@@ -1,0 +1,129 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Change to your own main package name. -->
+    <groupId>net.omegagames</groupId>
+
+    <!-- Change to your plugin name, must be lowed cased and match your end package name. No spaces. -->
+    <artifactId>OmegaCore</artifactId>
+
+    <!-- Change to your plugin's name. Can contain capital letters, but do NOT use spaces. -->
+    <name>OmegaCore</name>
+
+    <!-- Change to the appropriate plugin's version, starting at 1.0.0. -->
+    <version>1.0.0</version>
+
+    <!-- DO NOT EDIT. -->
+    <packaging>jar</packaging>
+
+    <properties>
+        <author>maliimaloo</author>
+        <main.class>net.omegagames.core.PluginCore</main.class>
+        <java.version>17</java.version>
+
+        <foundation.version>6.4.5</foundation.version>
+        <foundation.path>com.github.kangarko</foundation.path>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+
+        <repository>
+            <id>sk89q-repo</id>
+            <url>https://maven.enginehub.org/repo/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>${foundation.path}</groupId>
+            <artifactId>Foundation</artifactId>
+            <version>${foundation.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>net.omegagames</groupId>
+            <artifactId>OmegaAPI</artifactId>
+            <version>1.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>5.0.0-alpha2</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.name}-${project.version}</finalName>
+        <defaultGoal>clean install</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+
+                <!-- Change version to the latest one from
+                     https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->
+                <version>3.3.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+
+                <!-- Change version to the latest one from
+                     https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
+                <version>3.11.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+
+                <!-- Change version to the latest one from
+                     https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-shade-plugin -->
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <artifactSet>
+                        <includes>
+                            <include>${foundation.path}:Foundation*</include>
+                        </includes>
+                    </artifactSet>
+                    <relocations>
+                        <!-- Move the Foundation library into your own package in "lib" subpackage to prevent interference. -->
+                        <relocation>
+                            <pattern>org.mineacademy.fo</pattern>
+                            <shadedPattern>${project.groupId}.${project.artifactId}.lib</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+</project>
