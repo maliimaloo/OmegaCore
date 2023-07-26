@@ -43,22 +43,13 @@ public class PlayerData extends AbstractPlayerData {
 
         //Load from redis
         try (Jedis jedis = this.api.getBungeeResource()) {
-            Common.log("&cData: &9Chargements des datas !");
+            Common.log("&cJedis: &9Chargement des datas à partir de Jedis !");
+            this.playerBean = SerializeUtil.deserialize(SerializeUtil.Mode.JSON, PlayerBean.class, jedis.hget(key + this.playerUniqueID, "data"));
 
-            if (jedis.exists(key + this.playerUniqueID)) {
-                Common.log("&cJedis: &9Chargement à partir de Jedis !");
-                this.playerBean = SerializeUtil.deserialize(SerializeUtil.Mode.JSON, PlayerBean.class, jedis.hget(key + this.playerUniqueID, "data"));
-            } else {
-                Common.log("&cDatabase: &9Chargement à partir de la base de donnée !");
-                this.playerBean = this.api.getServerServiceManager().getPlayer(this.playerUniqueID, this.playerBean);
-            }
+            Common.log(this.playerBean.toStringList());
 
-            if (this.playerBean != null) {
-                Common.log(this.playerBean.toStringList());
-
-                this.loaded = true;
-                return true;
-            }
+            this.loaded = true;
+            return true;
         } catch (Throwable throwable) {
             Common.throwError(throwable);
         }
@@ -78,9 +69,6 @@ public class PlayerData extends AbstractPlayerData {
                     case 1 -> Common.log("&cJedis: &9Enregistrement dans Jedis avec succès !");
                     case 0 -> Common.log("&cJedis: &9Mise à jour dans Jedis avec succès !");
                 }
-            } catch (JedisException jedisException) {
-                Common.log("&cDatabase: &9Envoie dans la Base de données !");
-                this.api.getServerServiceManager().updatePlayer(this.playerBean);
             } catch (Throwable throwable) {
                 throw new FoException(throwable);
             }

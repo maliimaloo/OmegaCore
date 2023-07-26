@@ -18,7 +18,6 @@ import java.util.concurrent.ScheduledExecutorService;
 @SuppressWarnings("unused")
 public class PluginCore extends SimplePlugin {
     private ApiImplementation api;
-    private ServerServiceManager serverServiceManager;
     private DatabaseConnector databaseConnector;
     private DebugListener debugListener;
     private ScheduledExecutorService executor;
@@ -29,10 +28,6 @@ public class PluginCore extends SimplePlugin {
 
     public ApiImplementation getAPI() {
         return this.api;
-    }
-
-    public ServerServiceManager getServerServiceManager() {
-        return this.serverServiceManager;
     }
 
     public DatabaseConnector getDatabaseConnector() {
@@ -58,8 +53,7 @@ public class PluginCore extends SimplePlugin {
 
     @Override
     protected void onPluginStop() {
-        this.getDatabaseConnector().killConnection();
-        this.getServerServiceManager().getDatabaseManager().close();
+        this.api.getBungeeResource().close();
     }
 
     private void setupPlugin() {
@@ -74,11 +68,6 @@ public class PluginCore extends SimplePlugin {
         }
 
         this.debugListener = new DebugListener();
-
-        final String paramUrl = Settings.Database.URL;
-        final String paramUsername = Settings.Database.USERNAME;
-        final String paramPassword = Settings.Database.PASSWORD;
-        this.serverServiceManager = new ServerServiceManager(paramUrl, paramUsername, paramPassword);
         this.databaseConnector = new DatabaseConnector(this, this.redisServer());
 
         this.api = new ApiImplementation(this);

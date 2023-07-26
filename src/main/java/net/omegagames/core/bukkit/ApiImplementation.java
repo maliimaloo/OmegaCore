@@ -40,10 +40,6 @@ public class ApiImplementation extends OmegaGamesAPI {
         return this.pubSub;
     }
 
-    public ServerServiceManager getServerServiceManager() {
-        return this.plugin.getServerServiceManager();
-    }
-
     @Override
     public PluginCore getPlugin() {
         return this.plugin;

@@ -1,6 +1,6 @@
 name: ${project.name}
 version: ${project.version}
-main: ${main.class}
+main: ${main.class.bukkit}
 author: ${author}
 load: STARTUP
 
