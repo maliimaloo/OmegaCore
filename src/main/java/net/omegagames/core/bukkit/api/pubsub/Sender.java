@@ -1,9 +1,9 @@
-package net.omegagames.core.api.pubsub;
+package net.omegagames.core.bukkit.api.pubsub;
 
 import net.omegagames.api.pubsub.ISender;
 import net.omegagames.api.pubsub.PendingMessage;
-import net.omegagames.core.ApiImplementation;
-import net.omegagames.core.PluginCore;
+import net.omegagames.core.bukkit.ApiImplementation;
+import net.omegagames.core.bukkit.PluginCore;
 import redis.clients.jedis.Jedis;
 
 import java.util.concurrent.LinkedBlockingQueue;

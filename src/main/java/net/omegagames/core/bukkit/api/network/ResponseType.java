@@ -1,4 +1,4 @@
-package net.omegagames.core.api.network;
+package net.omegagames.core.bukkit.api.network;
 
 import net.md_5.bungee.api.ChatColor;
 

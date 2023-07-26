@@ -1,7 +1,7 @@
-package net.omegagames.core.api.pubsub;
+package net.omegagames.core.bukkit.api.pubsub;
 
 import net.omegagames.api.pubsub.*;
-import net.omegagames.core.ApiImplementation;
+import net.omegagames.core.bukkit.ApiImplementation;
 import redis.clients.jedis.Jedis;
 
 public class PubSubAPI implements IPubSubAPI

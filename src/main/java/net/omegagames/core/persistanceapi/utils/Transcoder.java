@@ -1,6 +1,5 @@
 package net.omegagames.core.persistanceapi.utils;
 
-import com.massivecraft.factions.Perm;
 import org.mineacademy.fo.command.annotation.Permission;
 import org.mineacademy.fo.exception.FoException;
 

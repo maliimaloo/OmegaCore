@@ -20,7 +20,7 @@
 
     <properties>
         <author>maliimaloo</author>
-        <main.class>net.omegagames.core.PluginCore</main.class>
+        <main.class>net.omegagames.core.bukkit.PluginCore</main.class>
         <java.version>17</java.version>
 
         <foundation.version>6.4.5</foundation.version>

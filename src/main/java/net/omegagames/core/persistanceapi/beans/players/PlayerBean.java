@@ -1,7 +1,8 @@
 package net.omegagames.core.persistanceapi.beans.players;
 
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.TimeUtil;
+import org.mineacademy.fo.collection.SerializedMap;
+import org.mineacademy.fo.model.ConfigSerializable;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
-public class PlayerBean {
+public class PlayerBean implements ConfigSerializable {
     /* Database Structure
     Table : t_lobby_players
     +-------------+--------------+------+-----+---------------------+-------+
@@ -119,5 +120,32 @@ public class PlayerBean {
         paramStringList.add("group_id: " + this.groupId);
         paramStringList.add(Common.chatLine());
         return paramStringList;
+    }
+
+    @Override
+    public SerializedMap serialize() {
+        return SerializedMap.ofArray(
+                "unique_id", this.uniqueId.toString(),
+                "name", this.name,
+                "nick_name", this.nickName,
+                "omega", this.omega,
+                "last_login", this.lastLogin.toString(),
+                "first_login", this.firstLogin.toString(),
+                "last_ip", this.lastIP,
+                "group_id", this.groupId
+        );
+    }
+
+    public static PlayerBean deserialize(SerializedMap map) {
+        return new PlayerBean(
+                UUID.fromString(map.getString("unique_id")),
+                map.getString("name"),
+                map.getString("nick_name"),
+                map.getInteger("omega"),
+                Timestamp.valueOf(map.getString("last_login")),
+                Timestamp.valueOf(map.getString("first_login")),
+                map.getString("last_ip"),
+                map.getLong("group_id")
+        );
     }
 }

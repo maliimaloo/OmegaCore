@@ -1,8 +1,8 @@
-package net.omegagames.core.api.listeners.general;
+package net.omegagames.core.bukkit.api.listeners.general;
 
-import net.omegagames.core.ApiImplementation;
-import net.omegagames.core.PluginCore;
-import net.omegagames.core.api.player.PlayerData;
+import net.omegagames.core.bukkit.ApiImplementation;
+import net.omegagames.core.bukkit.PluginCore;
+import net.omegagames.core.bukkit.api.player.PlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,6 +10,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.exception.FoException;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -29,8 +30,6 @@ public class GlobalJoinListener extends APIListener {
             //Chargement des data principal
             this.api.getPlayerManager().loadPlayer(player);
             Common.log("AsyncPrelogin Time: " + (System.currentTimeMillis() - startTime) + "ms.");
-
-            Common.log(this.api.getPlayerManager().getPlayerData(player).getPlayerBean().toStringList());
         } catch (Exception exception) {
             Common.error(exception);
             paramEvent.setKickMessage("Erreur lors du chargement de votre profil.");
@@ -46,19 +45,23 @@ public class GlobalJoinListener extends APIListener {
         paramEvent.setJoinMessage("");
         try {
             PlayerData paramPlayerData = this.api.getPlayerManager().getPlayerData(paramPlayer.getUniqueId());
+
+            paramPlayerData.refreshIfNeeded();
             paramPlayerData.getPlayerBean().setName(paramPlayer.getName());
             paramPlayerData.getPlayerBean().setLastLogin(Timestamp.valueOf(LocalDateTime.now().plusHours(2)));
             paramPlayerData.getPlayerBean().setLastIP(paramPlayer.getAddress().getAddress().getHostAddress());
+            paramPlayerData.updateData();
 
             Common.log("Join Time: " + (System.currentTimeMillis() - startTime) + "ms.");
-        } catch (Exception exception) {
-            Common.error(exception);
+        } catch (Throwable throwable) {
             paramPlayer.kickPlayer("Erreur lors du chargement de votre profil.");
+            throw new FoException(throwable, "Erreur lors du chargement du profil de " + paramPlayer.getName() + ".");
         }
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent paramEvent) {
-        this.api.getPlayerManager().getPlayerData(paramEvent.getPlayer().getUniqueId()).updateData();
+        PlayerData paramPlayerData = this.api.getPlayerManager().getPlayerData(paramEvent.getPlayer().getUniqueId());
+        this.api.getServerServiceManager().updatePlayer(paramPlayerData.getPlayerBean());
     }
 }

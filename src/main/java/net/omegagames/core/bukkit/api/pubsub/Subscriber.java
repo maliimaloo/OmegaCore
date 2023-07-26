@@ -1,8 +1,8 @@
-package net.omegagames.core.api.pubsub;
+package net.omegagames.core.bukkit.api.pubsub;
 
 import net.omegagames.api.pubsub.IPacketsReceiver;
 import net.omegagames.api.pubsub.IPatternReceiver;
-import net.omegagames.core.PluginCore;
+import net.omegagames.core.bukkit.PluginCore;
 import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import redis.clients.jedis.JedisPubSub;

@@ -1,8 +1,8 @@
-package net.omegagames.core;
+package net.omegagames.core.bukkit;
 
 import net.md_5.bungee.api.ChatColor;
 import net.omegagames.api.pubsub.IPatternReceiver;
-import net.omegagames.core.api.network.IJoinHandler;
+import net.omegagames.core.bukkit.api.network.IJoinHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

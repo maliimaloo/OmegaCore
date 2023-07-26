@@ -1,6 +1,6 @@
-package net.omegagames.core.api.jedis;
+package net.omegagames.core.bukkit.api.jedis;
 
-import net.omegagames.core.PluginCore;
+import net.omegagames.core.bukkit.PluginCore;
 import org.bukkit.Bukkit;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.debug.Debugger;

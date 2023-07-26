@@ -1,17 +1,16 @@
-package net.omegagames.core;
+package net.omegagames.core.bukkit;
 
-import net.omegagames.core.api.jedis.DatabaseConnector;
-import net.omegagames.core.api.jedis.RedisServer;
-import net.omegagames.core.api.listeners.general.GlobalJoinListener;
+import net.omegagames.core.bukkit.api.jedis.DatabaseConnector;
+import net.omegagames.core.bukkit.api.jedis.RedisServer;
+import net.omegagames.core.bukkit.api.listeners.general.GlobalJoinListener;
 import net.omegagames.core.persistanceapi.ServerServiceManager;
 import org.bukkit.Bukkit;
 import org.mineacademy.fo.MinecraftVersion;
-import org.mineacademy.fo.SerializeUtil;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.exception.FoException;
 import org.mineacademy.fo.plugin.SimplePlugin;
-import net.omegagames.core.settings.Settings;
+import net.omegagames.core.bukkit.settings.Settings;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -84,6 +83,7 @@ public class PluginCore extends SimplePlugin {
 
         this.api = new ApiImplementation(this);
 
+        this.api.getBungeeResource().flushAll();
         super.registerEvents(new GlobalJoinListener(this, this.api));
     }
 

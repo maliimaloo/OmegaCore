@@ -1,4 +1,4 @@
-package net.omegagames.core.settings;
+package net.omegagames.core.bukkit.settings;
 
 import org.mineacademy.fo.settings.SimpleSettings;
 

@@ -1,4 +1,4 @@
-package net.omegagames.core.api.network;
+package net.omegagames.core.bukkit.api.network;
 
 import java.util.List;
 import java.util.UUID;

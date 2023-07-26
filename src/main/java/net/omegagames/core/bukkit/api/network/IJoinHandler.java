@@ -1,4 +1,4 @@
-package net.omegagames.core.api.network;
+package net.omegagames.core.bukkit.api.network;
 
 import org.bukkit.entity.Player;
 

@@ -1,9 +1,9 @@
-package net.omegagames.core.api.player;
+package net.omegagames.core.bukkit.api.player;
 
 import net.omegagames.api.player.AbstractPlayerData;
 import net.omegagames.api.player.IFinancialCallback;
-import net.omegagames.core.ApiImplementation;
-import net.omegagames.core.PluginCore;
+import net.omegagames.core.bukkit.ApiImplementation;
+import net.omegagames.core.bukkit.PluginCore;
 import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,6 +12,7 @@ import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.SerializeUtil;
 import org.mineacademy.fo.exception.FoException;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.exceptions.JedisException;
 
 import java.util.UUID;
 
@@ -42,19 +43,48 @@ public class PlayerData extends AbstractPlayerData {
 
         //Load from redis
         try (Jedis jedis = this.api.getBungeeResource()) {
+            Common.log("&cData: &9Chargements des datas !");
+
             if (jedis.exists(key + this.playerUniqueID)) {
-                this.playerBean = SerializeUtil.deserialize(SerializeUtil.Mode.JSON, PlayerBean.class, jedis.get(key + this.playerUniqueID));
+                Common.log("&cJedis: &9Chargement à partir de Jedis !");
+                this.playerBean = SerializeUtil.deserialize(SerializeUtil.Mode.JSON, PlayerBean.class, jedis.hget(key + this.playerUniqueID, "data"));
             } else {
+                Common.log("&cDatabase: &9Chargement à partir de la base de donnée !");
                 this.playerBean = this.api.getServerServiceManager().getPlayer(this.playerUniqueID, this.playerBean);
             }
 
-            this.loaded = true;
-            return true;
-        } catch (Exception exception) {
-            Common.error(exception);
+            if (this.playerBean != null) {
+                Common.log(this.playerBean.toStringList());
+
+                this.loaded = true;
+                return true;
+            }
+        } catch (Throwable throwable) {
+            Common.throwError(throwable);
         }
 
         return false;
+    }
+
+    public void updateData() {
+        if (this.playerBean != null && this.loaded) {
+            Common.log("&cData: &9Sauvegarde des datas !");
+            Common.log(this.playerBean.toStringList());
+
+            try (Jedis jedis = this.api.getBungeeResource()) {
+                Common.log("&cJedis: &9Envoie dans Jedis !");
+                long paramResult = jedis.hset(key + this.playerUniqueID, "data", SerializeUtil.serialize(SerializeUtil.Mode.JSON, this.playerBean).toString());
+                switch ((int) paramResult) {
+                    case 1 -> Common.log("&cJedis: &9Enregistrement dans Jedis avec succès !");
+                    case 0 -> Common.log("&cJedis: &9Mise à jour dans Jedis avec succès !");
+                }
+            } catch (JedisException jedisException) {
+                Common.log("&cDatabase: &9Envoie dans la Base de données !");
+                this.api.getServerServiceManager().updatePlayer(this.playerBean);
+            } catch (Throwable throwable) {
+                throw new FoException(throwable);
+            }
+        }
     }
 
     /**
@@ -63,26 +93,6 @@ public class PlayerData extends AbstractPlayerData {
     public void refreshIfNeeded() {
         if (this.lastRefresh + 1000 * 60 < System.currentTimeMillis()) {
             this.refreshData();
-        }
-    }
-
-
-    public void updateData() {
-        if (this.playerBean != null && this.loaded) {
-            //Save in redisResource
-            //Jedis jedis = api.getBungee();
-            //Generated class so FUCK IT I made it static
-            //CacheLoader.send(jedis, key + playerUUID, playerBean);
-
-            try (Jedis jedis = this.api.getBungeeResource()){
-                if (jedis != null) {
-                    jedis.set(key + this.playerUniqueID, SerializeUtil.serialize(SerializeUtil.Mode.JSON, this.playerBean).toString());
-                } else {
-                    this.api.getServerServiceManager().updatePlayer(this.playerBean);
-                }
-            } catch (Throwable throwable) {
-                throw new FoException(throwable);
-            }
         }
     }
 

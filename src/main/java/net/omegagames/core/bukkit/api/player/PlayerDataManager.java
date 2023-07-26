@@ -1,7 +1,7 @@
-package net.omegagames.core.api.player;
+package net.omegagames.core.bukkit.api.player;
 
 import net.omegagames.api.player.IPlayerDataManager;
-import net.omegagames.core.ApiImplementation;
+import net.omegagames.core.bukkit.ApiImplementation;
 import org.bukkit.Bukkit;
 import org.mineacademy.fo.exception.FoException;
 
