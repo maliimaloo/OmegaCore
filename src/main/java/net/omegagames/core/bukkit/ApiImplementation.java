@@ -18,7 +18,7 @@ public class ApiImplementation extends OmegaGamesAPI {
         this.plugin = plugin;
 
         this.pubSub = new PubSubAPI(this);
-        GlobalUpdateListener listener = new GlobalUpdateListener();
+        GlobalUpdateListener listener = new GlobalUpdateListener(this);
         this.pubSub.subscribe("online_status_check", listener);
 
         this.playerDataManager = new PlayerDataManager(this);

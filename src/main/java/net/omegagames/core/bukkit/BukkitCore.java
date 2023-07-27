@@ -9,6 +9,7 @@ import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.exception.FoException;
+import org.mineacademy.fo.menu.Menu;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import net.omegagames.core.bukkit.settings.Settings;
 

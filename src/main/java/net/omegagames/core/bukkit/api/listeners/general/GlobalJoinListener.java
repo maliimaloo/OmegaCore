@@ -1,5 +1,6 @@
 package net.omegagames.core.bukkit.api.listeners.general;
 
+import net.omegagames.api.pubsub.PendingMessage;
 import net.omegagames.core.bukkit.ApiImplementation;
 import net.omegagames.core.bukkit.BukkitCore;
 import net.omegagames.core.bukkit.api.player.PlayerData;
@@ -12,6 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.SerializeUtil;
 import org.mineacademy.fo.exception.FoException;
+import redis.clients.jedis.Jedis;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -70,18 +72,34 @@ public class GlobalJoinListener extends APIListener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent paramEvent) {
-        UUID player = paramEvent.getPlayer().getUniqueId();
-        PlayerData paramPlayerData = this.api.getPlayerManager().getPlayerData(player);
-        onlineStatus.put(player, false);
+        final UUID player = paramEvent.getPlayer().getUniqueId();
+        final PlayerData paramPlayerData = this.api.getPlayerManager().getPlayerData(player);
+        if (paramPlayerData == null) {
+            Common.log("Le joueur " + player + " n'a pas de PlayerData.");
+            return;
+        }
 
-        Common.runLaterAsync(60, () -> {
-            this.api.getPubSub().send("online_status_check", player.toString());
+        paramPlayerData.updateData();
 
-            if (!onlineStatus.get(player)) {
-                Common.log("Le joueur " + player + " n'est pas connecté sur le réseau.");
-                onlineStatus.remove(player);
-                this.api.getServerServiceManager().updatePlayer(paramPlayerData.getPlayerBean());
-            }
-        });
+        final String paramKey = PlayerData.getKey() + player;
+        final String paramFieldOnline = PlayerData.getFieldOnline();
+        try (Jedis jedis = this.api.getBungeeResource()){
+            jedis.hset(paramKey, paramFieldOnline, Boolean.toString(false));
+            this.api.getPubSub().send(new PendingMessage("online_status_check", player.toString()));
+
+            Common.runLaterAsync(60, () -> {
+                boolean paramOnlineStatus = false;
+                if (jedis.hexists(PlayerData.getKey() + player, PlayerData.getFieldOnline())) {
+                    paramOnlineStatus = Boolean.parseBoolean(jedis.hget(paramKey, paramFieldOnline));
+                }
+
+                if (!paramOnlineStatus) {
+                    Common.log("Le joueur " + player + " n'est pas connecté sur le réseau.");
+                    this.api.getServerServiceManager().updatePlayer(paramPlayerData.getPlayerBean());
+                }
+            });
+        } catch (Throwable throwable) {
+            Common.throwError(throwable);
+        }
     }
 }

@@ -26,6 +26,9 @@ public class PlayerData extends AbstractPlayerData {
     private final UUID playerUniqueID;
 
     private final static String key = "playerdata:";
+    private final static String fieldData = "data";
+    private final static String fieldOnline = "online";
+
     private boolean loaded = false;
 
     protected PlayerData(UUID playerUniqueID, ApiImplementation api, PlayerDataManager manager) {
@@ -189,5 +192,13 @@ public class PlayerData extends AbstractPlayerData {
 
     public static String getKey() {
         return key;
+    }
+
+    public static String getFieldData() {
+        return fieldData;
+    }
+
+    public static String getFieldOnline() {
+        return fieldOnline;
     }
 }
