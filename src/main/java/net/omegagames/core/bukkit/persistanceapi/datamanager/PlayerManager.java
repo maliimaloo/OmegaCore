@@ -1,9 +1,9 @@
-package net.omegagames.core.persistanceapi.datamanager;
+package net.omegagames.core.bukkit.persistanceapi.datamanager;
 
-import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
-import net.omegagames.core.persistanceapi.database.DatabaseManager;
-import net.omegagames.core.persistanceapi.database.MResultSet;
-import net.omegagames.core.persistanceapi.utils.Transcoder;
+import net.omegagames.core.bukkit.persistanceapi.beans.players.PlayerBean;
+import net.omegagames.core.bukkit.persistanceapi.database.DatabaseManager;
+import net.omegagames.core.bukkit.persistanceapi.database.MResultSet;
+import net.omegagames.core.bukkit.persistanceapi.utils.Transcoder;
 import org.mineacademy.fo.exception.FoException;
 
 import java.sql.Timestamp;

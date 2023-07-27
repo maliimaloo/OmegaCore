@@ -3,7 +3,7 @@ package net.omegagames.core.bukkit;
 import net.omegagames.api.OmegaGamesAPI;
 import net.omegagames.core.bukkit.api.player.PlayerDataManager;
 import net.omegagames.core.bukkit.api.pubsub.PubSubAPI;
-import net.omegagames.core.persistanceapi.ServerServiceManager;
+import net.omegagames.core.bukkit.persistanceapi.ServerServiceManager;
 import redis.clients.jedis.Jedis;
 
 @SuppressWarnings("unused")

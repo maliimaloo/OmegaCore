@@ -1,4 +1,4 @@
-package net.omegagames.core.persistanceapi.beans.players;
+package net.omegagames.core.bukkit.persistanceapi.beans.players;
 
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.collection.SerializedMap;

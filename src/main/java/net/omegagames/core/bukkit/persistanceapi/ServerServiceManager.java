@@ -1,11 +1,12 @@
-package net.omegagames.core.persistanceapi;
+package net.omegagames.core.bukkit.persistanceapi;
 
-import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
-import net.omegagames.core.persistanceapi.database.DatabaseManager;
-import net.omegagames.core.persistanceapi.datamanager.PlayerManager;
+import net.omegagames.core.bukkit.persistanceapi.beans.players.PlayerBean;
+import net.omegagames.core.bukkit.persistanceapi.database.DatabaseManager;
+import net.omegagames.core.bukkit.persistanceapi.datamanager.PlayerManager;
 
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public class ServerServiceManager {
     private final DatabaseManager databaseManager;
     private final PlayerManager playerManager;

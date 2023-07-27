@@ -1,4 +1,4 @@
-package net.omegagames.core.persistanceapi.utils;
+package net.omegagames.core.bukkit.persistanceapi.utils;
 
 import org.mineacademy.fo.command.annotation.Permission;
 import org.mineacademy.fo.exception.FoException;

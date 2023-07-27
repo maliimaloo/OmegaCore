@@ -4,7 +4,7 @@ import net.omegagames.api.player.AbstractPlayerData;
 import net.omegagames.api.player.IFinancialCallback;
 import net.omegagames.core.bukkit.ApiImplementation;
 import net.omegagames.core.bukkit.BukkitCore;
-import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
+import net.omegagames.core.bukkit.persistanceapi.beans.players.PlayerBean;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;

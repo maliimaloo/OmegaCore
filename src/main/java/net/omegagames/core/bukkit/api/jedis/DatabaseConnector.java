@@ -1,8 +1,7 @@
 package net.omegagames.core.bukkit.api.jedis;
 
-import net.md_5.bungee.api.ProxyServer;
 import net.omegagames.core.bukkit.BukkitCore;
-import net.omegagames.core.bungee.BungeeCore;
+import org.bukkit.Bukkit;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.exception.FoException;
 import redis.clients.jedis.Jedis;
@@ -56,9 +55,7 @@ public class DatabaseConnector {
             Common.logNoPrefix("&7[&9Jedis&7] &aConnection à la database.");
         } catch (Throwable throwable) {
             Common.throwError(throwable, "Impossible de se connecter à la database, désactivation du plugin.");
-
-            ProxyServer.getInstance().getPluginManager().unregisterCommands(BungeeCore.getInstance());
-            ProxyServer.getInstance().getPluginManager().unregisterListeners(BungeeCore.getInstance());
+            Bukkit.shutdown();
         }
     }
 }

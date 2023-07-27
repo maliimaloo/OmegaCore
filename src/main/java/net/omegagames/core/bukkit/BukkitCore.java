@@ -3,7 +3,7 @@ package net.omegagames.core.bukkit;
 import net.omegagames.core.bukkit.api.jedis.DatabaseConnector;
 import net.omegagames.core.bukkit.api.jedis.RedisServer;
 import net.omegagames.core.bukkit.api.listeners.general.GlobalJoinListener;
-import net.omegagames.core.persistanceapi.ServerServiceManager;
+import net.omegagames.core.bukkit.persistanceapi.ServerServiceManager;
 import org.bukkit.Bukkit;
 import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.Valid;
