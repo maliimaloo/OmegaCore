@@ -1,5 +1,7 @@
 Version: 1
 
+Server_Name: "BungeeCore"
+
 Database:
   # -------------------------------------------------------------------------------------------------
   # Prefix utilisé avant les messages dans la console liés à la base de données.
@@ -20,3 +22,13 @@ Database:
   # Password de connection à la base de donnée
   # -------------------------------------------------------------------------------------------------
   Password: "ig1TI28nKMyAIdLN6.O^cpOe"
+
+Jedis:
+  # -------------------------------------------------------------------------------------------------
+  # Prefix utilisé avant les messages dans la console liés à la base de données Jedis.
+  # -------------------------------------------------------------------------------------------------
+  Prefix: '§7[§bJedis§7]§b'
+
+  Bungee_Ip: 51.210.155.175
+  Bungee_Port: 6379
+  Bungee_Password: "DFNLCPMXXHODAYVYDYBDRFQRIBKHOKTD"

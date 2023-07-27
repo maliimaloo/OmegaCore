@@ -1,7 +1,7 @@
 package net.omegagames.core.bukkit.api.listeners.general;
 
 import net.omegagames.core.bukkit.ApiImplementation;
-import net.omegagames.core.bukkit.PluginCore;
+import net.omegagames.core.bukkit.BukkitCore;
 import net.omegagames.core.bukkit.api.player.PlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class GlobalJoinListener extends APIListener {
-    public GlobalJoinListener(PluginCore plugin, ApiImplementation api) {
+    public GlobalJoinListener(BukkitCore plugin, ApiImplementation api) {
         super(plugin);
     }
 
@@ -61,7 +61,6 @@ public class GlobalJoinListener extends APIListener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent paramEvent) {
-        PlayerData paramPlayerData = this.api.getPlayerManager().getPlayerData(paramEvent.getPlayer().getUniqueId());
-        this.api.getServerServiceManager().updatePlayer(paramPlayerData.getPlayerBean());
+        this.api.getPlayerManager().getPlayerData(paramEvent.getPlayer().getUniqueId()).updateData();
     }
 }

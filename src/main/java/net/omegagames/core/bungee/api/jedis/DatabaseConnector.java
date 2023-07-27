@@ -1,9 +1,10 @@
-package net.omegagames.core.bukkit.api.jedis;
+package net.omegagames.core.bungee.api.jedis;
 
-import net.md_5.bungee.api.ProxyServer;
 import net.omegagames.core.bukkit.BukkitCore;
 import net.omegagames.core.bungee.BungeeCore;
+import org.bukkit.Bukkit;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.exception.FoException;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -12,11 +13,11 @@ import redis.clients.jedis.JedisPoolConfig;
 import java.util.concurrent.TimeUnit;
 
 public class DatabaseConnector {
-    private final BukkitCore plugin;
+    private final BungeeCore plugin;
     private JedisPool cachePool;
     private final RedisServer bungee;
 
-    public DatabaseConnector(BukkitCore plugin, RedisServer bungee) {
+    public DatabaseConnector(BungeeCore plugin, RedisServer bungee) {
         this.plugin = plugin;
         this.bungee = bungee;
 
@@ -36,9 +37,9 @@ public class DatabaseConnector {
         this.connect();
         this.plugin.getExecutor().scheduleAtFixedRate(() -> {
             try {
-                this.cachePool.getResource().close();
+                cachePool.getResource().close();
             } catch (FoException exception) {
-                Common.throwError(exception, "Error redis connection, Try to reconnect!");
+                Debugger.saveError(exception, "Error redis connection, Try to reconnect!");
                 this.connect();
             }
         }, 0, 10, TimeUnit.SECONDS);
@@ -54,11 +55,9 @@ public class DatabaseConnector {
             this.cachePool.getResource().close();
 
             Common.logNoPrefix("&7[&9Jedis&7] &aConnection à la database.");
-        } catch (Throwable throwable) {
-            Common.throwError(throwable, "Impossible de se connecter à la database, désactivation du plugin.");
-
-            ProxyServer.getInstance().getPluginManager().unregisterCommands(BungeeCore.getInstance());
-            ProxyServer.getInstance().getPluginManager().unregisterListeners(BungeeCore.getInstance());
+        } catch (FoException exception) {
+            Debugger.saveError(exception, "Impossible de se connecter à la database.");
+            Bukkit.shutdown();
         }
     }
 }

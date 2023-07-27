@@ -2,7 +2,7 @@ package net.omegagames.core.bukkit.api.pubsub;
 
 import net.omegagames.api.pubsub.IPacketsReceiver;
 import net.omegagames.api.pubsub.IPatternReceiver;
-import net.omegagames.core.bukkit.PluginCore;
+import net.omegagames.core.bukkit.BukkitCore;
 import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import redis.clients.jedis.JedisPubSub;
@@ -44,7 +44,7 @@ public class Subscriber extends JedisPubSub {
                 Debugger.printStackTrace("{PubSub} Message reçu sur un canal, mais aucun packetsReceiver n'a été trouvé. (canal : " + channel + ", message : " + message + ")");
             }
 
-            ((PluginCore) SimplePlugin.getInstance()).getDebugListener().receive("onlychannel", channel, message);
+            ((BukkitCore) SimplePlugin.getInstance()).getDebugListener().receive("onlychannel", channel, message);
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -61,7 +61,7 @@ public class Subscriber extends JedisPubSub {
                 Debugger.printStackTrace("{PubSub} Message reçu sur un canal, mais aucun packetsReceiver n'a été trouvé. (canal : " + channel + ", message : " + message + ")");
             }
 
-            ((PluginCore) SimplePlugin.getInstance()).getDebugListener().receive(pattern, channel, message);
+            ((BukkitCore) SimplePlugin.getInstance()).getDebugListener().receive(pattern, channel, message);
         } catch (Exception exception) {
             exception.printStackTrace();
         }

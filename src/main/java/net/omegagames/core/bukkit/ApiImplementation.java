@@ -8,11 +8,11 @@ import redis.clients.jedis.Jedis;
 
 @SuppressWarnings("unused")
 public class ApiImplementation extends OmegaGamesAPI {
-    private final PluginCore plugin;
+    private final BukkitCore plugin;
     private final PlayerDataManager playerDataManager;
     private final PubSubAPI pubSub;
 
-    public ApiImplementation(PluginCore plugin) {
+    public ApiImplementation(BukkitCore plugin) {
         super(plugin);
         this.plugin = plugin;
 
@@ -40,8 +40,12 @@ public class ApiImplementation extends OmegaGamesAPI {
         return this.pubSub;
     }
 
+    public ServerServiceManager getServerServiceManager() {
+        return this.plugin.getServerServiceManager();
+    }
+
     @Override
-    public PluginCore getPlugin() {
+    public BukkitCore getPlugin() {
         return this.plugin;
     }
 }

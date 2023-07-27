@@ -1,4 +1,4 @@
-package net.omegagames.core.bukkit.api.jedis;
+package net.omegagames.core.bungee.api.jedis;
 
 public class RedisServer {
     private final String ip;

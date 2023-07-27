@@ -10,6 +10,20 @@ public final class Settings extends SimpleSettings {
         SERVER_NAME = Settings.getString("Server_Name");
     }
 
+    public final static class Database {
+        public static String PREFIX;
+
+        public static String URL, USERNAME, PASSWORD;
+
+        private static void init() {
+            Settings.setPathPrefix("Database");
+            PREFIX = Settings.getString("Prefix");
+            URL = Settings.getString("Url");
+            USERNAME = Settings.getString("Username");
+            PASSWORD = Settings.getString("Password");
+        }
+    }
+
     public final static class Jedis {
         public static String PREFIX;
 

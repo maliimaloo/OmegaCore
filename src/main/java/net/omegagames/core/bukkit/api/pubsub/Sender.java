@@ -3,7 +3,7 @@ package net.omegagames.core.bukkit.api.pubsub;
 import net.omegagames.api.pubsub.ISender;
 import net.omegagames.api.pubsub.PendingMessage;
 import net.omegagames.core.bukkit.ApiImplementation;
-import net.omegagames.core.bukkit.PluginCore;
+import net.omegagames.core.bukkit.BukkitCore;
 import redis.clients.jedis.Jedis;
 
 import java.util.concurrent.LinkedBlockingQueue;
@@ -56,7 +56,7 @@ class Sender implements Runnable, ISender
         try {
             this.jedis = this.connector.getBungeeResource();
         } catch (Exception e) {
-            PluginCore.getInstance().getLogger().severe("[Publisher] Cannot connect to redis server : " + e.getMessage() + ". Retrying in 5 seconds.");
+            BukkitCore.getInstance().getLogger().severe("[Publisher] Cannot connect to redis server : " + e.getMessage() + ". Retrying in 5 seconds.");
             try {
                 Thread.sleep(5000);
                 fixDatabase();

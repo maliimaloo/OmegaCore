@@ -20,7 +20,7 @@
 
     <properties>
         <author>maliimaloo</author>
-        <main.class.bukkit>net.omegagames.core.bukkit.PluginCore</main.class.bukkit>
+        <main.class.bukkit>net.omegagames.core.bukkit.BukkitCore</main.class.bukkit>
         <main.class.bungee>net.omegagames.core.bungee.BungeeCore</main.class.bungee>
         <java.version>17</java.version>
 

@@ -5,18 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="940e35d5-2514-4d4a-934b-03e782247ed0" name="Changes" comment="Init commit">
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bungee/BungeeCore.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bungee/settings/BungeeSettings.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/bungee.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/bungee_settings.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bungee/api/jedis/DatabaseConnector.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bungee/api/jedis/RedisServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bungee/api/listeners/GlobalJoinListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/ApiImplementation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/ApiImplementation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/PluginCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/PluginCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/PluginCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/BukkitCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/jedis/DatabaseConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/jedis/DatabaseConnector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/jedis/RedisServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/jedis/RedisServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/general/APIListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/general/APIListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/general/GlobalJoinListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/general/GlobalJoinListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/pubsub/Sender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/pubsub/Sender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/pubsub/Subscriber.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/pubsub/Subscriber.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/settings/Settings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/settings/Settings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bungee/BungeeCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bungee/BungeeCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bungee/settings/BungeeSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bungee/settings/BungeeSettings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/bungee_settings.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/bungee_settings.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/settings.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/settings.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -57,7 +63,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "C:/Intellij-OmegaGames/OmegaCore[Old]",
+    "last_opened_file_path": "C:/OmegaGames/OmegaCore/src/main/java/net/omegagames/core/bungee/api",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2"
@@ -65,6 +71,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\OmegaGames\OmegaCore\src\main\java\net\omegagames\core\bungee\api" />
       <recent name="C:\OmegaGames\OmegaCore\src\main\java\net\omegagames\core\persistanceapi" />
       <recent name="C:\OmegaGames\OmegaCore\src\main\java\net\omegagames\core\api\database" />
     </key>
@@ -120,7 +127,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690375406914</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Init commit">
+      <created>1690414896821</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1690414896821</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

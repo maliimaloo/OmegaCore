@@ -16,18 +16,23 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 @SuppressWarnings("unused")
-public class PluginCore extends SimplePlugin {
+public class BukkitCore extends SimplePlugin {
     private ApiImplementation api;
+    private ServerServiceManager serverServiceManager;
     private DatabaseConnector databaseConnector;
     private DebugListener debugListener;
     private ScheduledExecutorService executor;
 
     private String serverName;
 
-    public PluginCore() {}
+    public BukkitCore() {}
 
     public ApiImplementation getAPI() {
         return this.api;
+    }
+
+    public ServerServiceManager getServerServiceManager() {
+        return this.serverServiceManager;
     }
 
     public DatabaseConnector getDatabaseConnector() {
@@ -53,7 +58,7 @@ public class PluginCore extends SimplePlugin {
 
     @Override
     protected void onPluginStop() {
-        this.api.getBungeeResource().close();
+        this.getDatabaseConnector().killConnection();
     }
 
     private void setupPlugin() {
@@ -68,6 +73,11 @@ public class PluginCore extends SimplePlugin {
         }
 
         this.debugListener = new DebugListener();
+
+        final String paramUrl = Settings.Database.URL;
+        final String paramUsername = Settings.Database.USERNAME;
+        final String paramPassword = Settings.Database.PASSWORD;
+        this.serverServiceManager = new ServerServiceManager(paramUrl, paramUsername, paramPassword);
         this.databaseConnector = new DatabaseConnector(this, this.redisServer());
 
         this.api = new ApiImplementation(this);
@@ -96,7 +106,7 @@ public class PluginCore extends SimplePlugin {
         return "Maliimaloo";
     }
 
-    public static PluginCore getInstance() {
-        return (PluginCore) SimplePlugin.getInstance();
+    public static BukkitCore getInstance() {
+        return (BukkitCore) SimplePlugin.getInstance();
     }
 }

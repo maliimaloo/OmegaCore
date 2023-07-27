@@ -3,7 +3,7 @@ package net.omegagames.core.bukkit.api.player;
 import net.omegagames.api.player.AbstractPlayerData;
 import net.omegagames.api.player.IFinancialCallback;
 import net.omegagames.core.bukkit.ApiImplementation;
-import net.omegagames.core.bukkit.PluginCore;
+import net.omegagames.core.bukkit.BukkitCore;
 import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,7 +12,6 @@ import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.SerializeUtil;
 import org.mineacademy.fo.exception.FoException;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.exceptions.JedisException;
 
 import java.util.UUID;
 
@@ -126,7 +125,7 @@ public class PlayerData extends AbstractPlayerData {
 
     @Override
     public void withdrawCoins(long amount, IFinancialCallback iFinancialCallback) {
-        PluginCore.getInstance().getExecutor().execute(() -> {
+        BukkitCore.getInstance().getExecutor().execute(() -> {
             long result = this.decreaseCoins(amount);
             if (iFinancialCallback != null) {
                 iFinancialCallback.done(result, -amount, null);
@@ -161,7 +160,7 @@ public class PlayerData extends AbstractPlayerData {
 
 
     private void creditEconomy(int type, long amountFinal, String reason, boolean applyMultiplier, IFinancialCallback financialCallback) {
-        PluginCore.getInstance().getExecutor().execute(() -> {
+        BukkitCore.getInstance().getExecutor().execute(() -> {
             try {
                 String message;
                 if (reason != null) {
