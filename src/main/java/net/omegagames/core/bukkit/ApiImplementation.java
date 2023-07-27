@@ -1,6 +1,7 @@
 package net.omegagames.core.bukkit;
 
 import net.omegagames.api.OmegaGamesAPI;
+import net.omegagames.core.bukkit.api.listeners.pubsub.GlobalUpdateListener;
 import net.omegagames.core.bukkit.api.player.PlayerDataManager;
 import net.omegagames.core.bukkit.api.pubsub.PubSubAPI;
 import net.omegagames.core.bukkit.persistanceapi.ServerServiceManager;
@@ -17,6 +18,9 @@ public class ApiImplementation extends OmegaGamesAPI {
         this.plugin = plugin;
 
         this.pubSub = new PubSubAPI(this);
+        GlobalUpdateListener listener = new GlobalUpdateListener();
+        this.pubSub.subscribe("online_status_check", listener);
+
         this.playerDataManager = new PlayerDataManager(this);
     }
 

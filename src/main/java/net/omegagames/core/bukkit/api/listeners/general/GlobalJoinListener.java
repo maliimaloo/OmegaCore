@@ -10,15 +10,24 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.SerializeUtil;
 import org.mineacademy.fo.exception.FoException;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class GlobalJoinListener extends APIListener {
-    public GlobalJoinListener(BukkitCore plugin, ApiImplementation api) {
+    private static final Map<UUID, Boolean> onlineStatus = new HashMap<>();
+
+    public GlobalJoinListener(BukkitCore plugin) {
         super(plugin);
+    }
+
+    public static Map<UUID, Boolean> getOnlineStatus() {
+        return onlineStatus;
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -61,6 +70,18 @@ public class GlobalJoinListener extends APIListener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent paramEvent) {
-        this.api.getPlayerManager().getPlayerData(paramEvent.getPlayer().getUniqueId()).updateData();
+        UUID player = paramEvent.getPlayer().getUniqueId();
+        PlayerData paramPlayerData = this.api.getPlayerManager().getPlayerData(player);
+        onlineStatus.put(player, false);
+
+        Common.runLaterAsync(60, () -> {
+            this.api.getPubSub().send("online_status_check", player.toString());
+
+            if (!onlineStatus.get(player)) {
+                Common.log("Le joueur " + player + " n'est pas connecté sur le réseau.");
+                onlineStatus.remove(player);
+                this.api.getServerServiceManager().updatePlayer(paramPlayerData.getPlayerBean());
+            }
+        });
     }
 }

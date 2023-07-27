@@ -83,7 +83,7 @@ public class BukkitCore extends SimplePlugin {
         this.api = new ApiImplementation(this);
 
         this.api.getBungeeResource().flushAll();
-        super.registerEvents(new GlobalJoinListener(this, this.api));
+        super.registerEvents(new GlobalJoinListener(this));
     }
 
     private RedisServer redisServer() {

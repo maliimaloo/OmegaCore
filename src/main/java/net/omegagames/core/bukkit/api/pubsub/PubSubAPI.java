@@ -2,11 +2,10 @@ package net.omegagames.core.bukkit.api.pubsub;
 
 import net.omegagames.api.pubsub.*;
 import net.omegagames.core.bukkit.ApiImplementation;
+import org.mineacademy.fo.Common;
 import redis.clients.jedis.Jedis;
 
-public class PubSubAPI implements IPubSubAPI
-{
-
+public class PubSubAPI implements IPubSubAPI {
     private final Subscriber subscriberPattern;
     private final Subscriber subscriberChannel;
 
@@ -36,14 +35,12 @@ public class PubSubAPI implements IPubSubAPI
         this.patternThread = new Thread(() -> {
             while (this.working) {
                 Jedis jedis = this.api.getBungeeResource();
-                try
-                {
+                try {
                     String[] patternsSuscribed = this.subscriberPattern.getPatternsSuscribed();
                     if(patternsSuscribed.length > 0)
                         jedis.psubscribe(this.subscriberPattern, patternsSuscribed);
-                } catch (Exception e)
-                {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    Common.throwError(e, "Error while subscribing to patterns");
                 }
                 jedis.close();
             }
@@ -51,17 +48,14 @@ public class PubSubAPI implements IPubSubAPI
         this.patternThread.start();
 
         this.channelThread = new Thread(() -> {
-            while (this.working)
-            {
+            while (this.working) {
                 Jedis jedis = this.api.getBungeeResource();
-                try
-                {
+                try {
                     String[] channelsSuscribed = this.subscriberChannel.getChannelsSuscribed();
                     if (channelsSuscribed.length > 0)
                         jedis.subscribe(this.subscriberChannel, channelsSuscribed);
-                } catch (Exception e)
-                {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    Common.throwError(e, "Error while subscribing to channels");
                 }
                 jedis.close();
             }
@@ -70,16 +64,14 @@ public class PubSubAPI implements IPubSubAPI
     }
 
     @Override
-    public void subscribe(String channel, IPacketsReceiver receiver)
-    {
+    public void subscribe(String channel, IPacketsReceiver receiver) {
         this.subscriberChannel.registerReceiver(channel, receiver);
         if(this.subscriberChannel.isSubscribed())
             this.subscriberChannel.unsubscribe();
     }
 
     @Override
-    public void subscribe(String pattern, IPatternReceiver receiver)
-    {
+    public void subscribe(String pattern, IPatternReceiver receiver) {
         this.subscriberPattern.registerPattern(pattern, receiver);
         if(this.subscriberPattern.isSubscribed())
             this.subscriberPattern.punsubscribe();

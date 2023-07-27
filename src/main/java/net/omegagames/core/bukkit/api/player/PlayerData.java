@@ -42,8 +42,13 @@ public class PlayerData extends AbstractPlayerData {
 
         //Load from redis
         try (Jedis jedis = this.api.getBungeeResource()) {
-            Common.log("&cJedis: &9Chargement des datas à partir de Jedis !");
-            this.playerBean = SerializeUtil.deserialize(SerializeUtil.Mode.JSON, PlayerBean.class, jedis.hget(key + this.playerUniqueID, "data"));
+            if (jedis.exists(key + this.playerUniqueID)) {
+                Common.log("&cJedis: &9Chargement des datas à partir de Jedis !");
+                this.playerBean = SerializeUtil.deserialize(SerializeUtil.Mode.JSON, PlayerBean.class, jedis.hget(key + this.playerUniqueID, "data"));
+            } else {
+                Common.log("&cDatabase: &9Chargement des datas à partir de la base de donnée !");
+                this.playerBean = this.api.getServerServiceManager().getPlayer(this.playerUniqueID, this.playerBean);
+            }
 
             Common.log(this.playerBean.toStringList());
 
