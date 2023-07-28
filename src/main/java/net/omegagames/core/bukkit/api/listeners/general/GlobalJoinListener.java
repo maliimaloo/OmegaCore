@@ -20,15 +20,17 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class GlobalJoinListener extends APIListener {
-    private static final Map<UUID, Boolean> onlineStatus = new HashMap<>();
+    private static final Map<UUID, CompletableFuture<Boolean>> onlineStatus = new HashMap<>();
 
     public GlobalJoinListener(BukkitCore plugin) {
         super(plugin);
     }
 
-    public static Map<UUID, Boolean> getOnlineStatus() {
+    public static Map<UUID, CompletableFuture<Boolean>> getOnlineStatus() {
         return onlineStatus;
     }
 
@@ -81,25 +83,23 @@ public class GlobalJoinListener extends APIListener {
 
         paramPlayerData.updateData();
 
-        final String paramKey = PlayerData.getKey() + player;
-        final String paramFieldOnline = PlayerData.getFieldOnline();
-        try (Jedis jedis = this.api.getBungeeResource()){
-            jedis.hset(paramKey, paramFieldOnline, Boolean.toString(false));
-            this.api.getPubSub().send(new PendingMessage("online_status_check", player.toString()));
+        final CompletableFuture<Boolean> future = new CompletableFuture<>();
+        GlobalJoinListener.getOnlineStatus().put(player, future);
 
-            Common.runLaterAsync(60, () -> {
-                boolean paramOnlineStatus = false;
-                if (jedis.hexists(PlayerData.getKey() + player, PlayerData.getFieldOnline())) {
-                    paramOnlineStatus = Boolean.parseBoolean(jedis.hget(paramKey, paramFieldOnline));
-                }
-
+        this.api.getPubSub().send(new PendingMessage("omegacore:player:online_status_check", player.toString()));
+        CompletableFuture.runAsync(() -> {
+            try {
+                boolean paramOnlineStatus = future.get(5, TimeUnit.SECONDS);
                 if (!paramOnlineStatus) {
                     Common.log("Le joueur " + player + " n'est pas connecté sur le réseau.");
                     this.api.getServerServiceManager().updatePlayer(paramPlayerData.getPlayerBean());
                 }
-            });
-        } catch (Throwable throwable) {
+            } catch (Throwable throwable) {
+                Common.throwError(throwable);
+            }
+        }).thenRun(() -> GlobalJoinListener.getOnlineStatus().remove(player)).exceptionally(throwable -> {
             Common.throwError(throwable);
-        }
+            return null;
+        });
     }
 }
