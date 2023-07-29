@@ -1,14 +1,19 @@
 package net.omegagames.core.bukkit.api.listeners.pubsub;
 
-import io.netty.util.concurrent.CompleteFuture;
 import net.omegagames.api.pubsub.IPacketsReceiver;
 import net.omegagames.api.pubsub.PendingMessage;
 import net.omegagames.core.bukkit.ApiImplementation;
 import net.omegagames.core.bukkit.api.listeners.general.GlobalJoinListener;
+import net.omegagames.core.bukkit.persistanceapi.database.Callback;
+import net.omegagames.core.bukkit.persistanceapi.database.MResultSet;
 import org.bukkit.Bukkit;
+import org.mineacademy.fo.Common;
 import org.mineacademy.fo.SerializeUtil;
+import org.mineacademy.fo.Valid;
 
+import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class GlobalUpdateListener implements IPacketsReceiver {
     private final ApiImplementation api;
@@ -19,16 +24,26 @@ public class GlobalUpdateListener implements IPacketsReceiver {
 
     @Override
     public void receive(String channel, String packet) {
-        if (channel.equals("online_status_check")) {
-            final UUID player = UUID.fromString(SerializeUtil.deserialize(SerializeUtil.Mode.JSON, String.class, packet));
-            if (Bukkit.getPlayer(player) != null) {
-                this.api.getPubSub().send(new PendingMessage("omegacore:player:online_status_response", player.toString()));
-            }
-        }
+        switch (channel) {
+            case "omegacore:player:online_status_check" -> {
+                final String[] params = packet.split(":");
+                final String paramServerName = params[0];
+                final UUID player = UUID.fromString(params[1]);
 
-        if (channel.equals("omegacore:player:online_status_response")) {
-            final UUID player = UUID.fromString(packet);
-            GlobalJoinListener.getOnlineStatus().get(player).complete(true);
+                if (Bukkit.getPlayer(player) != null && !Objects.equals(this.api.getServerName(), paramServerName)) {
+                    this.api.getPubSub().send("omegacore:player:online_status_response", player.toString());
+                }
+            }
+
+            case "omegacore:player:online_status_response" -> {
+                final String[] params = packet.split(":");
+                final UUID player = UUID.fromString(params[1]);
+
+                final CompletableFuture<Boolean> paramFuture = GlobalJoinListener.getOnlineStatus().get(player);
+                if (paramFuture != null) {
+                    paramFuture.complete(true);
+                }
+            }
         }
     }
 }

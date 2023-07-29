@@ -4,6 +4,7 @@ import net.omegagames.core.bukkit.api.jedis.DatabaseConnector;
 import net.omegagames.core.bukkit.api.jedis.RedisServer;
 import net.omegagames.core.bukkit.api.listeners.general.GlobalJoinListener;
 import net.omegagames.core.bukkit.persistanceapi.ServerServiceManager;
+import net.omegagames.core.bukkit.persistanceapi.database.DatabaseManager;
 import org.bukkit.Bukkit;
 import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.Valid;
@@ -60,6 +61,8 @@ public class BukkitCore extends SimplePlugin {
     @Override
     protected void onPluginStop() {
         this.getDatabaseConnector().killConnection();
+
+        this.getServerServiceManager().getDatabaseManager().close();
     }
 
     private void setupPlugin() {

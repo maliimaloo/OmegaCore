@@ -76,26 +76,22 @@ public class GlobalJoinListener extends APIListener {
     public void onQuit(PlayerQuitEvent paramEvent) {
         final UUID player = paramEvent.getPlayer().getUniqueId();
         final PlayerData paramPlayerData = this.api.getPlayerManager().getPlayerData(player);
-        if (paramPlayerData == null) {
-            Common.log("Le joueur " + player + " n'a pas de PlayerData.");
-            return;
-        }
 
-        paramPlayerData.updateData();
+        final CompletableFuture<Boolean> paramFuture = new CompletableFuture<>();
+        GlobalJoinListener.getOnlineStatus().put(player, paramFuture);
 
-        final CompletableFuture<Boolean> future = new CompletableFuture<>();
-        GlobalJoinListener.getOnlineStatus().put(player, future);
+        paramPlayerData.refreshIfNeeded();
 
-        this.api.getPubSub().send(new PendingMessage("omegacore:player:online_status_check", player.toString()));
+        this.api.getPubSub().send("omegacore:player:online_status_check", player.toString());
         CompletableFuture.runAsync(() -> {
             try {
-                boolean paramOnlineStatus = future.get(5, TimeUnit.SECONDS);
-                if (!paramOnlineStatus) {
-                    Common.log("Le joueur " + player + " n'est pas connecté sur le réseau.");
-                    this.api.getServerServiceManager().updatePlayer(paramPlayerData.getPlayerBean());
+                boolean paramOnlineStatus = paramFuture.get(5, TimeUnit.SECONDS);
+                if (paramOnlineStatus) {
+                    Common.log("Le joueur " + player + " est connecté sur le réseau.");
                 }
             } catch (Throwable throwable) {
-                Common.throwError(throwable);
+                Common.log("Le joueur " + player + " n'est pas connecté sur le réseau.");
+                this.api.getServerServiceManager().updatePlayer(paramPlayerData.getPlayerBean());
             }
         }).thenRun(() -> GlobalJoinListener.getOnlineStatus().remove(player)).exceptionally(throwable -> {
             Common.throwError(throwable);

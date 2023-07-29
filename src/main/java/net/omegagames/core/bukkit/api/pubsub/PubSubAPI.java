@@ -2,6 +2,7 @@ package net.omegagames.core.bukkit.api.pubsub;
 
 import net.omegagames.api.pubsub.*;
 import net.omegagames.core.bukkit.ApiImplementation;
+import net.omegagames.core.bukkit.settings.Settings;
 import org.mineacademy.fo.Common;
 import redis.clients.jedis.Jedis;
 
@@ -79,7 +80,10 @@ public class PubSubAPI implements IPubSubAPI {
 
     @Override
     public void send(String channel, String message) {
-        this.sender.publish(new PendingMessage(channel, message));
+        Common.log(Settings.Jedis.PREFIX + "[SEND] Channel: &f" + channel + "&9, Message: &f" + message + "&f.");
+
+        final String paramServerName = this.api.getServerName();
+        this.sender.publish(new PendingMessage(channel, paramServerName + ":" + message));
     }
 
     @Override
