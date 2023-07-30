@@ -1,7 +1,5 @@
 package net.omegagames.core.bukkit.api.listeners.general;
 
-import net.omegagames.api.pubsub.PendingMessage;
-import net.omegagames.core.bukkit.ApiImplementation;
 import net.omegagames.core.bukkit.BukkitCore;
 import net.omegagames.core.bukkit.api.player.PlayerData;
 import org.bukkit.entity.Player;
@@ -11,9 +9,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.SerializeUtil;
 import org.mineacademy.fo.exception.FoException;
-import redis.clients.jedis.Jedis;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -34,7 +30,7 @@ public class GlobalJoinListener extends APIListener {
         return onlineStatus;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    /*@EventHandler(priority = EventPriority.LOWEST)
     public void onConnect(AsyncPlayerPreLoginEvent paramEvent) {
         try {
             long startTime = System.currentTimeMillis();
@@ -43,8 +39,8 @@ public class GlobalJoinListener extends APIListener {
             //Chargement des data principal
             this.api.getPlayerManager().loadPlayer(player);
             Common.log("AsyncPrelogin Time: " + (System.currentTimeMillis() - startTime) + "ms.");
-        } catch (Exception exception) {
-            Common.error(exception);
+        } catch (Throwable throwable) {
+            Common.throwError(throwable);
             paramEvent.setKickMessage("Erreur lors du chargement de votre profil.");
             paramEvent.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
         }
@@ -56,21 +52,21 @@ public class GlobalJoinListener extends APIListener {
         Player paramPlayer = paramEvent.getPlayer();
 
         paramEvent.setJoinMessage("");
-        try {
-            PlayerData paramPlayerData = this.api.getPlayerManager().getPlayerData(paramPlayer.getUniqueId());
 
-            paramPlayerData.refreshIfNeeded();
-            paramPlayerData.getPlayerBean().setName(paramPlayer.getName());
-            paramPlayerData.getPlayerBean().setLastLogin(Timestamp.valueOf(LocalDateTime.now().plusHours(2)));
-            paramPlayerData.getPlayerBean().setLastIP(paramPlayer.getAddress().getAddress().getHostAddress());
-            paramPlayerData.updateData();
+        try {
+            PlayerDataOld paramPlayerDataOld = this.api.getPlayerManager().getPlayerData(paramPlayer.getUniqueId());
+
+            paramPlayerDataOld.getPlayerBean().setName(paramPlayer.getName());
+            paramPlayerDataOld.getPlayerBean().setLastLogin(Timestamp.valueOf(LocalDateTime.now().plusHours(2)));
+            paramPlayerDataOld.getPlayerBean().setLastIP(paramPlayer.getAddress().getAddress().getHostAddress());
+            paramPlayerDataOld.updateData();
 
             Common.log("Join Time: " + (System.currentTimeMillis() - startTime) + "ms.");
         } catch (Throwable throwable) {
             paramPlayer.kickPlayer("Erreur lors du chargement de votre profil.");
             throw new FoException(throwable, "Erreur lors du chargement du profil de " + paramPlayer.getName() + ".");
         }
-    }
+    }*/
 
     @EventHandler
     public void onQuit(PlayerQuitEvent paramEvent) {
@@ -79,8 +75,6 @@ public class GlobalJoinListener extends APIListener {
 
         final CompletableFuture<Boolean> paramFuture = new CompletableFuture<>();
         GlobalJoinListener.getOnlineStatus().put(player, paramFuture);
-
-        paramPlayerData.refreshIfNeeded();
 
         this.api.getPubSub().send("omegacore:player:online_status_check", player.toString());
         CompletableFuture.runAsync(() -> {

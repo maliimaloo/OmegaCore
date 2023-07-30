@@ -2,98 +2,29 @@ package net.omegagames.core.bukkit.api.player;
 
 import net.omegagames.api.player.AbstractPlayerData;
 import net.omegagames.api.player.IFinancialCallback;
-import net.omegagames.core.bukkit.ApiImplementation;
-import net.omegagames.core.bukkit.BukkitCore;
 import net.omegagames.core.bukkit.persistanceapi.beans.players.PlayerBean;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Messenger;
-import org.mineacademy.fo.SerializeUtil;
-import org.mineacademy.fo.exception.FoException;
 import redis.clients.jedis.Jedis;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class PlayerData extends AbstractPlayerData {
-    protected final ApiImplementation api;
-    protected final PlayerDataManager manager;
+    private final Jedis jedis;
+    private final String key;
 
-    private PlayerBean playerBean;
-
-    private long lastRefresh;
-    private final UUID playerUniqueID;
-
-    private final static String key = "playerdata:";
-    private final static String fieldData = "data";
-    private final static String fieldOnline = "online";
-
-    private boolean loaded = false;
-
-    protected PlayerData(UUID playerUniqueID, ApiImplementation api, PlayerDataManager manager) {
-        this.playerUniqueID = playerUniqueID;
-        this.api = api;
-        this.manager = manager;
-
-        this.playerBean = new PlayerBean(this.playerUniqueID, "", null, 0, null, null, null, 0);
-        this.refreshData();
-    }
-
-    public boolean refreshData() {
-        this.lastRefresh = System.currentTimeMillis();
-
-        //Load from redis
-        try (Jedis jedis = this.api.getBungeeResource()) {
-            if (jedis.exists(key + this.playerUniqueID)) {
-                Common.log("&cJedis: &9Chargement des datas à partir de Jedis !");
-                this.playerBean = SerializeUtil.deserialize(SerializeUtil.Mode.JSON, PlayerBean.class, jedis.hget(key + this.playerUniqueID, "data"));
-            } else {
-                Common.log("&cDatabase: &9Chargement des datas à partir de la base de donnée !");
-                this.playerBean = this.api.getServerServiceManager().getPlayer(this.playerUniqueID, this.playerBean);
-            }
-
-            Common.log(this.playerBean.toStringList());
-
-            this.loaded = true;
-            return true;
-        } catch (Throwable throwable) {
-            Common.throwError(throwable);
-        }
-
-        return false;
-    }
-
-    public void updateData() {
-        if (this.playerBean != null && this.loaded) {
-            Common.log("&cData: &9Sauvegarde des datas !");
-            Common.log(this.playerBean.toStringList());
-
-            try (Jedis jedis = this.api.getBungeeResource()) {
-                Common.log("&cJedis: &9Envoie dans Jedis !");
-                long paramResult = jedis.hset(key + this.playerUniqueID, "data", SerializeUtil.serialize(SerializeUtil.Mode.JSON, this.playerBean).toString());
-                switch ((int) paramResult) {
-                    case 1 -> Common.log("&cJedis: &9Enregistrement dans Jedis avec succès !");
-                    case 0 -> Common.log("&cJedis: &9Mise à jour dans Jedis avec succès !");
-                }
-            } catch (Throwable throwable) {
-                throw new FoException(throwable);
-            }
-        }
-    }
-
-    /**
-     *  Doit être appelé avant de modifier les données.
-     */
-    public void refreshIfNeeded() {
-        if (this.lastRefresh + 1000 * 60 < System.currentTimeMillis()) {
-            this.refreshData();
-        }
+    public PlayerData(Jedis jedis, UUID uniqueId) {
+        this.jedis = jedis;
+        this.key = "omegacore:account:" + uniqueId.toString();
     }
 
     @Override
-    public UUID getPlayerID() {
-        return this.playerUniqueID;
+    public UUID getUniqueId() {
+        return UUID.fromString(this.getHashValue("uniqueId"));
     }
 
     /**
@@ -102,23 +33,83 @@ public class PlayerData extends AbstractPlayerData {
      * ========================
      */
     @Override
-    public String getDisplayName() {
-        return this.hasNickname() ? this.getCustomName() : this.getEffectiveName();
-    }
-
-    @Override
     public String getEffectiveName() {
-        return this.playerBean.getName();
+        return this.getHashValue("name");
     }
 
     @Override
     public String getCustomName() {
-        return this.playerBean.getNickName();
+        return this.getHashValue("customName");
+    }
+
+    @Override
+    public String getDisplayName() {
+        return this.getCustomName() != null ? this.getCustomName() : this.getEffectiveName();
+    }
+
+    @Override
+    public void setEffectiveName(String name) {
+        this.setHashValue("name", name);
+    }
+
+    @Override
+    public void setCustomName(String name) {
+        this.setHashValue("customName", name);
     }
 
     @Override
     public boolean hasNickname() {
-        return this.getCustomName() != null && !this.getCustomName().equals("null");
+        return this.getCustomName() != null;
+    }
+
+    /**
+     * ========================
+     * > State management
+     * ========================
+     */
+    @Override
+    public Timestamp getLastLogin() {
+        return Timestamp.valueOf(this.getHashValue("lastLogin"));
+    }
+
+    @Override
+    public Timestamp getFirstLogin() {
+        return Timestamp.valueOf(this.getHashValue("firstLogin"));
+    }
+
+    @Override
+    public String getLastIp() {
+        return this.getHashValue("lastIp");
+    }
+
+    @Override
+    public void setLastLogin(Timestamp lastLogin) {
+        this.setHashValue("lastLogin", lastLogin.toString());
+    }
+
+    @Override
+    public void setFirstLogin(Timestamp firstLogin) {
+        this.setHashValue("firstLogin", firstLogin.toString());
+    }
+
+    @Override
+    public void setLastIp(String lastIp) {
+        this.setHashValue("lastIp", lastIp);
+    }
+
+    /**
+     * ========================
+     * > Groupe management
+     * ========================
+     */
+    @Override
+    public Long getGroupId() {
+        return Long.parseLong(this.getHashValue("groupId"));
+    }
+
+    @Override
+    public void setGroupId(Long groupId) {
+        this.setHashValue("groupId", groupId.toString());
     }
 
     /**
@@ -127,78 +118,92 @@ public class PlayerData extends AbstractPlayerData {
      * ========================
      */
     @Override
-    public void creditCoins(long amount, String reason, boolean applyMultiplier, IFinancialCallback iFinancialCallback) {
-        this.creditEconomy(0, amount, reason, applyMultiplier, iFinancialCallback);
+    public long getOmegaCoins() {
+        return Integer.parseInt(this.getHashValue("omegaCoins"));
     }
 
     @Override
-    public void withdrawCoins(long amount, IFinancialCallback iFinancialCallback) {
-        BukkitCore.getInstance().getExecutor().execute(() -> {
-            long result = this.decreaseCoins(amount);
-            if (iFinancialCallback != null) {
-                iFinancialCallback.done(result, -amount, null);
-            }
-        });
+    public void creditOmegaCoins(long amount, String reason, boolean applyMultiplier, IFinancialCallback financialCallback) {
+        this.creditEconomy(0, amount, reason, applyMultiplier, financialCallback);
     }
 
     @Override
-    public long increaseCoins(long incrBy) {
-        this.refreshData();
-        int result = (int) (this.playerBean.getOmega() + incrBy);
-        this.playerBean.setOmega(result);
-        this.updateData();
+    public void withdrawOmegaCoins(long amount, String reason, IFinancialCallback financialCallback) {
+        this.creditEconomy(0, -amount, reason, false, financialCallback);
+    }
+
+    @Override
+    public long increaseOmegaCoins(long increaseBy) {
+        int result = (int) (this.getOmegaCoins() + (int) increaseBy);
+        this.setHashValue("omegaCoins", Integer.toString(result));
         return result;
     }
 
     @Override
-    public long decreaseCoins(long decrBy) {
-        return this.increaseCoins(-decrBy);
+    public long decreaseOmegaCoins(long decreaseBy) {
+        return this.increaseOmegaCoins(-decreaseBy);
     }
-
-    @Override
-    public long getOmega() {
-        this.refreshIfNeeded();
-        return this.playerBean.getOmega();
-    }
-
-    public PlayerBean getPlayerBean() {
-        return this.playerBean;
-    }
-
-
 
     private void creditEconomy(int type, long amountFinal, String reason, boolean applyMultiplier, IFinancialCallback financialCallback) {
-        BukkitCore.getInstance().getExecutor().execute(() -> {
+        Common.runAsync(() ->  {
             try {
-                String message;
+                String message = "Aucune raison spécifiée.";
                 if (reason != null) {
                     message = reason;
-                    if (this.getPlayerID() != null) {
-                        Player paramReceiver = Bukkit.getPlayer(this.getPlayerID());
-                        Messenger.success(paramReceiver, "Vous venez de recevoir " + amountFinal + " omega. [" + message + "]" );
+                }
+
+                if (this.getUniqueId() != null) {
+                    Player paramReceiver = Bukkit.getPlayer(this.getUniqueId());
+                    if (amountFinal > 0) {
+                        Messenger.success(paramReceiver, "Vous venez de recevoir " + amountFinal + " omega. [" + message + "]");
+                    } else {
+                        Messenger.success(paramReceiver, "Vous venez de perdre " + amountFinal + " omega. [" + message + "]");
                     }
                 }
 
-                long result = (type == 0) ? this.increaseCoins(amountFinal) : 0;
+                long result = (type == 0) ? this.increaseOmegaCoins(amountFinal) : 0;
 
                 if (financialCallback != null) {
                     financialCallback.done(result, amountFinal, null);
                 }
-            } catch (Exception exception) {
-                exception.printStackTrace();
+            } catch (Throwable throwable) {
+                Common.throwError(throwable);
             }
         });
     }
 
-    public static String getKey() {
-        return key;
+    /**
+     * ========================
+     * > PlayerBean management
+     * ========================
+     */
+    public PlayerBean getPlayerBean() {
+        return new PlayerBean(
+                this.getUniqueId(),
+                this.getEffectiveName(),
+                this.getCustomName(),
+                (int) this.getOmegaCoins(),
+                this.getLastLogin(),
+                this.getFirstLogin(),
+                this.getLastIp(),
+                this.getGroupId()
+        );
     }
 
-    public static String getFieldData() {
-        return fieldData;
+    /**
+     * ========================
+     * > Jedis management
+     * ========================
+     */
+    private String getHashValue(String hash) {
+        try (Jedis jedis = this.jedis) {
+            return jedis.hget(this.key, hash);
+        }
     }
 
-    public static String getFieldOnline() {
-        return fieldOnline;
+    private void setHashValue(String hash, String value) {
+        try (Jedis jedis = this.jedis) {
+            jedis.hset(this.key, hash, value);
+        }
     }
 }

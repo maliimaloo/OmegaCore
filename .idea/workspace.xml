@@ -6,12 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="940e35d5-2514-4d4a-934b-03e782247ed0" name="Changes" comment="Init commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/BukkitCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/BukkitCore.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/general/GlobalJoinListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/general/GlobalJoinListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/pubsub/GlobalUpdateListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/pubsub/GlobalUpdateListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/pubsub/PubSubAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/pubsub/PubSubAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/settings.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/settings.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerDataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerDataManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/persistanceapi/beans/players/PlayerBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/persistanceapi/beans/players/PlayerBean.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -171,7 +169,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690537274796</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Init commit">
+      <created>1690624978926</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1690624978926</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
