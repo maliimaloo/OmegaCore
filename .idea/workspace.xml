@@ -5,32 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="940e35d5-2514-4d4a-934b-03e782247ed0" name="Changes" comment="Init commit">
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/commands/credit/CreditCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/commands/credit/CreditHelpCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/commands/credit/CreditManagerCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/util/CommandUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/util/LangUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/util/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/ApiImplementation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/ApiImplementation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/BukkitCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/BukkitCore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/jedis/DatabaseConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/jedis/DatabaseConnector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/jedis/RedisServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/jedis/RedisServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/general/GlobalJoinListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/general/GlobalJoinListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/pubsub/GlobalUpdateListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/pubsub/GlobalUpdateListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerDataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerDataManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/pubsub/PubSubAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/pubsub/PubSubAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/persistanceapi/ServerServiceManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/persistanceapi/ServerServiceManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/persistanceapi/beans/players/PlayerBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/persistanceapi/beans/players/PlayerBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/persistanceapi/database/Callback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/persistanceapi/database/Callback.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/persistanceapi/database/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/persistanceapi/database/DatabaseManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/persistanceapi/database/MResultSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/persistanceapi/database/MResultSet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/persistanceapi/datamanager/PlayerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/persistanceapi/datamanager/PlayerManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/persistanceapi/utils/Transcoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/persistanceapi/utils/Transcoder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/settings/Settings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/settings/Settings.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -205,7 +180,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690710868766</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Init commit">
+      <created>1691016865017</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1691016865017</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

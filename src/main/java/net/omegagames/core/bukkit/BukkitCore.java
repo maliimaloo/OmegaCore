@@ -92,13 +92,6 @@ public class BukkitCore extends SimplePlugin {
         super.registerEvents(new GlobalJoinListener(this));
     }
 
-    private RedisServer redisServer() {
-        final String paramBungeeIp = Settings.Jedis.BUNGEE_IP;
-        final String paramBungeePassword = Settings.Jedis.BUNGEE_PASSWORD;
-        final Integer paramBungeePort = Settings.Jedis.BUNGEE_PORT;
-        return new RedisServer(paramBungeeIp, paramBungeePort, paramBungeePassword);
-    }
-
     @Override
     public boolean suggestPaper() {
         return false;
@@ -114,5 +107,12 @@ public class BukkitCore extends SimplePlugin {
 
     public static BukkitCore getInstance() {
         return (BukkitCore) SimplePlugin.getInstance();
+    }
+
+    private RedisServer redisServer() {
+        final String paramBungeeIp = Settings.Jedis.BUNGEE_IP;
+        final String paramBungeePassword = Settings.Jedis.BUNGEE_PASSWORD;
+        final Integer paramBungeePort = Settings.Jedis.BUNGEE_PORT;
+        return new RedisServer(paramBungeeIp, paramBungeePort, paramBungeePassword);
     }
 }
