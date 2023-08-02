@@ -1,4 +1,4 @@
-package net.omegagames.core.bukkit.persistanceapi.database;
+package net.omegagames.core.persistanceapi.database;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;

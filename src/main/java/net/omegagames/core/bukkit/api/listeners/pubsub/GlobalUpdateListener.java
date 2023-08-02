@@ -1,15 +1,11 @@
 package net.omegagames.core.bukkit.api.listeners.pubsub;
 
 import net.omegagames.api.pubsub.IPacketsReceiver;
-import net.omegagames.api.pubsub.PendingMessage;
 import net.omegagames.core.bukkit.ApiImplementation;
 import net.omegagames.core.bukkit.api.listeners.general.GlobalJoinListener;
-import net.omegagames.core.bukkit.persistanceapi.database.Callback;
-import net.omegagames.core.bukkit.persistanceapi.database.MResultSet;
+import net.omegagames.core.bukkit.api.player.PlayerData;
 import org.bukkit.Bukkit;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.SerializeUtil;
-import org.mineacademy.fo.Valid;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -42,6 +38,14 @@ public class GlobalUpdateListener implements IPacketsReceiver {
                 final CompletableFuture<Boolean> paramFuture = GlobalJoinListener.getOnlineStatus().get(player);
                 if (paramFuture != null) {
                     paramFuture.complete(true);
+                }
+            }
+
+            case "__keyevent@0__:expired" -> {
+                if (packet.startsWith("omegacore:account:")) {
+                    UUID playerId = UUID.fromString(packet.split(":")[2]);
+                    PlayerData paramPlayerData = this.api.getPlayerManager().getPlayerData(playerId);
+                    this.api.getServerServiceManager().updatePlayer(paramPlayerData.getPlayerBean());
                 }
             }
         }

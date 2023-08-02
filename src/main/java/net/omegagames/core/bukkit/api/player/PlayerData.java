@@ -2,24 +2,28 @@ package net.omegagames.core.bukkit.api.player;
 
 import net.omegagames.api.player.AbstractPlayerData;
 import net.omegagames.api.player.IFinancialCallback;
-import net.omegagames.core.bukkit.persistanceapi.beans.players.PlayerBean;
+import net.omegagames.core.bukkit.ApiImplementation;
+import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.MathUtil;
 import org.mineacademy.fo.Messenger;
 import redis.clients.jedis.Jedis;
 
 import java.sql.Timestamp;
 import java.util.UUID;
 
-@SuppressWarnings("unused")
 public class PlayerData extends AbstractPlayerData {
-    private final Jedis jedis;
-    private final String key;
+    private final ApiImplementation api;
+    private final String jedisKey;
 
-    public PlayerData(Jedis jedis, UUID uniqueId) {
-        this.jedis = jedis;
-        this.key = "omegacore:account:" + uniqueId.toString();
+    public PlayerData(ApiImplementation api, UUID uniqueId) {
+        this.api = api;
+        this.jedisKey = "omegacore:account:" + uniqueId.toString();
+
+        this.loadToJedis(uniqueId);
+        this.persist();
     }
 
     @Override
@@ -155,9 +159,9 @@ public class PlayerData extends AbstractPlayerData {
                 if (this.getUniqueId() != null) {
                     Player paramReceiver = Bukkit.getPlayer(this.getUniqueId());
                     if (amountFinal > 0) {
-                        Messenger.success(paramReceiver, "Vous venez de recevoir " + amountFinal + " omega. [" + message + "]");
+                        Messenger.success(paramReceiver, "&aVous venez de recevoir " + amountFinal + " crédits. [" + message + "]");
                     } else {
-                        Messenger.success(paramReceiver, "Vous venez de perdre " + amountFinal + " omega. [" + message + "]");
+                        Messenger.success(paramReceiver, "&aVous venez de perdre " + Math.abs(amountFinal) + " crédits. [" + message + "]");
                     }
                 }
 
@@ -195,15 +199,54 @@ public class PlayerData extends AbstractPlayerData {
      * > Jedis management
      * ========================
      */
+    @Override
+    public void expire() {
+        try (Jedis jedis = this.api.getBungeeResource()) {
+            jedis.expire(this.jedisKey, ((60 * 60) * 24));
+        }
+    }
+
+    @Override
+    public void persist() {
+        try (Jedis jedis = this.api.getBungeeResource()) {
+            jedis.persist(this.jedisKey);
+        }
+    }
+
+    @Override
+    public void delete() {
+        try (Jedis jedis = this.api.getBungeeResource()) {
+            jedis.del(this.jedisKey);
+        }
+    }
+
+    public String getJedisKey() {
+        return this.jedisKey;
+    }
+
     private String getHashValue(String hash) {
-        try (Jedis jedis = this.jedis) {
-            return jedis.hget(this.key, hash);
+        try (Jedis jedis = this.api.getBungeeResource()) {
+            return jedis.hget(this.jedisKey, hash);
         }
     }
 
     private void setHashValue(String hash, String value) {
-        try (Jedis jedis = this.jedis) {
-            jedis.hset(this.key, hash, value);
+        try (Jedis jedis = this.api.getBungeeResource()) {
+            jedis.hset(this.jedisKey, hash, value == null ? "" : value);
+        }
+    }
+
+    private void loadToJedis(UUID uniqueId) {
+        try (Jedis jedis = this.api.getBungeeResource()) {
+            PlayerBean paramPlayerBean = this.api.getServerServiceManager().getPlayer(uniqueId);
+            jedis.hsetnx(this.jedisKey, "uniqueId", paramPlayerBean.getUniqueId().toString());
+            jedis.hsetnx(this.jedisKey, "name", paramPlayerBean.getName());
+            jedis.hsetnx(this.jedisKey, "customName", paramPlayerBean.getNickName());
+            jedis.hsetnx(this.jedisKey, "omegaCoins", Integer.toString(paramPlayerBean.getOmega()));
+            jedis.hsetnx(this.jedisKey, "lastLogin", paramPlayerBean.getLastLogin().toString());
+            jedis.hsetnx(this.jedisKey, "firstLogin", paramPlayerBean.getFirstLogin().toString());
+            jedis.hsetnx(this.jedisKey, "lastIp", paramPlayerBean.getLastIP());
+            jedis.hsetnx(this.jedisKey, "groupId", Long.toString(paramPlayerBean.getGroupId()));
         }
     }
 }

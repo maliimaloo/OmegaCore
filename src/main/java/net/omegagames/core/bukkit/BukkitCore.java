@@ -1,18 +1,16 @@
 package net.omegagames.core.bukkit;
 
-import net.omegagames.core.bukkit.api.jedis.DatabaseConnector;
-import net.omegagames.core.bukkit.api.jedis.RedisServer;
+import net.omegagames.core.jedis.DatabaseConnector;
+import net.omegagames.core.jedis.RedisServer;
 import net.omegagames.core.bukkit.api.listeners.general.GlobalJoinListener;
-import net.omegagames.core.bukkit.persistanceapi.ServerServiceManager;
-import net.omegagames.core.bukkit.persistanceapi.database.DatabaseManager;
+import net.omegagames.core.persistanceapi.ServerServiceManager;
 import org.bukkit.Bukkit;
 import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.exception.FoException;
-import org.mineacademy.fo.menu.Menu;
 import org.mineacademy.fo.plugin.SimplePlugin;
-import net.omegagames.core.bukkit.settings.Settings;
+import net.omegagames.core.bukkit.api.settings.Settings;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -32,11 +30,9 @@ public class BukkitCore extends SimplePlugin {
     public ApiImplementation getAPI() {
         return this.api;
     }
-
     public ServerServiceManager getServerServiceManager() {
         return this.serverServiceManager;
     }
-
     public DatabaseConnector getDatabaseConnector() {
         return this.databaseConnector;
     }
@@ -44,13 +40,22 @@ public class BukkitCore extends SimplePlugin {
     public DebugListener getDebugListener() {
         return this.debugListener;
     }
-
     public ScheduledExecutorService getExecutor() {
         return this.executor;
     }
 
     public String getServerName() {
         return this.serverName;
+    }
+
+    @Override
+    protected void onPluginLoad() {
+        if (!MinecraftVersion.atLeast(MinecraftVersion.V.v1_17)) {
+            Debugger.saveError(new FoException(), "Impossible d'activer le plugin: Version de Minecraft non supporté !");
+            super.setEnabled(false);
+            Bukkit.getServer().shutdown();
+            return;
+        }
     }
 
     @Override
@@ -61,7 +66,6 @@ public class BukkitCore extends SimplePlugin {
     @Override
     protected void onPluginStop() {
         this.getDatabaseConnector().killConnection();
-
         this.getServerServiceManager().getDatabaseManager().close();
     }
 
@@ -85,8 +89,6 @@ public class BukkitCore extends SimplePlugin {
         this.databaseConnector = new DatabaseConnector(this, this.redisServer());
 
         this.api = new ApiImplementation(this);
-
-        this.api.getBungeeResource().flushAll();
         super.registerEvents(new GlobalJoinListener(this));
     }
 

@@ -2,7 +2,7 @@ package net.omegagames.core.bukkit.api.pubsub;
 
 import net.omegagames.api.pubsub.*;
 import net.omegagames.core.bukkit.ApiImplementation;
-import net.omegagames.core.bukkit.settings.Settings;
+import net.omegagames.core.bukkit.api.settings.Settings;
 import org.mineacademy.fo.Common;
 import redis.clients.jedis.Jedis;
 

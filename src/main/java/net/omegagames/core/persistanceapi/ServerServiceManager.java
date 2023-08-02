@@ -1,8 +1,8 @@
-package net.omegagames.core.bukkit.persistanceapi;
+package net.omegagames.core.persistanceapi;
 
-import net.omegagames.core.bukkit.persistanceapi.beans.players.PlayerBean;
-import net.omegagames.core.bukkit.persistanceapi.database.DatabaseManager;
-import net.omegagames.core.bukkit.persistanceapi.datamanager.PlayerManager;
+import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
+import net.omegagames.core.persistanceapi.database.DatabaseManager;
+import net.omegagames.core.persistanceapi.datamanager.PlayerManager;
 
 import java.util.UUID;
 
@@ -25,9 +25,15 @@ public class ServerServiceManager {
     ============================================*/
 
     // Get the player by UUID
-    public synchronized PlayerBean getPlayer(UUID uuid, PlayerBean player) {
+    public synchronized PlayerBean getPlayer(UUID uuid) {
         // Get the PlayerBean
-        return this.playerManager.getPlayer(uuid, player);
+        return this.playerManager.getPlayer(uuid);
+    }
+
+    // Get the player by username
+    public synchronized PlayerBean getPlayer(String username) {
+        // Get the PlayerBean
+        return this.playerManager.getPlayerByName(username);
     }
 
     // Update the player
@@ -36,8 +42,8 @@ public class ServerServiceManager {
     }
 
     // Create the player
-    public synchronized void createPlayer(PlayerBean player) {
+    public synchronized boolean createPlayer(PlayerBean player) {
         // Create the player
-        this.playerManager.createPlayer(player);
+        return this.playerManager.createPlayer(player);
     }
 }

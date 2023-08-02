@@ -1,4 +1,4 @@
-package net.omegagames.core.bukkit.api.jedis;
+package net.omegagames.core.jedis;
 
 import net.omegagames.core.bukkit.BukkitCore;
 import org.bukkit.Bukkit;
@@ -11,12 +11,13 @@ import redis.clients.jedis.JedisPoolConfig;
 import java.util.concurrent.TimeUnit;
 
 public class DatabaseConnector {
-    private final BukkitCore plugin;
+    private final BukkitCore pluginBukkit;
+
     private JedisPool cachePool;
     private final RedisServer bungee;
 
-    public DatabaseConnector(BukkitCore plugin, RedisServer bungee) {
-        this.plugin = plugin;
+    public DatabaseConnector(BukkitCore pluginBukkit, RedisServer bungee) {
+        this.pluginBukkit = pluginBukkit;
         this.bungee = bungee;
 
         this.initiateConnection();
@@ -33,13 +34,15 @@ public class DatabaseConnector {
 
     private void initiateConnection() {
         this.connect();
-        this.plugin.getExecutor().scheduleAtFixedRate(() -> {
+
+        this.pluginBukkit.getExecutor().scheduleAtFixedRate(() -> {
             try {
                 this.cachePool.getResource().close();
             } catch (FoException exception) {
                 Common.throwError(exception, "Error redis connection, Try to reconnect!");
                 this.connect();
             }
+
         }, 0, 10, TimeUnit.SECONDS);
     }
 
@@ -50,6 +53,7 @@ public class DatabaseConnector {
 
         try {
             this.cachePool = new JedisPool(paramJedisConfig, this.bungee.getIp(), this.bungee.getPort(), 0, this.bungee.getPassword());
+            this.cachePool.getResource().configSet("notify-keyspace-events", "Ex");
             this.cachePool.getResource().close();
 
             Common.logNoPrefix("&7[&9Jedis&7] &aConnection à la database.");

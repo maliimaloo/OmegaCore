@@ -14,12 +14,11 @@ public class PlayerDataManager implements IPlayerDataManager {
 
     @Override
     public PlayerData getPlayerData(UUID playerId) {
-        return new PlayerData(this.api.getBungeeResource(), playerId);
+        return new PlayerData(this.api, playerId);
     }
 
     @Override
     public void connectToServer(UUID uuid, String s) {
-
 
     }
 }

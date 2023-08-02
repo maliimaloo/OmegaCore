@@ -1,4 +1,4 @@
-package net.omegagames.core.bukkit.persistanceapi.database;
+package net.omegagames.core.persistanceapi.database;
 
 public interface Callback<T> {
     void onSuccess(T var1);
