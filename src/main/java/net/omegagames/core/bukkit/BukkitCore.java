@@ -4,11 +4,14 @@ package net.omegagames.core.bukkit;
 
 import net.omegagames.core.bukkit.api.expansion.CreditPlaceholderExpansion;
 import net.omegagames.core.bukkit.api.listeners.general.GlobalJoinListener;
+import net.omegagames.core.bukkit.api.scoreboard.Scoreboard;
 import net.omegagames.core.bukkit.api.settings.Settings;
 import net.omegagames.core.jedis.DatabaseConnector;
 import net.omegagames.core.jedis.RedisServer;
 import net.omegagames.core.persistanceapi.ServerServiceManager;
 import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitTask;
+import org.mineacademy.fo.Common;
 import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.debug.Debugger;
@@ -29,10 +32,14 @@ public class BukkitCore extends SimplePlugin {
     private ScheduledExecutorService executor;
     private String serverName;
 
+    private BukkitTask task;
+
     public BukkitCore() {
     }
 
-    // Méthodes pour obtenir différentes composantes
+    /* -------------------------------------------------------
+     * Méthodes pour obtenir différentes composantes du plugin.
+     * ------------------------------------------------------- */
 
     /**
      * Récupère l'instance de l'implémentation de l'API.
@@ -88,6 +95,10 @@ public class BukkitCore extends SimplePlugin {
         return serverName;
     }
 
+
+    /* -------------------------------------------------------
+     * Méthodes d'allumage et d'extinction du plugin.
+     * ------------------------------------------------------- */
     @Override
     protected void onPluginLoad() {
         // Vérifie si la version de Minecraft est prise en charge avant d'activer le plugin
@@ -109,6 +120,10 @@ public class BukkitCore extends SimplePlugin {
         // Actions de nettoyage lorsque le plugin s'arrête
         this.databaseConnector.killConnection();
         this.serverServiceManager.getDatabaseManager().close();
+
+        if (this.task != null && !this.task.isCancelled()) {
+            this.task.cancel();
+        }
     }
 
     /**
@@ -128,16 +143,15 @@ public class BukkitCore extends SimplePlugin {
 
         this.debugListener = new DebugListener();
 
-        final String paramUrl = Settings.Database.URL;
-        final String paramUsername = Settings.Database.USERNAME;
-        final String paramPassword = Settings.Database.PASSWORD;
-        this.serverServiceManager = new ServerServiceManager(paramUrl, paramUsername, paramPassword);
-        this.databaseConnector = new DatabaseConnector(this, redisServer());
+        this.serverServiceManager = this.initServerServiceManager();
+        this.databaseConnector = this.initDatabaseconnector();
 
         this.api = new ApiImplementation(this);
         super.registerEvents(new GlobalJoinListener(this));
 
         new CreditPlaceholderExpansion().register();
+
+        this.task = Common.runTimer(0, 1, Scoreboard.getInstance());
     }
 
     @Override
@@ -151,6 +165,7 @@ public class BukkitCore extends SimplePlugin {
      *
      * @return La version minimale de Minecraft requise.
      */
+    @Override
     public MinecraftVersion.V getMinimumVersion() {
         return MinecraftVersion.V.v1_17;
     }
@@ -173,15 +188,31 @@ public class BukkitCore extends SimplePlugin {
         return (BukkitCore) SimplePlugin.getInstance();
     }
 
+
     /**
-     * Crée une nouvelle instance de RedisServer en fonction des paramètres configurés dans les paramètres.
+     * Initialise le connecteur de la base de données pour Jedis.
      *
-     * @return L'instance de RedisServer.
+     * @return Le connecteur de la base de données.
      */
-    private RedisServer redisServer() {
+    private DatabaseConnector initDatabaseconnector() {
         final String paramBungeeIp = Settings.Jedis.BUNGEE_IP;
         final String paramBungeePassword = Settings.Jedis.BUNGEE_PASSWORD;
         final Integer paramBungeePort = Settings.Jedis.BUNGEE_PORT;
-        return new RedisServer(paramBungeeIp, paramBungeePort, paramBungeePassword);
+        final RedisServer paramRedisServer = new RedisServer(paramBungeeIp, paramBungeePort, paramBungeePassword);
+
+        return new DatabaseConnector(this, paramRedisServer);
+    }
+
+    /**
+     * Initialise le gestionnaire de services du serveur.
+     *
+     * @return Le gestionnaire de services du serveur.
+     */
+    private ServerServiceManager initServerServiceManager() {
+        final String paramDatabaseUrl = Settings.Database.URL;
+        final String paramDatabaseUsername = Settings.Database.USERNAME;
+        final String paramDatabasePassword = Settings.Database.PASSWORD;
+
+        return new ServerServiceManager(paramDatabaseUrl, paramDatabaseUsername, paramDatabasePassword);
     }
 }
