@@ -1,8 +1,8 @@
 package net.omegagames.core.bukkit.api.commands.credit;
 
+import net.omegagames.core.bukkit.api.settings.Settings;
 import net.omegagames.core.bukkit.api.util.CommandUtils;
 import net.omegagames.core.bukkit.api.util.Utils;
-import net.omegagames.core.bukkit.api.settings.Settings;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.model.SimpleComponent;

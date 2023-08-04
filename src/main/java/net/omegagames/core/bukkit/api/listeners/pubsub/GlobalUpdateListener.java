@@ -5,7 +5,6 @@ import net.omegagames.core.bukkit.ApiImplementation;
 import net.omegagames.core.bukkit.api.listeners.general.GlobalJoinListener;
 import net.omegagames.core.bukkit.api.player.PlayerData;
 import org.bukkit.Bukkit;
-import org.mineacademy.fo.Common;
 
 import java.util.Objects;
 import java.util.UUID;

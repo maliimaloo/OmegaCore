@@ -1,7 +1,7 @@
 package net.omegagames.core.persistanceapi.database;
 
-import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
 import net.omegagames.core.bukkit.api.settings.Settings;
+import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.database.SimpleDatabase;
 

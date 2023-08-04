@@ -1,7 +1,5 @@
 package net.omegagames.core.bukkit.api.util;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

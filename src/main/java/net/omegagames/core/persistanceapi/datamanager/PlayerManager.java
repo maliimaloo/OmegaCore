@@ -4,7 +4,6 @@ import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
 import net.omegagames.core.persistanceapi.database.DatabaseManager;
 import net.omegagames.core.persistanceapi.database.MResultSet;
 import net.omegagames.core.persistanceapi.utils.Transcoder;
-import org.mineacademy.fo.exception.FoException;
 
 import java.sql.Timestamp;
 import java.util.UUID;
