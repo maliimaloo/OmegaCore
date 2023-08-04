@@ -73,6 +73,7 @@ public class GlobalJoinListener extends APIListener {
             String paramHostAddress = Objects.requireNonNull(paramPlayer.getAddress()).getHostString();
             paramPlayerData.setLastIp(paramHostAddress);
 
+            this.plugin.getMain_scoreboard().show(paramPlayer);
             Common.log("Join Time: " + (System.currentTimeMillis() - startTime) + "ms.");
         } catch (Throwable throwable) {
             paramPlayer.kickPlayer("Erreur lors du chargement de votre profil.");

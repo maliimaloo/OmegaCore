@@ -141,12 +141,6 @@ public class CreditManagerCommand extends SimpleSubCommand {
         }
     }
 
-    @NotNull
-    @Override
-    public Command setPermissionMessage(@org.jetbrains.annotations.Nullable String permissionMessage) {
-        return super.setPermissionMessage(LangUtils.of(SimpleLocalization.NO_PERMISSION, SerializedMap.ofArray("{permission}", super.getPermission())));
-    }
-
     /**
      * Méthode pour traiter la commande /credit take
      */

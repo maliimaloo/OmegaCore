@@ -1,7 +1,6 @@
 package net.omegagames.core.bukkit;
 
-// ... (importations)
-
+import lombok.Getter;
 import net.omegagames.core.bukkit.api.expansion.CreditPlaceholderExpansion;
 import net.omegagames.core.bukkit.api.listeners.general.GlobalJoinListener;
 import net.omegagames.core.bukkit.api.scoreboard.Scoreboard;
@@ -10,12 +9,11 @@ import net.omegagames.core.jedis.DatabaseConnector;
 import net.omegagames.core.jedis.RedisServer;
 import net.omegagames.core.persistanceapi.ServerServiceManager;
 import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitTask;
-import org.mineacademy.fo.Common;
 import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.exception.FoException;
+import org.mineacademy.fo.model.SimpleScoreboard;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
 import java.util.concurrent.Executors;
@@ -32,7 +30,8 @@ public class BukkitCore extends SimplePlugin {
     private ScheduledExecutorService executor;
     private String serverName;
 
-    private BukkitTask task;
+    @Getter
+    private SimpleScoreboard main_scoreboard;
 
     public BukkitCore() {
     }
@@ -121,9 +120,7 @@ public class BukkitCore extends SimplePlugin {
         this.databaseConnector.killConnection();
         this.serverServiceManager.getDatabaseManager().close();
 
-        if (this.task != null && !this.task.isCancelled()) {
-            this.task.cancel();
-        }
+        this.getMain_scoreboard().stop();
     }
 
     /**
@@ -151,7 +148,7 @@ public class BukkitCore extends SimplePlugin {
 
         new CreditPlaceholderExpansion().register();
 
-        this.task = Common.runTimer(0, 1, Scoreboard.getInstance());
+        this.main_scoreboard = new Scoreboard();
     }
 
     @Override

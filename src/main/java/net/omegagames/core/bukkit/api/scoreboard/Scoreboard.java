@@ -1,17 +1,17 @@
 package net.omegagames.core.bukkit.api.scoreboard;
 
-import lombok.Getter;
+import org.mineacademy.fo.model.SimpleScoreboard;
+import org.mineacademy.fo.remain.Remain;
 
-public class Scoreboard implements Runnable {
-    @Getter
-    private final static Scoreboard instance = new Scoreboard();
+public class Scoreboard extends SimpleScoreboard {
+    public Scoreboard() {
+        super("§6§lOmegaGames");
 
-    private Scoreboard() {
-
+        super.addRows("§7§m------------------", "§7Joueurs: §f%player_online%", "§7§m------------------");
     }
 
     @Override
-    public void run() {
-
+    protected void onUpdate() {
+        super.setRow(1, "§7Joueurs: §f" + Remain.getOnlinePlayers().size());
     }
 }
