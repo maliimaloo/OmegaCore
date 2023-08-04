@@ -7,20 +7,27 @@ import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.MathUtil;
 import org.mineacademy.fo.Messenger;
 import redis.clients.jedis.Jedis;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 public class PlayerData extends AbstractPlayerData {
     private final ApiImplementation api;
     private final String jedisKey;
 
+    private final UUID uniqueId;
+    private boolean isLoaded = false;
+
     public PlayerData(ApiImplementation api, UUID uniqueId) {
         this.api = api;
         this.jedisKey = "omegacore:account:" + uniqueId.toString();
+        this.uniqueId = uniqueId;
 
         this.loadToJedis(uniqueId);
         this.persist();
@@ -28,7 +35,11 @@ public class PlayerData extends AbstractPlayerData {
 
     @Override
     public UUID getUniqueId() {
-        return UUID.fromString(this.getHashValue("uniqueId"));
+        return this.uniqueId;
+    }
+
+    public boolean isLoaded() {
+        return this.isLoaded;
     }
 
     /**
@@ -128,27 +139,20 @@ public class PlayerData extends AbstractPlayerData {
 
     @Override
     public void creditOmegaCoins(long amount, String reason, boolean applyMultiplier, IFinancialCallback financialCallback) {
-        this.creditEconomy(0, amount, reason, applyMultiplier, financialCallback);
+        this.creditEconomy(amount, reason, applyMultiplier, financialCallback);
     }
 
     @Override
     public void withdrawOmegaCoins(long amount, String reason, IFinancialCallback financialCallback) {
-        this.creditEconomy(0, -amount, reason, false, financialCallback);
+        this.creditEconomy(-amount, reason, false, financialCallback);
     }
 
     @Override
-    public long increaseOmegaCoins(long increaseBy) {
-        int result = (int) (this.getOmegaCoins() + (int) increaseBy);
-        this.setHashValue("omegaCoins", Integer.toString(result));
-        return result;
+    public boolean hasEnoughOmegaCoins(long amount) {
+        return this.getOmegaCoins() >= amount;
     }
 
-    @Override
-    public long decreaseOmegaCoins(long decreaseBy) {
-        return this.increaseOmegaCoins(-decreaseBy);
-    }
-
-    private void creditEconomy(int type, long amountFinal, String reason, boolean applyMultiplier, IFinancialCallback financialCallback) {
+    private void creditEconomy(long amountFinal, String reason, boolean applyMultiplier, IFinancialCallback financialCallback) {
         Common.runAsync(() ->  {
             try {
                 String message = "Aucune raison spécifiée.";
@@ -159,14 +163,18 @@ public class PlayerData extends AbstractPlayerData {
                 if (this.getUniqueId() != null) {
                     Player paramReceiver = Bukkit.getPlayer(this.getUniqueId());
                     if (amountFinal > 0) {
-                        Messenger.success(paramReceiver, "&aVous venez de recevoir " + amountFinal + " crédits. [" + message + "]");
+                        Messenger.success(paramReceiver, "&aVous venez de recevoir " + amountFinal + " oméga. [" + message + "]");
                     } else {
-                        Messenger.success(paramReceiver, "&aVous venez de perdre " + Math.abs(amountFinal) + " crédits. [" + message + "]");
+                        Messenger.success(paramReceiver, "&aVous venez de perdre " + Math.abs(amountFinal) + " oméga. [" + message + "]");
                     }
                 }
 
-                long result = (type == 0) ? this.increaseOmegaCoins(amountFinal) : 0;
+                int result = (int) (this.getOmegaCoins() + (int) amountFinal);
+                if (result < 0) {
+                    result = 0;
+                }
 
+                this.setHashValue("omegaCoins", Integer.toString(result));
                 if (financialCallback != null) {
                     financialCallback.done(result, amountFinal, null);
                 }
@@ -202,7 +210,7 @@ public class PlayerData extends AbstractPlayerData {
     @Override
     public void expire() {
         try (Jedis jedis = this.api.getBungeeResource()) {
-            jedis.expire(this.jedisKey, ((60 * 60) * 24));
+            jedis.expire(this.jedisKey, ((60 * 60) * 3));
         }
     }
 
@@ -220,10 +228,6 @@ public class PlayerData extends AbstractPlayerData {
         }
     }
 
-    public String getJedisKey() {
-        return this.jedisKey;
-    }
-
     private String getHashValue(String hash) {
         try (Jedis jedis = this.api.getBungeeResource()) {
             return jedis.hget(this.jedisKey, hash);
@@ -239,6 +243,10 @@ public class PlayerData extends AbstractPlayerData {
     private void loadToJedis(UUID uniqueId) {
         try (Jedis jedis = this.api.getBungeeResource()) {
             PlayerBean paramPlayerBean = this.api.getServerServiceManager().getPlayer(uniqueId);
+            if (Objects.isNull(paramPlayerBean)) {
+                return;
+            }
+
             jedis.hsetnx(this.jedisKey, "uniqueId", paramPlayerBean.getUniqueId().toString());
             jedis.hsetnx(this.jedisKey, "name", paramPlayerBean.getName());
             jedis.hsetnx(this.jedisKey, "customName", paramPlayerBean.getNickName());
@@ -247,6 +255,12 @@ public class PlayerData extends AbstractPlayerData {
             jedis.hsetnx(this.jedisKey, "firstLogin", paramPlayerBean.getFirstLogin().toString());
             jedis.hsetnx(this.jedisKey, "lastIp", paramPlayerBean.getLastIP());
             jedis.hsetnx(this.jedisKey, "groupId", Long.toString(paramPlayerBean.getGroupId()));
+            this.isLoaded = true;
         }
+    }
+
+    public boolean create() {
+        ZonedDateTime paramZonedParisTime = ZonedDateTime.now(ZoneId.of("Europe/Paris"));
+        return this.api.getServerServiceManager().createPlayer(new PlayerBean(this.getUniqueId(), "", "", 0, Timestamp.valueOf(paramZonedParisTime.toLocalDateTime()), Timestamp.valueOf(paramZonedParisTime.toLocalDateTime()), "", 0));
     }
 }

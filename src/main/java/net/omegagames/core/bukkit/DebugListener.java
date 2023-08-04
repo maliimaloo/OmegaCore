@@ -2,7 +2,6 @@ package net.omegagames.core.bukkit;
 
 import net.md_5.bungee.api.ChatColor;
 import net.omegagames.api.pubsub.IPatternReceiver;
-import net.omegagames.core.bukkit.api.network.IJoinHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -11,7 +10,7 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 @SuppressWarnings("unused")
-public class DebugListener implements IPatternReceiver, IJoinHandler {
+public class DebugListener implements IPatternReceiver {
     private final CopyOnWriteArraySet<UUID> debugs = new CopyOnWriteArraySet<>();
     private boolean console = false;
 
@@ -26,11 +25,6 @@ public class DebugListener implements IPatternReceiver, IJoinHandler {
         } else {
             this.console = !console;
         }
-    }
-
-    @Override
-    public void onLogout(Player player) {
-        debugs.remove(player.getUniqueId());
     }
 
     @Override

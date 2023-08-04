@@ -48,7 +48,7 @@ public final class Utils {
      * @return true si le joueur a la permission, sinon false.
      */
     public static boolean hasPermission(CommandSender paramSender, String paramString) {
-        if (paramString.isEmpty() || paramString.equals("none"))
+        if (paramString == null || paramString.isEmpty() || paramString.equals("none"))
             return true;
         return !(paramSender instanceof Player) || paramSender.hasPermission(paramString) || paramSender.isOp();
     }

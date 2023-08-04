@@ -28,12 +28,16 @@ public class CreditHelpCommand extends SimpleSubCommand {
                 .append("\n" + this.prefix + "&6<> &f- Arguments Optionnels")
                 .append("\n" + this.prefix);
 
-        if (Utils.hasPermission(super.getSender(), "arkacore.credit.give")) {
-            CommandUtils.createCommandComponent(commandComponent, super.getCurrentLabel(), super.getPlayer(), "give", "<joueur> <montant>", Collections.singletonList("\n &f- &cDonner &fdes crédits"), "arkacore.credit.give", CommandUtils.Action.SUGGEST_COMMAND.getHover());
+        if (Utils.hasPermission(super.getSender(), "arkacore.credit.give") || Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
+            CommandUtils.createCommandComponent(commandComponent, super.getCurrentLabel(), super.getPlayer(), "give", "<joueur> <montant>", Collections.singletonList("\n &f- &cDonner &fdes crédits"), "arkacore.credit.give|arkacore.credit.admin", CommandUtils.Action.SUGGEST_COMMAND.getHover());
         }
 
-        if (Utils.hasPermission(super.getSender(), "arkacore.credit.take")) {
-            CommandUtils.createCommandComponent(commandComponent, super.getCurrentLabel(), super.getPlayer(), "take", "<joueur> <montant>", Collections.singletonList("\n &f- &cRetirer &fdes crédits"), "arkacore.credit.take", CommandUtils.Action.SUGGEST_COMMAND.getHover());
+        if (Utils.hasPermission(super.getSender(), "arkacore.credit.take") || Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
+            CommandUtils.createCommandComponent(commandComponent, super.getCurrentLabel(), super.getPlayer(), "take", "<joueur> <montant>", Collections.singletonList("\n &f- &cRetirer &fdes crédits"), "arkacore.credit.take|arkacore.credit.admin", CommandUtils.Action.SUGGEST_COMMAND.getHover());
+        }
+
+        if (Utils.hasPermission(super.getSender(), "arkacore.credit.show") || Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
+            CommandUtils.createCommandComponent(commandComponent, super.getCurrentLabel(), super.getPlayer(), "show", "<joueur>", Collections.singletonList("\n &f- &cVoir &fles crédits"), "arkacore.credit.show|arkacore.credit.admin", CommandUtils.Action.SUGGEST_COMMAND.getHover());
         }
 
         commandComponent

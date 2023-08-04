@@ -39,11 +39,6 @@ public class PlayerManager {
             String lastIP = paramResultSet.getString(PlayerBean.fieldLastIp);
             long groupId = paramResultSet.getLong(PlayerBean.fieldGroupId);
             return new PlayerBean(UUID.fromString(playerUuid), name, nickName, omega , lastLogin, firsLogin, lastIP, groupId);
-        } else {
-            PlayerBean playerBean = new PlayerBean(uuid, "", null, 0, null, null, null, 0);
-            if (this.createPlayer(playerBean)) {
-                return this.getPlayer(uuid);
-            }
         }
 
         return null;
