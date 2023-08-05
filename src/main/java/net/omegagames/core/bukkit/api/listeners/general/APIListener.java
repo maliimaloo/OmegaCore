@@ -11,6 +11,6 @@ abstract class APIListener implements Listener
 
     APIListener(BukkitCore plugin) {
         this.plugin = plugin;
-        this.api = plugin.getAPI();
+        this.api = plugin.getApi();
     }
 }

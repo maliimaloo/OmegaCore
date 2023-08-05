@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- Change to your own main package name. -->
-    <groupId>net.omegagames</groupId>
+    <groupId>net.arkamc</groupId>
 
     <!-- Change to your plugin name, must be lowed cased and match your end package name. No spaces. -->
-    <artifactId>OmegaCore</artifactId>
+    <artifactId>ArkaCore</artifactId>
 
     <!-- Change to your plugin's name. Can contain capital letters, but do NOT use spaces. -->
-    <name>OmegaCore</name>
+    <name>ArkaCore</name>
 
     <!-- Change to the appropriate plugin's version, starting at 1.0.0. -->
     <version>1.0.0</version>

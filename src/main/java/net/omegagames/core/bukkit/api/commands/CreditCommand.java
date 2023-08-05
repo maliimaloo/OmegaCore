@@ -1,35 +1,40 @@
-package net.omegagames.core.bukkit.api.commands.credit;
+package net.omegagames.core.bukkit.api.commands;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import net.omegagames.core.bukkit.ApiImplementation;
 import net.omegagames.core.bukkit.api.player.PlayerData;
+import net.omegagames.core.bukkit.api.settings.Settings;
+import net.omegagames.core.bukkit.api.util.CommandUtils;
 import net.omegagames.core.bukkit.api.util.LangUtils;
 import net.omegagames.core.bukkit.api.util.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.collection.SerializedMap;
-import org.mineacademy.fo.command.SimpleSubCommand;
+import org.mineacademy.fo.command.SimpleCommand;
 import org.mineacademy.fo.exception.FoException;
+import org.mineacademy.fo.model.SimpleComponent;
 import org.mineacademy.fo.settings.SimpleLocalization;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 
-public class CreditManagerCommand extends SimpleSubCommand {
+@AutoRegister
+public final class CreditCommand extends SimpleCommand {
+    private final String prefix = Settings.PLUGIN_PREFIX + " ";
 
-    /**
-     * Constructeur de la classe `CreditManagerCommand`
-     */
-    public CreditManagerCommand() {
-        super("give|take|show");
+    @Getter (value = AccessLevel.PRIVATE)
+    private static final CreditCommand instance = new CreditCommand();
+
+    public CreditCommand() {
+        super("acredit");
+        super.setAutoHandleHelp(false);
     }
 
-    /**
-     * Méthode principale pour traiter la commande /credit give|take|show
-     */
     @Override
     protected void onCommand() {
         // Vérifier si les arguments sont corrects
@@ -38,30 +43,25 @@ public class CreditManagerCommand extends SimpleSubCommand {
             return;
         }
 
-        // Vérifier les permissions du joueur
-        if (!Utils.hasPermission(super.getSender(), super.getPermission())) {
-            super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, SerializedMap.ofArray("{permission}", super.getPermission())));
-            return;
-        }
-
         // Récupérer l'action demandée (give, take, show)
-        final Param param = Param.find(super.getSublabel());
+        final Param param = Param.find(super.args[0]);
         if (param == null) {
             super.returnInvalidArgs();
             return;
         }
 
-        // Récupérer le nom du joueur cible et la raison (uniquement pour give et take)
-        final String targetName = super.args[0];
-        final String reason = Common.joinRange(2, super.args);
+        final String targetName = super.args.length > 1 ? super.args[1] : "";
+        final String amount = super.args.length > 2 ? super.args[2] : "";
+        final String reason = super.args.length > 3 ? Common.joinRange(3, super.args) : "";
 
-        // Traiter l'action en fonction de l'action demandée
         switch (param) {
-            case GIVE -> handleGiveCommand(targetName, reason);
+            case HELP -> this.handleHelpCommand();
 
-            case TAKE -> handleTakeCommand(targetName, reason);
+            case GIVE -> this.handleGiveCommand(targetName, reason, amount);
 
-            case SHOW -> handleShowCommand(targetName);
+            case TAKE -> this.handleTakeCommand(targetName, reason, amount);
+
+            case SHOW -> this.handleShowCommand(targetName);
         }
     }
 
@@ -69,6 +69,7 @@ public class CreditManagerCommand extends SimpleSubCommand {
      * Enum pour représenter les différentes actions possibles pour la commande /credit
      */
     private enum Param {
+        HELP("help", "?"),
         GIVE("give", "g"),
         TAKE("take", "t"),
         SHOW("show", "s");
@@ -103,18 +104,16 @@ public class CreditManagerCommand extends SimpleSubCommand {
     /**
      * Méthode pour traiter la commande /credit give
      */
-    private void handleGiveCommand(String targetName, String reason) {
+    private void handleGiveCommand(String targetName, String reason, String amountArgs) {
         // Vérifier les permissions du joueur pour effectuer cette action
-        if (!Utils.hasPermission(super.getSender(), "arkacore.credit.give.others") && !Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
-            super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, SerializedMap.ofArray("{permission}", "arkacore.credit.give")));
+        if (!Utils.hasPermission(super.getSender(), "arkacore.credit.give") && !Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
+            super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, SerializedMap.ofArray("permission", "arkacore.credit.give")));
             return;
         }
 
         // Récupérer le joueur cible et le montant spécifié
-        Player paramTargetPlayer = Bukkit.getPlayer(targetName);
-        final int amount = convertAmountToInt(CreditManagerCommand.super.args);
-
-        // Vérifier si le joueur cible est en ligne
+        final Player paramTargetPlayer = Bukkit.getPlayer(targetName);
+        final int amount = this.convertAmountToInt(amountArgs);
         if (paramTargetPlayer == null) {
             // Si le joueur n'est pas en ligne, récupérer son UUID de manière asynchrone
             Utils.getUUIDFromUsernameAsync(targetName, new Utils.UUIDCallback() {
@@ -122,7 +121,7 @@ public class CreditManagerCommand extends SimpleSubCommand {
                 public void onSuccess(UUID uniqueId) {
                     // Si le joueur n'existe pas, afficher un message d'erreur
                     if (uniqueId == null) {
-                        CreditManagerCommand.super.tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
+                        tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
                         return;
                     }
 
@@ -132,7 +131,7 @@ public class CreditManagerCommand extends SimpleSubCommand {
 
                 @Override
                 public void onFailure() {
-                    CreditManagerCommand.super.tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
+                    tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
                 }
             });
         } else {
@@ -144,16 +143,16 @@ public class CreditManagerCommand extends SimpleSubCommand {
     /**
      * Méthode pour traiter la commande /credit take
      */
-    private void handleTakeCommand(String targetName, String reason) {
+    private void handleTakeCommand(String targetName, String reason, String amountArgs) {
         // Vérifier les permissions du joueur pour effectuer cette action
-        if (Utils.hasPermission(super.getSender(), "arkacore.credit.take.others") && !Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
+        if (Utils.hasPermission(super.getSender(), "arkacore.credit.take") && !Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
             super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, SerializedMap.ofArray("{permission}", super.getPermission())));
             return;
         }
 
         // Récupérer le joueur cible et le montant spécifié
-        Player paramTargetPlayer = Bukkit.getPlayer(targetName);
-        int paramAmount = convertAmountToInt(CreditManagerCommand.super.args);
+        final Player paramTargetPlayer = Bukkit.getPlayer(targetName);
+        final int paramAmount = convertAmountToInt(amountArgs);
 
         // Vérifier si le joueur cible est en ligne
         if (paramTargetPlayer == null) {
@@ -163,7 +162,7 @@ public class CreditManagerCommand extends SimpleSubCommand {
                 public void onSuccess(UUID uniqueId) {
                     // Si le joueur n'existe pas, afficher un message d'erreur
                     if (uniqueId == null) {
-                        CreditManagerCommand.super.tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
+                        tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
                         return;
                     }
 
@@ -173,7 +172,7 @@ public class CreditManagerCommand extends SimpleSubCommand {
 
                 @Override
                 public void onFailure() {
-                    CreditManagerCommand.super.tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
+                    tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
                 }
             });
         } else {
@@ -203,35 +202,69 @@ public class CreditManagerCommand extends SimpleSubCommand {
                 public void onSuccess(UUID uniqueId) {
                     // Si le joueur n'existe pas, afficher un message d'erreur
                     if (uniqueId == null) {
-                        CreditManagerCommand.super.tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
+                        tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
                         return;
                     }
 
                     // Récupérer les données du joueur cible et afficher son crédit
                     PlayerData paramTargetData = ApiImplementation.getInstance().getPlayerManager().getPlayerData(uniqueId);
                     if (!paramTargetData.isLoaded()) {
-                        CreditManagerCommand.super.tellError("&cUne erreur est survenue lors de la récupération des données du joueur.");
+                        tellError("&cUne erreur est survenue lors de la récupération des données du joueur.");
                         return;
                     }
 
-                    CreditManagerCommand.super.tell("&aLe joueur &f" + paramTargetData.getEffectiveName() + " &aà &f" + paramTargetData.getOmegaCoins() + " &aoméga.");
+                    tellSuccess("&aLe joueur &f" + paramTargetData.getEffectiveName() + " &aà &f" + paramTargetData.getOmegaCoins() + " &aoméga.");
                 }
 
                 @Override
                 public void onFailure() {
-                    CreditManagerCommand.super.tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
+                    tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
                 }
             });
         } else {
             // Si le joueur est en ligne, récupérer directement les données du joueur et afficher son crédit
             PlayerData paramTargetData = ApiImplementation.getInstance().getPlayerManager().getPlayerData(paramTargetPlayer.getUniqueId());
             if (!paramTargetData.isLoaded()) {
-                CreditManagerCommand.super.tellError("&cUne erreur est survenue lors de la récupération des données du joueur.");
+                tellError("&cUne erreur est survenue lors de la récupération des données du joueur.");
                 return;
             }
 
-            CreditManagerCommand.super.tell("&aLe joueur &f" + paramTargetData.getEffectiveName() + " &aà &f" + paramTargetData.getOmegaCoins() + " &aoméga.");
+            tellSuccess("&aLe joueur &f" + paramTargetData.getEffectiveName() + " &aà &f" + paramTargetData.getOmegaCoins() + " &aoméga.");
         }
+    }
+
+    private void handleHelpCommand() {
+        if (!Utils.hasPermission(super.getSender(), "arkacore.credit.help") && !Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
+            super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, SerializedMap.ofArray("{permission}", "arkacore.scoreboard.help")));
+            return;
+        }
+
+        final SimpleComponent commandComponent = SimpleComponent.empty();
+        commandComponent
+                .append(Common.chatLine())
+                .append("\n" + this.prefix + "&ccommandes manager disponible")
+                .append("\n" + this.prefix)
+                .append("\n" + this.prefix + "&6[] &f- Arguments Requis")
+                .append("\n" + this.prefix + "&6<> &f- Arguments Optionnels")
+                .append("\n" + this.prefix);
+
+        if (Utils.hasPermission(super.getSender(), "arkacore.credit.give") || Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
+            CommandUtils.createCommandComponent(commandComponent, "&f" + super.getCurrentLabel(), super.getPlayer(), "give", "<joueur> <montant>", Collections.singletonList("\n &f- &cDonner &fdes crédits"), "arkacore.credit.give|arkacore.credit.admin", CommandUtils.Action.SUGGEST_COMMAND.getHover());
+        }
+
+        if (Utils.hasPermission(super.getSender(), "arkacore.credit.take") || Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
+            CommandUtils.createCommandComponent(commandComponent, "&f" + super.getCurrentLabel(), super.getPlayer(), "take", "<joueur> <montant>", Collections.singletonList("\n &f- &cRetirer &fdes crédits"), "arkacore.credit.take|arkacore.credit.admin", CommandUtils.Action.SUGGEST_COMMAND.getHover());
+        }
+
+        if (Utils.hasPermission(super.getSender(), "arkacore.credit.show") || Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
+            CommandUtils.createCommandComponent(commandComponent, "&f" + super.getCurrentLabel(), super.getPlayer(), "show", "<joueur>", Collections.singletonList("\n &f- &cVoir &fles crédits"), "arkacore.credit.show|arkacore.credit.admin", CommandUtils.Action.SUGGEST_COMMAND.getHover());
+        }
+
+        commandComponent
+                .append("\n" + this.prefix)
+                .append("\n" + this.prefix + "&f&nSurvolez la commande pour plus d'informations.")
+                .append("\n&f" + Common.chatLine())
+                .send(super.getSender());
     }
 
     /**
@@ -251,7 +284,7 @@ public class CreditManagerCommand extends SimpleSubCommand {
                 throw new FoException(throwable);
             }
 
-            this.tellSuccess("&aVous avez ajouté &f" + amount + " &acrédits à &f" + paramTargetData.getEffectiveName() + "&a.");
+            this.tellSuccess("&fVous avez ajouté &a" + amount + " omegas &fà &a" + paramTargetData.getEffectiveName() + "&a.");
         });
     }
 
@@ -272,21 +305,20 @@ public class CreditManagerCommand extends SimpleSubCommand {
                 throw new FoException(throwable);
             }
 
-            this.tellSuccess("&aVous avez retiré &f" + amount + " &acrédits à &f" + paramTargetData.getEffectiveName() + "&a.");
+            this.tellSuccess("&fVous avez retiré &a" + amount + " omegas &fà &a" + paramTargetData.getEffectiveName() + "&f.");
         });
     }
 
     /**
      * Méthode pour convertir le montant de crédits (en tant que chaîne de caractères) en entier
      */
-    private int convertAmountToInt(String[] args) {
-        final String amountString = args[1];
-        if (!Utils.isInteger(amountString)) {
+    private int convertAmountToInt(String args) {
+        if (!Utils.isInteger(args)) {
             super.tellError("&cLe montant doit être un nombre entier.");
             return 0;
         }
 
-        final int amount = Integer.parseInt(amountString);
+        final int amount = Integer.parseInt(args);
         if (amount <= 0) {
             super.tellError("&cLe montant doit être supérieur à 0.");
             return 0;

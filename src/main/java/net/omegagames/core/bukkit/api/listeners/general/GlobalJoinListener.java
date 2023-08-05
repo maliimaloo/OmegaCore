@@ -2,6 +2,7 @@ package net.omegagames.core.bukkit.api.listeners.general;
 
 import net.omegagames.core.bukkit.BukkitCore;
 import net.omegagames.core.bukkit.api.player.PlayerData;
+import net.omegagames.core.bukkit.api.scoreboard.ScoreboardData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -73,7 +74,13 @@ public class GlobalJoinListener extends APIListener {
             String paramHostAddress = Objects.requireNonNull(paramPlayer.getAddress()).getHostString();
             paramPlayerData.setLastIp(paramHostAddress);
 
-            this.plugin.getMain_scoreboard().show(paramPlayer);
+            for (ScoreboardData scoreboard : this.api.getPlugin().getScoreboardManager().getScoreboard_cache()) {
+                if (scoreboard.getIsDefault()) {
+                    scoreboard.show(paramPlayer);
+                    break;
+                }
+            }
+
             Common.log("Join Time: " + (System.currentTimeMillis() - startTime) + "ms.");
         } catch (Throwable throwable) {
             paramPlayer.kickPlayer("Erreur lors du chargement de votre profil.");
