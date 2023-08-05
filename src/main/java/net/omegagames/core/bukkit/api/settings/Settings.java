@@ -1,6 +1,9 @@
 package net.omegagames.core.bukkit.api.settings;
 
+import net.omegagames.core.bukkit.api.scoreboard.ScoreboardData;
 import org.mineacademy.fo.settings.SimpleSettings;
+
+import java.util.Set;
 
 public final class Settings extends SimpleSettings {
     public static String SERVER_NAME;
@@ -37,6 +40,15 @@ public final class Settings extends SimpleSettings {
             BUNGEE_IP = Settings.getString("Bungee_Ip");
             BUNGEE_PASSWORD = Settings.getString("Bungee_Password");
             BUNGEE_PORT = Settings.getInteger("Bungee_Port", 4242);
+        }
+    }
+
+    public final static class Scoreboard {
+        public static Set<ScoreboardData> SCOREBOARD_DATA;
+
+        private static void init() {
+            Settings.setPathPrefix(null);
+            SCOREBOARD_DATA = Settings.getSet("Scoreboard", ScoreboardData.class);
         }
     }
 }

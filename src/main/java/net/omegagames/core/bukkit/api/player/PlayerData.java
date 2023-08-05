@@ -76,11 +76,11 @@ public class PlayerData extends AbstractPlayerData {
         return this.getCustomName() != null;
     }
 
-    /**
-     * ========================
+
+    /* ========================
      * > State management
-     * ========================
-     */
+     * ======================== */
+
     @Override
     public Timestamp getLastLogin() {
         return Timestamp.valueOf(this.getHashValue("lastLogin"));
@@ -111,11 +111,10 @@ public class PlayerData extends AbstractPlayerData {
         this.setHashValue("lastIp", lastIp);
     }
 
-    /**
-     * ========================
+
+    /* ========================
      * > Groupe management
-     * ========================
-     */
+     * ======================== */
     @Override
     public Long getGroupId() {
         return Long.parseLong(this.getHashValue("groupId"));
@@ -126,11 +125,9 @@ public class PlayerData extends AbstractPlayerData {
         this.setHashValue("groupId", groupId.toString());
     }
 
-    /**
-     * ========================
+    /* ========================
      * > Coins management
-     * ========================
-     */
+     * ======================== */
     @Override
     public long getOmegaCoins() {
         return Integer.parseInt(this.getHashValue("omegaCoins"));
@@ -162,9 +159,9 @@ public class PlayerData extends AbstractPlayerData {
                 if (this.getUniqueId() != null) {
                     Player paramReceiver = Bukkit.getPlayer(this.getUniqueId());
                     if (amountFinal > 0) {
-                        Messenger.success(paramReceiver, "&aVous venez de recevoir " + amountFinal + " oméga. [" + message + "]");
+                        Messenger.success(paramReceiver, "&fVous venez de recevoir &a" + amountFinal + " omegas&f. &7[&f" + message + "&7]");
                     } else {
-                        Messenger.success(paramReceiver, "&aVous venez de perdre " + Math.abs(amountFinal) + " oméga. [" + message + "]");
+                        Messenger.success(paramReceiver, "&fVous venez de perdre &a" + Math.abs(amountFinal) + " omegas&f. &7[&f" + message + "&7]");
                     }
                 }
 

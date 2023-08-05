@@ -44,3 +44,32 @@ Jedis:
   # -------------------------------------------------------------------------------------------------
   Bungee_Password: "password"
 
+Scoreboard:
+  # Example:
+  # - UniqueId: 'exemple_scoreboard'
+  #   display_condition: ''
+  #   if-condition-not-met: 'main_scoreboard'
+  #   title: ''§6§l%server_name% network'
+  #   updateTime: 20
+  #   content:
+  #     - "§7"
+  #     - "§7Joueurs: §b%online_players%"
+  #   default: true
+  #
+  - UniqueId: 'main_scoreboard'
+    # La condition d'affichage du scoreboard
+    display_condition: ''
+    # Le scoreboard à afficher si la condition n'est pas remplie
+    if-condition-not-met: 'main_scoreboard'
+    # Le titre du scoreboard
+    title: '&6&l%server_name% network'
+    # Le temps d'update du scoreboard
+    update_interval: 20
+    # Le contenu du scoreboard
+    contents:
+      - "&7"
+      - "&7Joueurs: &b%online_players%"
+    # Si le scoreboard est par défaut
+    default: true
+
+

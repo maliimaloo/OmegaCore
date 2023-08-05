@@ -1,9 +1,11 @@
 package net.omegagames.core.bukkit;
 
 import lombok.Getter;
-import net.omegagames.core.bukkit.api.expansion.CreditPlaceholderExpansion;
+import net.omegagames.core.bukkit.api.commands.TestCommand;
+import net.omegagames.core.bukkit.api.expansion.player.PlayerPlaceholderExpansion;
+import net.omegagames.core.bukkit.api.expansion.server.ServerPlaceholderExpansion;
 import net.omegagames.core.bukkit.api.listeners.general.GlobalJoinListener;
-import net.omegagames.core.bukkit.api.scoreboard.Scoreboard;
+import net.omegagames.core.bukkit.api.scoreboard.ScoreboardManager;
 import net.omegagames.core.bukkit.api.settings.Settings;
 import net.omegagames.core.jedis.DatabaseConnector;
 import net.omegagames.core.jedis.RedisServer;
@@ -13,7 +15,7 @@ import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.exception.FoException;
-import org.mineacademy.fo.model.SimpleScoreboard;
+import org.mineacademy.fo.model.HookManager;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
 import java.util.concurrent.Executors;
@@ -23,91 +25,27 @@ import java.util.concurrent.ScheduledExecutorService;
  * Classe principale du plugin.
  */
 public class BukkitCore extends SimplePlugin {
-    private ApiImplementation api;
-    private ServerServiceManager serverServiceManager;
-    private DatabaseConnector databaseConnector;
-    private DebugListener debugListener;
-    private ScheduledExecutorService executor;
-    private String serverName;
-
     @Getter
-    private SimpleScoreboard main_scoreboard;
+    private ApiImplementation api;
+    @Getter
+    private ServerServiceManager serverServiceManager;
+    @Getter
+    private DatabaseConnector databaseConnector;
+    @Getter
+    private DebugListener debugListener;
+    @Getter
+    private ScheduledExecutorService executor;
+    @Getter
+    private ScoreboardManager scoreboardManager;
+    @Getter
+    private String serverName;
 
     public BukkitCore() {
     }
 
     /* -------------------------------------------------------
-     * Méthodes pour obtenir différentes composantes du plugin.
-     * ------------------------------------------------------- */
-
-    /**
-     * Récupère l'instance de l'implémentation de l'API.
-     *
-     * @return L'implémentation de l'API.
-     */
-    public ApiImplementation getAPI() {
-        return api;
-    }
-
-    /**
-     * Récupère l'instance du gestionnaire de services du serveur.
-     *
-     * @return Le gestionnaire de services du serveur.
-     */
-    public ServerServiceManager getServerServiceManager() {
-        return serverServiceManager;
-    }
-
-    /**
-     * Récupère l'instance du connecteur de la base de données.
-     *
-     * @return Le connecteur de la base de données.
-     */
-    public DatabaseConnector getDatabaseConnector() {
-        return databaseConnector;
-    }
-
-    /**
-     * Récupère l'instance de l'écouteur de débogage.
-     *
-     * @return L'écouteur de débogage.
-     */
-    public DebugListener getDebugListener() {
-        return debugListener;
-    }
-
-    /**
-     * Récupère l'instance du service d'exécution planifiée.
-     *
-     * @return Le service d'exécution planifiée.
-     */
-    public ScheduledExecutorService getExecutor() {
-        return executor;
-    }
-
-    /**
-     * Récupère le nom du serveur associé à cette instance de BukkitCore.
-     *
-     * @return Le nom du serveur.
-     */
-    public String getServerName() {
-        return serverName;
-    }
-
-
-    /* -------------------------------------------------------
      * Méthodes d'allumage et d'extinction du plugin.
      * ------------------------------------------------------- */
-    @Override
-    protected void onPluginLoad() {
-        // Vérifie si la version de Minecraft est prise en charge avant d'activer le plugin
-        if (!MinecraftVersion.atLeast(super.getMinimumVersion())) {
-            Debugger.saveError(new FoException(), "Impossible d'activer le plugin: Version de Minecraft non supportée !");
-            super.setEnabled(false);
-            Bukkit.getServer().shutdown();
-        }
-    }
-
     @Override
     protected void onPluginStart() {
         // Configuration du plugin lors de son démarrage
@@ -117,10 +55,13 @@ public class BukkitCore extends SimplePlugin {
     @Override
     protected void onPluginStop() {
         // Actions de nettoyage lorsque le plugin s'arrête
-        this.databaseConnector.killConnection();
-        this.serverServiceManager.getDatabaseManager().close();
+        if (this.databaseConnector != null) {
+            this.databaseConnector.killConnection();
+        }
 
-        this.getMain_scoreboard().stop();
+        if (this.serverServiceManager != null && this.serverServiceManager.getDatabaseManager() != null) {
+            this.serverServiceManager.getDatabaseManager().close();
+        }
     }
 
     /**
@@ -144,11 +85,10 @@ public class BukkitCore extends SimplePlugin {
         this.databaseConnector = this.initDatabaseconnector();
 
         this.api = new ApiImplementation(this);
-        super.registerEvents(new GlobalJoinListener(this));
+        this.scoreboardManager = new ScoreboardManager(this.api);
 
-        new CreditPlaceholderExpansion().register();
-
-        this.main_scoreboard = new Scoreboard();
+        this.initListeners();
+        this.initPlaceholder();
     }
 
     @Override
@@ -211,5 +151,22 @@ public class BukkitCore extends SimplePlugin {
         final String paramDatabasePassword = Settings.Database.PASSWORD;
 
         return new ServerServiceManager(paramDatabaseUrl, paramDatabaseUsername, paramDatabasePassword);
+    }
+
+    /**
+     * Initialise les écouteurs d'événements.
+     */
+    private void initListeners() {
+        super.registerEvents(new GlobalJoinListener(this));
+    }
+
+    /**
+     * Initialise les placeholders.
+     */
+    private void initPlaceholder() {
+        new PlayerPlaceholderExpansion().register();
+        new ServerPlaceholderExpansion(this.getApi()).register();
+
+        HookManager.addPlaceholder("test_scoreboard", (player) -> Boolean.toString(TestCommand.getParamValue()));
     }
 }

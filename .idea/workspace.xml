@@ -5,7 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="940e35d5-2514-4d4a-934b-03e782247ed0" name="Changes" comment="Init Commit">
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/commands/ScoreboardCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/commands/TestCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/expansion/player/PlayerPlaceholderExpansion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/expansion/server/ServerPlaceholderExpansion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/scoreboard/ScoreboardData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/scoreboard/ScoreboardManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/ApiImplementation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/ApiImplementation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/BukkitCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/BukkitCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/commands/credit/CreditCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/commands/credit/CreditHelpCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/commands/credit/CreditManagerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/commands/CreditCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/expansion/CreditPlaceholderExpansion.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/general/APIListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/general/APIListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/general/GlobalJoinListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/general/GlobalJoinListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerDataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerDataManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/scoreboard/Scoreboard.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/settings/Settings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/settings/Settings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/settings.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/settings.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +65,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "C:/Eclipse-ArkaMC/ArkaEssentials",
+    "last_opened_file_path": "C:/Eclipse-ArkaMC/ArkaChat",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2"
@@ -63,7 +83,20 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="OmegaCore" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="ArkaCore" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="ArkaCore" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ArkaCore" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="myGeneralSettings" />
         <option name="myRunnerSettings" />
@@ -236,7 +269,14 @@
       <option name="project" value="LOCAL" />
       <updated>1691157574286</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Init Commit">
+      <created>1691160388148</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1691160388148</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
