@@ -57,11 +57,17 @@ public final class ScoreboardCommand extends SimpleCommand {
         final String scoreboardUniqueId = super.args.length > 2 ? super.args[2] : "";
 
         switch (param) {
-            case HELP -> this.handleHelpCommand();
+            case HELP:
+                this.handleHelpCommand();
+                break;
 
-            case GIVE -> this.handleShowCommand(targetName, scoreboardUniqueId);
+            case GIVE:
+                this.handleShowCommand(targetName, scoreboardUniqueId);
+                break;
 
-            case TAKE -> this.handleHideCommand(targetName, scoreboardUniqueId);
+            case TAKE:
+                this.handleHideCommand(targetName, scoreboardUniqueId);
+                break;
         }
     }
 

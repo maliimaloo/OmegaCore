@@ -1,6 +1,7 @@
 package net.omegagames.core.bukkit;
 
 import lombok.Getter;
+import net.omegagames.core.bukkit.api.commands.CreditCommand;
 import net.omegagames.core.bukkit.api.commands.TestCommand;
 import net.omegagames.core.bukkit.api.expansion.player.PlayerPlaceholderExpansion;
 import net.omegagames.core.bukkit.api.expansion.server.ServerPlaceholderExpansion;
@@ -88,6 +89,7 @@ public class BukkitCore extends SimplePlugin {
         this.scoreboardManager = new ScoreboardManager(this.api);
 
         this.initListeners();
+        this.initCommands();
         this.initPlaceholder();
     }
 
@@ -158,6 +160,10 @@ public class BukkitCore extends SimplePlugin {
      */
     private void initListeners() {
         super.registerEvents(new GlobalJoinListener(this));
+    }
+
+    private void initCommands() {
+        super.registerCommand(new CreditCommand(this.getApi()));
     }
 
     /**

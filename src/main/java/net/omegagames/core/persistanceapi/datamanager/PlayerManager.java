@@ -1,102 +1,170 @@
 package net.omegagames.core.persistanceapi.datamanager;
 
+import net.omegagames.core.persistanceapi.ServerServiceManager;
+import net.omegagames.core.persistanceapi.beans.credit.CreditBean;
 import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
+import net.omegagames.core.bukkit.api.util.Callback;
 import net.omegagames.core.persistanceapi.database.DatabaseManager;
 import net.omegagames.core.persistanceapi.database.MResultSet;
 import net.omegagames.core.persistanceapi.utils.Transcoder;
+import org.mineacademy.fo.exception.FoException;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringJoiner;
 import java.util.UUID;
 
+/**
+ * Gestionnaire de joueurs pour interagir avec la base de données des joueurs.
+ */
 public class PlayerManager {
     private final DatabaseManager databaseManager;
 
-    public PlayerManager() {
-        this.databaseManager = DatabaseManager.getInstance();
+    public PlayerManager(ServerServiceManager manager) {
+        this.databaseManager = manager.getDatabaseManager();
     }
 
-    public PlayerBean getPlayer(UUID uuid) {
-        final String paramQuery = "select HEX(" + PlayerBean.fieldUniqueId + ") as " + PlayerBean.fieldUniqueId + ", " +
-                PlayerBean.fieldName + ", " +
-                PlayerBean.fieldNickname + ", " +
-                PlayerBean.fieldOmega + ", " +
-                PlayerBean.fieldLastLogin + ", " +
-                PlayerBean.fieldFirstLogin + ", " +
-                PlayerBean.fieldLastIp + ", " +
-                PlayerBean.fieldGroupId + " from " +
-                PlayerBean.tableName + " where " +
-                PlayerBean.fieldUniqueId + " = UNHEX(?)";
+    /**
+     * Récupère un joueur à partir de son UUID.
+     *
+     * @param uuid     L'UUID du joueur à récupérer.
+     * @param callback Le callback appelé lorsqu'un joueur est récupéré ou lorsque l'opération échoue.
+     * @return Le bean du joueur si trouvé, sinon null.
+     */
+    public PlayerBean getPlayer(UUID uuid, Callback<PlayerBean> callback) {
+        String query = "SELECT * FROM " + PlayerBean.getTableName() +
+                " INNER JOIN " + CreditBean.getTableName() +
+                " ON " + PlayerBean.getTableName() + "." + PlayerBean.getFieldUniqueId() + " = " + CreditBean.getTableName() + "." + CreditBean.getFieldUniqueId() +
+                " WHERE " + PlayerBean.getFieldUniqueId() + " = ?";
 
-        MResultSet paramResultSet = this.databaseManager.request(paramQuery, Transcoder.encode(uuid.toString()));
-        if (paramResultSet.next()) {
-            String playerUuid = Transcoder.decode(paramResultSet.getString(PlayerBean.fieldUniqueId));
-            String name = paramResultSet.getString(PlayerBean.fieldName);
-            String nickName = paramResultSet.getString(PlayerBean.fieldNickname);
-            int omega = paramResultSet.getInt(PlayerBean.fieldOmega);
-            Timestamp lastLogin = Timestamp.valueOf(paramResultSet.getString(PlayerBean.fieldLastLogin));
-            Timestamp firsLogin = Timestamp.valueOf(paramResultSet.getString(PlayerBean.fieldFirstLogin));
-            String lastIP = paramResultSet.getString(PlayerBean.fieldLastIp);
-            long groupId = paramResultSet.getLong(PlayerBean.fieldGroupId);
-            return new PlayerBean(UUID.fromString(playerUuid), name, nickName, omega , lastLogin, firsLogin, lastIP, groupId);
+        MResultSet resultSet = this.databaseManager.request(query, Transcoder.encode(uuid.toString()));
+        if (resultSet.next()) {
+            PlayerBean playerBean = convertToPlayerBean(resultSet);
+            if (callback != null) {
+                callback.onSuccess(playerBean);
+            }
+
+            return playerBean;
+        }
+
+        if (callback != null) {
+            callback.onFailure(new FoException("Impossible de récupérer le joueur dans la base de données."));
         }
 
         return null;
     }
 
-    public PlayerBean getPlayerByName(String playerName) {
-        final String paramQuery = "select HEX(" + PlayerBean.fieldUniqueId + ") as " + PlayerBean.fieldUniqueId + ", " +
-                PlayerBean.fieldName + ", " +
-                PlayerBean.fieldNickname + ", " +
-                PlayerBean.fieldOmega + ", " +
-                PlayerBean.fieldLastLogin + ", " +
-                PlayerBean.fieldFirstLogin + ", " +
-                PlayerBean.fieldLastIp + ", " +
-                PlayerBean.fieldGroupId + " from " +
-                PlayerBean.tableName + " where " +
-                PlayerBean.fieldName + " = ?";
 
-        MResultSet paramResultSet = this.databaseManager.request(paramQuery, playerName);
-        if (paramResultSet.next()) {
-            String playerUuid = Transcoder.decode(paramResultSet.getString(PlayerBean.fieldUniqueId));
-            String name = paramResultSet.getString(PlayerBean.fieldName);
-            String nickName = paramResultSet.getString(PlayerBean.fieldNickname);
-            int omega = paramResultSet.getInt(PlayerBean.fieldOmega);
-            Timestamp lastLogin = Timestamp.valueOf(paramResultSet.getString(PlayerBean.fieldLastLogin));
-            Timestamp firsLogin = Timestamp.valueOf(paramResultSet.getString(PlayerBean.fieldFirstLogin));
-            String lastIP = paramResultSet.getString(PlayerBean.fieldLastIp);
-            long groupId = paramResultSet.getLong(PlayerBean.fieldGroupId);
-            return new PlayerBean(UUID.fromString(playerUuid), name, nickName, omega , lastLogin, firsLogin, lastIP, groupId);
-        }
-
-        return null;
-    }
-
+    /**
+     * Crée un nouveau joueur dans la base de données.
+     *
+     * @param player Le bean du joueur à créer.
+     * @return true si le joueur a été créé avec succès, sinon false.
+     */
     public boolean createPlayer(PlayerBean player) {
-        String paramQuery = "insert into " + PlayerBean.tableName + " (" +
-                PlayerBean.fieldUniqueId + ", " +
-                PlayerBean.fieldName + ", " +
-                PlayerBean.fieldNickname + ", " +
-                PlayerBean.fieldOmega + ", " +
-                PlayerBean.fieldLastLogin + ", " +
-                PlayerBean.fieldFirstLogin + ", " +
-                PlayerBean.fieldLastIp + ", " +
-                PlayerBean.fieldGroupId + ")";
+        String query = "INSERT INTO " + PlayerBean.getTableName() + " (" +
+                PlayerBean.getFieldUniqueId() + ", " +
+                PlayerBean.getFieldName() + ", " +
+                PlayerBean.getFieldNickname() + ", " +
+                PlayerBean.getFieldOmega() + ", " +
+                PlayerBean.getFieldLastLogin() + ", " +
+                PlayerBean.getFieldFirstLogin() + ", " +
+                PlayerBean.getFieldLastIp() + ", " +
+                PlayerBean.getFieldGroupId() + ")";
+        query += " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        paramQuery += " values (UNHEX(?), ?, ?, ?, now(), now(), ?, ?)";
-        return this.databaseManager.transmission(paramQuery, Transcoder.encode(player.getUniqueId().toString()), player.getName(), player.getNickName(), player.getOmega(), player.getLastIP(), player.getGroupId());
+        return this.databaseManager.transmission(query, Transcoder.encode(player.getUniqueId().toString()), player.getName(), player.getNickname(), player.getOmega(), player.getFirstLogin(), player.getLastLogin(), player.getLastIp(), player.getGroupId());
     }
 
-    // Update the player
-    public void updatePlayer(PlayerBean player) {
-        String paramQuery = "update " + PlayerBean.tableName + " set " +
-                PlayerBean.fieldName + " = ?, " +
-                PlayerBean.fieldOmega + " = ?, " +
-                PlayerBean.fieldLastLogin + " = ?, " +
-                PlayerBean.fieldLastIp + " = ?, " +
-                PlayerBean.fieldGroupId + " = ?, " +
-                PlayerBean.fieldNickname + " = ?";
+    /**
+     * Met à jour les informations du joueur dans la base de données.
+     *
+     * @param playerBean   Le bean du joueur à mettre à jour.
+     * @param callback Le callback appelé lorsque la mise à jour est effectuée ou lorsque l'opération échoue.
+     */
+    public void updatePlayer(PlayerBean playerBean, Callback<Integer> callback) {
+        String updateQuery = "UPDATE " + PlayerBean.getTableName() + " SET " +
+                PlayerBean.getFieldName() + " = ?, " +
+                PlayerBean.getFieldOmega() + " = ?, " +
+                PlayerBean.getFieldLastLogin() + " = ?, " +
+                PlayerBean.getFieldLastIp() + " = ?, " +
+                PlayerBean.getFieldGroupId() + " = ?, " +
+                PlayerBean.getFieldNickname() + " = ? " +
+                "WHERE " + PlayerBean.getFieldUniqueId() + " = ?";
 
-        paramQuery += " where uuid = UNHEX(?)";
-        this.databaseManager.asyncTransmission(paramQuery, player.getName(), player.getOmega(), player.getLastLogin().toString(), player.getLastIP(), player.getGroupId(), player.getNickName(), Transcoder.encode(player.getUniqueId().toString()));
+        this.databaseManager.asyncTransmission(updateQuery, (response) -> {
+            if (callback != null) {
+                callback.onSuccess(response);
+            }
+
+            String insertLogsQuery = "INSERT IGNORE INTO " + CreditBean.getTableName() + " (" +
+                    CreditBean.getFieldUniqueId() + ", " +
+                    CreditBean.getFieldTimestamp() + ", " +
+                    CreditBean.getFieldType() + ", " +
+                    CreditBean.getFieldSender() + ", " +
+                    CreditBean.getFieldReceiver() + ", " +
+                    CreditBean.getFieldAmount() + ", " +
+                    CreditBean.getFieldReason() + ") VALUES ";
+
+            StringJoiner valuesJoiner = new StringJoiner(", ");
+            for (CreditBean creditLog : playerBean.getCreditLogs()) {
+                String values = String.format("('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+                        Transcoder.encode(playerBean.getUniqueId().toString()),
+                        creditLog.getTimestamp().toString(),
+                        creditLog.getType(),
+                        creditLog.getSender(),
+                        creditLog.getReceiver(),
+                        creditLog.getAmount(),
+                        creditLog.getReason());
+                valuesJoiner.add(values);
+            }
+
+            insertLogsQuery += valuesJoiner.toString();
+            this.databaseManager.asyncTransmission(insertLogsQuery);
+        }, playerBean.getName(), playerBean.getOmega(), playerBean.getLastLogin().toString(), playerBean.getLastIp(), playerBean.getGroupId(), playerBean.getNickname(), Transcoder.encode(playerBean.getUniqueId().toString()));
+    }
+
+    public void updatePlayerColumn(UUID uniqueId, String column, Object value) {
+        String updateQuery = "UPDATE " + PlayerBean.getTableName() + " " +
+                "SET " + column + " = ? " +
+                "WHERE " + PlayerBean.getFieldUniqueId() + " = ?";
+
+        this.databaseManager.asyncTransmission(updateQuery, value, uniqueId);
+    }
+
+    // Méthode privée pour convertir le résultat de la requête en PlayerBean
+    private PlayerBean convertToPlayerBean(MResultSet resultSet) {
+        if (resultSet == null || !resultSet.next()) {
+            return null;
+        }
+
+        final String uniqueId = Transcoder.decode(resultSet.getString(PlayerBean.getFieldUniqueId()));
+        final String name = resultSet.getString(PlayerBean.getFieldName());
+        final String nickname = resultSet.getString(PlayerBean.getFieldNickname());
+        final int omega = resultSet.getInt(PlayerBean.getFieldOmega());
+        final Timestamp lastLogin = Timestamp.valueOf(resultSet.getString(PlayerBean.getFieldLastLogin()));
+        final Timestamp firstLogin = Timestamp.valueOf(resultSet.getString(PlayerBean.getFieldFirstLogin()));
+        final String lastIP = resultSet.getString(PlayerBean.getFieldLastIp());
+        final long groupId = resultSet.getLong(PlayerBean.getFieldGroupId());
+
+        final List<CreditBean> creditLogs = new ArrayList<>();
+        do {
+            creditLogs.add(convertToCreditBean(resultSet));
+        } while (resultSet.next());
+
+        return new PlayerBean(UUID.fromString(uniqueId), name, nickname, omega, lastLogin, firstLogin, lastIP, groupId, creditLogs);
+    }
+
+    private CreditBean convertToCreditBean(MResultSet resultSet) {
+        final String uniqueId = Transcoder.decode(resultSet.getString(CreditBean.getFieldUniqueId()));
+        final Timestamp timestamp = Timestamp.valueOf(resultSet.getString(CreditBean.getFieldTimestamp()));
+        final String type = resultSet.getString(CreditBean.getFieldType());
+        final String sender = resultSet.getString(CreditBean.getFieldSender());
+        final String receiver = resultSet.getString(CreditBean.getFieldReceiver());
+        final int amount = resultSet.getInt(CreditBean.getFieldAmount());
+        final String reason = resultSet.getString(CreditBean.getFieldReason());
+
+        return new CreditBean(UUID.fromString(uniqueId), timestamp, type, sender, receiver, amount, reason);
     }
 }

@@ -1,6 +1,8 @@
 package net.omegagames.core.persistanceapi.database;
 
 import net.omegagames.core.bukkit.api.settings.Settings;
+import net.omegagames.core.bukkit.api.util.Callback;
+import net.omegagames.core.persistanceapi.beans.credit.CreditBean;
 import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.database.SimpleDatabase;
@@ -35,6 +37,7 @@ public class DatabaseManager extends SimpleDatabase {
     protected void onConnected() {
         Common.logNoPrefix(this.prefix + " Base de données connecter !");
         super.createTable(this.createTablePlayerBean());
+        super.createTable(this.createTableCreditLogBean());
     }
 
     public MResultSet request(String query, Object... objects) {
@@ -198,14 +201,26 @@ public class DatabaseManager extends SimpleDatabase {
     }
 
     private TableCreator createTablePlayerBean() {
-        return new TableCreator(PlayerBean.tableName)
-                .addDefault(PlayerBean.fieldUniqueId, "binary(16)", null)
-                .addDefault(PlayerBean.fieldName, "varchar(255)", null)
-                .addDefault(PlayerBean.fieldNickname, "varchar(45)", null)
-                .addDefault(PlayerBean.fieldOmega, "int(16)", "0")
-                .addDefault(PlayerBean.fieldLastLogin, "timestamp", "CURRENT_TIMESTAMP")
-                .addDefault(PlayerBean.fieldFirstLogin, "timestamp", "CURRENT_TIMESTAMP")
-                .addDefault(PlayerBean.fieldLastIp, "varchar(15)", null)
-                .setPrimaryColumn(PlayerBean.fieldUniqueId);
+        return new TableCreator(PlayerBean.getTableName())
+                .addDefault(PlayerBean.getFieldUniqueId(), "varchar(32)", null)
+                .addDefault(PlayerBean.getFieldName(), "varchar(255)", null)
+                .addDefault(PlayerBean.getFieldNickname(), "varchar(45)", null)
+                .addDefault(PlayerBean.getFieldOmega(), "int(16)", "0")
+                .addDefault(PlayerBean.getFieldLastLogin(), "timestamp", "CURRENT_TIMESTAMP")
+                .addDefault(PlayerBean.getFieldFirstLogin(), "timestamp", "CURRENT_TIMESTAMP")
+                .addDefault(PlayerBean.getFieldLastIp(), "varchar(15)", null)
+                .setPrimaryColumn(PlayerBean.getFieldUniqueId());
+    }
+
+    private TableCreator createTableCreditLogBean() {
+        return new TableCreator(CreditBean.getTableName())
+                .addDefault(CreditBean.getFieldUniqueId(), "varchar(32)", null)
+                .addDefault(CreditBean.getFieldTimestamp(), "timestamp", "CURRENT_TIMESTAMP")
+                .addDefault(CreditBean.getFieldType(), "varchar(45)", null)
+                .addDefault(CreditBean.getFieldSender(), "varchar(32)", null)
+                .addDefault(CreditBean.getFieldReceiver(), "varchar(32)", null)
+                .addDefault(CreditBean.getFieldAmount(), "int(16)", "0")
+                .addDefault(CreditBean.getFieldReason(), "varchar(255)", null)
+                .setPrimaryColumn(CreditBean.getFieldTimestamp());
     }
 }

@@ -57,7 +57,8 @@ Scoreboard:
   #   default: true
   #
   - UniqueId: 'main_scoreboard'
-    # La condition d'affichage du scoreboard
+    # La condition d'affichage du scoreboard, si vide le display_condition ainsi
+    # que l'if-condition-not-met ne seront pas pris en compte.
     display_condition: ''
     # Le scoreboard à afficher si la condition n'est pas remplie
     if-condition-not-met: 'main_scoreboard'

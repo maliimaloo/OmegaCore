@@ -3,7 +3,6 @@ package net.omegagames.core.bukkit.api.listeners.pubsub;
 import net.omegagames.api.pubsub.IPacketsReceiver;
 import net.omegagames.core.bukkit.ApiImplementation;
 import net.omegagames.core.bukkit.api.listeners.general.GlobalJoinListener;
-import net.omegagames.core.bukkit.api.player.PlayerData;
 import org.bukkit.Bukkit;
 
 import java.util.Objects;
@@ -20,33 +19,25 @@ public class GlobalUpdateListener implements IPacketsReceiver {
     @Override
     public void receive(String channel, String packet) {
         switch (channel) {
-            case "omegacore:player:online_status_check" -> {
-                final String[] params = packet.split(":");
-                final String paramServerName = params[0];
-                final UUID player = UUID.fromString(params[1]);
+            case "omegacore:player:online_status_check":
+                final String[] params1 = packet.split(":");
+                final String paramServerName1 = params1[0];
+                final UUID player1 = UUID.fromString(params1[1]);
 
-                if (Bukkit.getPlayer(player) != null && !Objects.equals(this.api.getServerName(), paramServerName)) {
-                    this.api.getPubSub().send("omegacore:player:online_status_response", player.toString());
+                if (Bukkit.getPlayer(player1) != null && !Objects.equals(this.api.getServerName(), paramServerName1)) {
+                    this.api.getPubSub().send("omegacore:player:online_status_response", player1.toString());
                 }
-            }
+                break;
 
-            case "omegacore:player:online_status_response" -> {
-                final String[] params = packet.split(":");
-                final UUID player = UUID.fromString(params[1]);
+            case "omegacore:player:online_status_response":
+                final String[] params2 = packet.split(":");
+                final UUID player2 = UUID.fromString(params2[1]);
 
-                final CompletableFuture<Boolean> paramFuture = GlobalJoinListener.getOnlineStatus().get(player);
+                final CompletableFuture<Boolean> paramFuture = GlobalJoinListener.getOnlineStatus().get(player2);
                 if (paramFuture != null) {
                     paramFuture.complete(true);
                 }
-            }
-
-            case "__keyevent@0__:expired" -> {
-                if (packet.startsWith("omegacore:account:")) {
-                    UUID playerId = UUID.fromString(packet.split(":")[2]);
-                    PlayerData paramPlayerData = this.api.getPlayerManager().getPlayerData(playerId);
-                    this.api.getServerServiceManager().updatePlayer(paramPlayerData.getPlayerBean());
-                }
-            }
+                break;
         }
     }
 }

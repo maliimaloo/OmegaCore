@@ -7,13 +7,11 @@ import org.bukkit.inventory.ItemStack;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.jsonsimple.JSONArray;
 import org.mineacademy.fo.jsonsimple.JSONObject;
-import org.mineacademy.fo.jsonsimple.JSONParseException;
 import org.mineacademy.fo.jsonsimple.JSONParser;
 import org.mineacademy.fo.model.SimpleComponent;
 import org.mineacademy.fo.model.Variables;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -99,7 +97,7 @@ public final class Utils {
         return arrayList;
     }
 
-    public static void getUUIDFromUsernameAsync(String username, UUIDCallback callback) {
+    public static void getUUIDFromUsernameAsync(String username, Callback<UUID> callback) {
         Common.runAsync(() -> {
             try {
                 URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + username);
@@ -116,21 +114,12 @@ public final class Utils {
                     callback.onSuccess(uuid);
                 } else {
                     Common.throwError(null, "Impossible de récupérer l'UUID de " + username + ". Code de réponse: " + connection.getResponseCode() + ".");
-                    callback.onFailure();
+                    callback.onFailure(null);
                 }
-            } catch (IOException e) {
-                Common.throwError(e, "Impossible de récupérer l'UUID de " + username);
-                callback.onFailure();
-            } catch (JSONParseException e) {
-                Common.throwError(e, "Impossible de récupérer l'UUID de " + username);
+            } catch (Throwable throwable) {
+                Common.throwError(throwable, "Impossible de récupérer l'UUID de " + username);
+                callback.onFailure(throwable);
             }
         });
-    }
-
-    // Callback interface for handling the result
-    public interface UUIDCallback {
-        void onSuccess(UUID uuid);
-
-        void onFailure();
     }
 }

@@ -41,7 +41,7 @@ public class ScoreboardData extends SimpleScoreboard implements ConfigSerializab
     public ScoreboardData(String unique_id, String title, Integer update_interval, List<String> contents, Boolean isDefault, String display_condition, String if_condition_not_met) {
         super(title);
         super.setUpdateDelayTicks(update_interval);
-
+        
         this.stripTitle = title;
         this.uniqueId = unique_id;
         this.contents = contents;

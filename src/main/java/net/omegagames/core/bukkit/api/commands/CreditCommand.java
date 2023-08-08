@@ -1,49 +1,47 @@
 package net.omegagames.core.bukkit.api.commands;
 
-import lombok.AccessLevel;
-import lombok.Getter;
 import net.omegagames.core.bukkit.ApiImplementation;
 import net.omegagames.core.bukkit.api.player.PlayerData;
 import net.omegagames.core.bukkit.api.settings.Settings;
 import net.omegagames.core.bukkit.api.util.CommandUtils;
 import net.omegagames.core.bukkit.api.util.LangUtils;
 import net.omegagames.core.bukkit.api.util.Utils;
+import net.omegagames.core.persistanceapi.beans.credit.CreditBean;
+import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
+import net.omegagames.core.bukkit.api.util.Callback;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.annotation.AutoRegister;
-import org.mineacademy.fo.collection.SerializedMap;
+import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.command.SimpleCommand;
-import org.mineacademy.fo.exception.FoException;
 import org.mineacademy.fo.model.SimpleComponent;
 import org.mineacademy.fo.settings.SimpleLocalization;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.UUID;
 
-@AutoRegister
 public final class CreditCommand extends SimpleCommand {
-    private final String prefix = Settings.PLUGIN_PREFIX + " ";
+    private final ApiImplementation api;
 
-    @Getter (value = AccessLevel.PRIVATE)
-    private static final CreditCommand instance = new CreditCommand();
-
-    public CreditCommand() {
+    public CreditCommand(ApiImplementation api) {
         super("acredit");
         super.setAutoHandleHelp(false);
+
+        this.api = api;
     }
 
     @Override
     protected void onCommand() {
-        // Vérifier si les arguments sont corrects
         if (super.args.length == 0) {
             super.returnInvalidArgs();
             return;
         }
 
-        // Récupérer l'action demandée (give, take, show)
         final Param param = Param.find(super.args[0]);
         if (param == null) {
             super.returnInvalidArgs();
@@ -51,23 +49,28 @@ public final class CreditCommand extends SimpleCommand {
         }
 
         final String targetName = super.args.length > 1 ? super.args[1] : "";
-        final String amount = super.args.length > 2 ? super.args[2] : "";
+        final String amountArgs = super.args.length > 2 ? super.args[2] : "";
         final String reason = super.args.length > 3 ? Common.joinRange(3, super.args) : "";
 
         switch (param) {
-            case HELP -> this.handleHelpCommand();
+            case HELP:
+                handleHelpCommand();
+                break;
 
-            case GIVE -> this.handleGiveCommand(targetName, reason, amount);
+            case GIVE:
+                handleGiveCommand(targetName, reason, amountArgs);
+                break;
 
-            case TAKE -> this.handleTakeCommand(targetName, reason, amount);
+            case TAKE:
+                handleTakeCommand(targetName, reason, amountArgs);
+                break;
 
-            case SHOW -> this.handleShowCommand(targetName);
+            case SHOW:
+                handleShowCommand(targetName);
+                break;
         }
     }
 
-    /**
-     * Enum pour représenter les différentes actions possibles pour la commande /credit
-     */
     private enum Param {
         HELP("help", "?"),
         GIVE("give", "g"),
@@ -82,134 +85,94 @@ public final class CreditCommand extends SimpleCommand {
             this.aliases = paramAliases;
         }
 
-        /**
-         * Trouver l'action correspondant au paramètre donné
-         */
         @Nullable
         private static Param find(String paramArgument) {
             String finalParamArgument = paramArgument.toLowerCase();
 
-            return Arrays.stream(values())
-                    .filter(param -> param.label.toLowerCase().equals(finalParamArgument) || param.aliases != null && Arrays.asList(param.aliases).contains(finalParamArgument))
+            return java.util.Arrays.stream(values())
+                    .filter(param -> param.label.equals(finalParamArgument) || (param.aliases != null && java.util.Arrays.asList(param.aliases).contains(finalParamArgument)))
                     .findFirst()
                     .orElse(null);
         }
 
         @Override
         public String toString() {
-            return this.label;
+            return label;
         }
     }
 
-    /**
-     * Méthode pour traiter la commande /credit give
-     */
     private void handleGiveCommand(String targetName, String reason, String amountArgs) {
-        // Vérifier les permissions du joueur pour effectuer cette action
         if (!Utils.hasPermission(super.getSender(), "arkacore.credit.give") && !Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
-            super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, SerializedMap.ofArray("permission", "arkacore.credit.give")));
+            super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, Collections.singletonMap("permission", "arkacore.credit.give")));
             return;
         }
 
-        // Récupérer le joueur cible et le montant spécifié
         final Player paramTargetPlayer = Bukkit.getPlayer(targetName);
-        final int amount = this.convertAmountToInt(amountArgs);
+        final long amount = parseAmount(amountArgs);
+
         if (paramTargetPlayer == null) {
-            // Si le joueur n'est pas en ligne, récupérer son UUID de manière asynchrone
-            Utils.getUUIDFromUsernameAsync(targetName, new Utils.UUIDCallback() {
+            Utils.getUUIDFromUsernameAsync(targetName, new Callback<UUID>() {
                 @Override
                 public void onSuccess(UUID uniqueId) {
-                    // Si le joueur n'existe pas, afficher un message d'erreur
-                    if (uniqueId == null) {
-                        tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
-                        return;
-                    }
-
-                    // Créditer le joueur cible avec le montant spécifié
-                    creditPlayer(uniqueId, amount, reason);
+                    creditPlayer(uniqueId, amount, reason, null);
                 }
 
                 @Override
-                public void onFailure() {
+                public void onFailure(Throwable throwable) {
                     tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
                 }
             });
         } else {
-            // Si le joueur est en ligne, créditer directement le joueur
-            creditPlayer(paramTargetPlayer.getUniqueId(), amount, reason);
+            this.creditPlayer(paramTargetPlayer.getUniqueId(), amount, reason, paramTargetPlayer);
         }
     }
 
-    /**
-     * Méthode pour traiter la commande /credit take
-     */
     private void handleTakeCommand(String targetName, String reason, String amountArgs) {
-        // Vérifier les permissions du joueur pour effectuer cette action
         if (Utils.hasPermission(super.getSender(), "arkacore.credit.take") && !Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
-            super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, SerializedMap.ofArray("{permission}", super.getPermission())));
+            super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, Collections.singletonMap("{permission}", super.getPermission())));
             return;
         }
 
-        // Récupérer le joueur cible et le montant spécifié
         final Player paramTargetPlayer = Bukkit.getPlayer(targetName);
-        final int paramAmount = convertAmountToInt(amountArgs);
+        final long amount = this.parseAmount(amountArgs);
 
-        // Vérifier si le joueur cible est en ligne
         if (paramTargetPlayer == null) {
-            // Si le joueur n'est pas en ligne, récupérer son UUID de manière asynchrone
-            Utils.getUUIDFromUsernameAsync(targetName, new Utils.UUIDCallback() {
+            Utils.getUUIDFromUsernameAsync(targetName, new Callback<UUID>() {
                 @Override
-                public void onSuccess(UUID uniqueId) {
-                    // Si le joueur n'existe pas, afficher un message d'erreur
-                    if (uniqueId == null) {
-                        tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
-                        return;
-                    }
-
-                    // Retirer le montant spécifié du crédit du joueur cible
-                    withdrawPlayer(uniqueId, paramAmount, reason);
+                public void onSuccess(UUID var1) {
+                    withdrawPlayer(var1, amount, reason, null);
                 }
 
                 @Override
-                public void onFailure() {
+                public void onFailure(Throwable var1) {
                     tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
                 }
             });
         } else {
-            // Si le joueur est en ligne, retirer directement le montant du crédit du joueur
-            withdrawPlayer(paramTargetPlayer.getUniqueId(), paramAmount, reason);
+            withdrawPlayer(paramTargetPlayer.getUniqueId(), amount, reason, paramTargetPlayer);
         }
     }
 
-    /**
-     * Méthode pour traiter la commande /credit show
-     */
     private void handleShowCommand(String targetName) {
-        // Vérifier les permissions du joueur pour effectuer cette action
         if (Utils.hasPermission(super.getSender(), "arkacore.credit.show.others") && !Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
-            super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, SerializedMap.ofArray("{permission}", super.getPermission())));
+            super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, Collections.singletonMap("{permission}", super.getPermission())));
             return;
         }
 
-        // Récupérer le joueur cible
-        Player paramTargetPlayer = Bukkit.getPlayer(targetName);
-
-        // Vérifier si le joueur cible est en ligne
+        final Player paramTargetPlayer = Bukkit.getPlayer(targetName);
         if (paramTargetPlayer == null) {
-            // Si le joueur n'est pas en ligne, récupérer son UUID de manière asynchrone
-            Utils.getUUIDFromUsernameAsync(targetName, new Utils.UUIDCallback() {
+            Utils.getUUIDFromUsernameAsync(targetName, new Callback<UUID>() {
                 @Override
                 public void onSuccess(UUID uniqueId) {
-                    // Si le joueur n'existe pas, afficher un message d'erreur
-                    if (uniqueId == null) {
-                        tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
-                        return;
-                    }
-
-                    // Récupérer les données du joueur cible et afficher son crédit
-                    PlayerData paramTargetData = ApiImplementation.getInstance().getPlayerManager().getPlayerData(uniqueId);
+                    PlayerData paramTargetData = api.getPlayerManager().getPlayerData(uniqueId);
                     if (!paramTargetData.isLoaded()) {
-                        tellError("&cUne erreur est survenue lors de la récupération des données du joueur.");
+                        PlayerBean playerBean = api.getServerServiceManager().getPlayer(uniqueId);
+                        if (playerBean == null) {
+                            tellError("&cUne erreur est survenue lors de la récupération des données du joueur hors-ligne.");
+                            return;
+                        }
+
+                        tellSuccess("&aLe joueur &f" + playerBean.getName() + " &aà &f" + playerBean.getOmega() + " &aoméga.");
                         return;
                     }
 
@@ -217,15 +180,14 @@ public final class CreditCommand extends SimpleCommand {
                 }
 
                 @Override
-                public void onFailure() {
+                public void onFailure(Throwable throwable) {
                     tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
                 }
             });
         } else {
-            // Si le joueur est en ligne, récupérer directement les données du joueur et afficher son crédit
-            PlayerData paramTargetData = ApiImplementation.getInstance().getPlayerManager().getPlayerData(paramTargetPlayer.getUniqueId());
+            PlayerData paramTargetData = api.getPlayerManager().getPlayerData(paramTargetPlayer.getUniqueId());
             if (!paramTargetData.isLoaded()) {
-                tellError("&cUne erreur est survenue lors de la récupération des données du joueur.");
+                tellError("&cUne erreur est survenue lors de la récupération des données du joueur en ligne.");
                 return;
             }
 
@@ -235,18 +197,18 @@ public final class CreditCommand extends SimpleCommand {
 
     private void handleHelpCommand() {
         if (!Utils.hasPermission(super.getSender(), "arkacore.credit.help") && !Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
-            super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, SerializedMap.ofArray("{permission}", "arkacore.scoreboard.help")));
+            super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, Collections.singletonMap("{permission}", "arkacore.scoreboard.help")));
             return;
         }
 
         final SimpleComponent commandComponent = SimpleComponent.empty();
         commandComponent
                 .append(Common.chatLine())
-                .append("\n" + this.prefix + "&ccommandes manager disponible")
-                .append("\n" + this.prefix)
-                .append("\n" + this.prefix + "&6[] &f- Arguments Requis")
-                .append("\n" + this.prefix + "&6<> &f- Arguments Optionnels")
-                .append("\n" + this.prefix);
+                .append("\n" + Settings.PLUGIN_PREFIX + " &ccommandes manager disponible")
+                .append("\n" + Settings.PLUGIN_PREFIX)
+                .append("\n" + Settings.PLUGIN_PREFIX + "&6[] &f- Arguments Requis")
+                .append("\n" + Settings.PLUGIN_PREFIX + "&6<> &f- Arguments Optionnels")
+                .append("\n" + Settings.PLUGIN_PREFIX);
 
         if (Utils.hasPermission(super.getSender(), "arkacore.credit.give") || Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
             CommandUtils.createCommandComponent(commandComponent, "&f" + super.getCurrentLabel(), super.getPlayer(), "give", "<joueur> <montant>", Collections.singletonList("\n &f- &cDonner &fdes crédits"), "arkacore.credit.give|arkacore.credit.admin", CommandUtils.Action.SUGGEST_COMMAND.getHover());
@@ -261,69 +223,106 @@ public final class CreditCommand extends SimpleCommand {
         }
 
         commandComponent
-                .append("\n" + this.prefix)
-                .append("\n" + this.prefix + "&f&nSurvolez la commande pour plus d'informations.")
+                .append("\n" + Settings.PLUGIN_PREFIX)
+                .append("\n" + Settings.PLUGIN_PREFIX + "&f&nSurvolez la commande pour plus d'informations.")
                 .append("\n&f" + Common.chatLine())
                 .send(super.getSender());
     }
 
-    /**
-     * Méthode pour créditer un joueur avec un montant donné
-     */
-    private void creditPlayer(UUID uniqueId, long amount, String reason) {
-        PlayerData paramTargetData = ApiImplementation.getInstance().getPlayerManager().getPlayerData(uniqueId);
+    private void creditPlayer(UUID uniqueId, long amount, String reason, Player targetPlayer) {
+        PlayerData paramTargetData = this.api.getPlayerManager().getPlayerData(uniqueId);
         if (!paramTargetData.isLoaded()) {
-            super.tellError("&cUne erreur est survenue lors de la récupération des données du joueur.");
-            return;
+            this.api.getServerServiceManager().getPlayer(uniqueId, new Callback<PlayerBean>() {
+                @Override
+                public void onSuccess(PlayerBean playerBean) {
+                    final long newAmount = playerBean.getOmega() + amount;
+                    playerBean.setOmega(newAmount);
+
+                    handleSaveTransactionOffline(playerBean, amount, reason, "give");
+
+                    tellSuccess("&fVous avez ajouté &a" + amount + " omegas &fà &a" + playerBean.getName() + "&a.");
+                    api.getServerServiceManager().updatePlayer(playerBean, null);
+                }
+
+                @Override
+                public void onFailure(Throwable cause) {
+                    tellError(cause.getMessage());
+                }
+            });
+        } else {
+            paramTargetData.creditOmegaCoins(amount, reason, false, (result, amountFinal, throwable) -> {
+                if (throwable != null) {
+                    this.tellError("&cUne erreur est survenue lors de l'ajout des crédits! Cause: " + throwable.getMessage());
+                    return;
+                }
+
+                this.handleSaveTransactionOnline(paramTargetData, amount, reason, "give");
+
+                this.tellSuccess("&fVous avez ajouté &a" + amount + " omegas &fà &a" + paramTargetData.getEffectiveName() + "&a. &7(&f" + reason + "&7)");
+                if (targetPlayer != null) {
+                    Messenger.success(targetPlayer, "&fVous avez reçu &a" + amountFinal + " omegas &fde &a" + super.getSender().getName() + "&a. &7(&f" + reason + "&7)");
+                }
+            });
         }
-
-        // Créditer le joueur avec le montant spécifié
-        paramTargetData.creditOmegaCoins(amount, reason, false, (l, l1, throwable) -> {
-            if (throwable != null) {
-                super.tellError("&cUne erreur est survenue! Le joueur n'a pas pu être trouvé.");
-                throw new FoException(throwable);
-            }
-
-            this.tellSuccess("&fVous avez ajouté &a" + amount + " omegas &fà &a" + paramTargetData.getEffectiveName() + "&a.");
-        });
     }
 
-    /**
-     * Méthode pour retirer un montant de crédits à un joueur
-     */
-    private void withdrawPlayer(UUID uniqueId, long amount, String reason) {
-        PlayerData paramTargetData = ApiImplementation.getInstance().getPlayerManager().getPlayerData(uniqueId);
-        if (!paramTargetData.isLoaded()) {
-            super.tellError("&cUne erreur est survenue! Le joueur n'a pas pu être trouvé.");
-            return;
+    private void withdrawPlayer(UUID playerId, long amount, String reason, Player targetPlayer) {
+        PlayerData playerData = api.getPlayerManager().getPlayerData(playerId);
+        if (!playerData.isLoaded()) {
+            this.api.getServerServiceManager().getPlayer(playerId, new Callback<PlayerBean>() {
+                @Override
+                public void onSuccess(PlayerBean playerBean) {
+                    long newAmount = Math.max(playerBean.getOmega() - amount, 0);
+                    playerBean.setOmega(newAmount);
+
+                    handleSaveTransactionOffline(playerBean, amount, reason, "take");
+
+                    tellSuccess("&fVous avez retiré &a" + amount + " omegas &fà &a" + playerBean.getName() + "&a.");
+                    api.getServerServiceManager().updatePlayer(playerBean, null);
+                }
+
+                @Override
+                public void onFailure(Throwable cause) {
+                    tellError(cause.getMessage());
+                }
+            });
+        } else {
+            playerData.withdrawOmegaCoins(amount, reason, (updatedAmount, newBalance, throwable) -> {
+                if (throwable != null) {
+                    this.tellError("&cUne erreur est survenue lors du retrait des crédits! Cause: " + throwable.getMessage());
+                    return;
+                }
+
+                this.handleSaveTransactionOnline(playerData, amount, reason, "take");
+
+                this.tellSuccess("&fVous avez retiré &a" + amount + " omegas &fà &a" + playerData.getEffectiveName() + "&f. &7(&f" + reason + "&7)");
+                if (targetPlayer != null) {
+                    Messenger.success(targetPlayer, "&fVous avez perdu &a" + amount + " omegas &fde &a" + super.getSender().getName() + "&f. &7(&f" + reason + "&7)");
+                }
+            });
         }
-
-        // Retirer le montant spécifié du crédit du joueur
-        paramTargetData.withdrawOmegaCoins(amount, reason, (l, l1, throwable) -> {
-            if (throwable != null) {
-                this.tellError("&cUne erreur est survenue lors de l'ajout des crédits.");
-                throw new FoException(throwable);
-            }
-
-            this.tellSuccess("&fVous avez retiré &a" + amount + " omegas &fà &a" + paramTargetData.getEffectiveName() + "&f.");
-        });
     }
 
-    /**
-     * Méthode pour convertir le montant de crédits (en tant que chaîne de caractères) en entier
-     */
-    private int convertAmountToInt(String args) {
+    private long parseAmount(String args) {
         if (!Utils.isInteger(args)) {
             super.tellError("&cLe montant doit être un nombre entier.");
             return 0;
         }
 
-        final int amount = Integer.parseInt(args);
-        if (amount <= 0) {
-            super.tellError("&cLe montant doit être supérieur à 0.");
-            return 0;
-        }
+        return Math.max(Long.parseLong(args), 0);
+    }
 
-        return amount;
+    private void handleSaveTransactionOffline(PlayerBean playerBean, long amount, String reason, String param) {
+        LocalDateTime currentTime = ZonedDateTime.now(ZoneId.of("Europe/Paris")).toLocalDateTime();
+        Timestamp timestamp = Timestamp.valueOf(currentTime);
+        CreditBean creditBean = new CreditBean(playerBean.getUniqueId(), timestamp, param, super.getSender().getName(), playerBean.getName(), (int) amount, reason);
+        playerBean.getCreditLogs().add(creditBean);
+    }
+
+    private void handleSaveTransactionOnline(PlayerData playerData, long amount, String reason, String param) {
+        LocalDateTime currentTime = ZonedDateTime.now(ZoneId.of("Europe/Paris")).toLocalDateTime();
+        Timestamp timestamp = Timestamp.valueOf(currentTime);
+        CreditBean creditBean = new CreditBean(playerData.getUniqueId(), timestamp, param, super.getSender().getName(), playerData.getEffectiveName(), (int) amount, reason);
+        playerData.addLog(creditBean);
     }
 }
