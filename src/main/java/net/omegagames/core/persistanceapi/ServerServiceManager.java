@@ -49,17 +49,6 @@ public class ServerServiceManager {
     }
 
     /**
-     * Update la colonne d'un joueur dans la base de données
-     *
-     * @param uuid L'UUID du joueur
-     * @param column La colonne à update
-     * @param value La valeur à update
-     */
-    public synchronized void updatePlayerColumn(UUID uuid, String column, Object value) {
-        this.playerManager.updatePlayerColumn(uuid, column, value);
-    }
-
-    /**
      * Update les données d'un joueur à partir de son PlayerBean
      *
      * @param playerBean Le PlayerBean du joueur

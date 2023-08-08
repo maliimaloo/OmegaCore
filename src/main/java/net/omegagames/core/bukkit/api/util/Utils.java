@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.exception.FoException;
 import org.mineacademy.fo.jsonsimple.JSONArray;
 import org.mineacademy.fo.jsonsimple.JSONObject;
 import org.mineacademy.fo.jsonsimple.JSONParser;
@@ -114,11 +115,11 @@ public final class Utils {
                     callback.onSuccess(uuid);
                 } else {
                     Common.throwError(null, "Impossible de récupérer l'UUID de " + username + ". Code de réponse: " + connection.getResponseCode() + ".");
-                    callback.onFailure(null);
+                    callback.onFailure(new FoException("Impossible de récupérer l'UUID de " + username + ". Code de réponse: " + connection.getResponseCode() + "."));
                 }
             } catch (Throwable throwable) {
                 Common.throwError(throwable, "Impossible de récupérer l'UUID de " + username);
-                callback.onFailure(throwable);
+                callback.onFailure(new FoException("Impossible de récupérer l'UUID de " + username));
             }
         });
     }

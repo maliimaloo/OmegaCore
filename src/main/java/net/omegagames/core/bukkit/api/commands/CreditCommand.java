@@ -119,7 +119,7 @@ public final class CreditCommand extends SimpleCommand {
 
                 @Override
                 public void onFailure(Throwable throwable) {
-                    tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
+                    tellError(throwable.getMessage());
                 }
             });
         } else {
@@ -144,8 +144,8 @@ public final class CreditCommand extends SimpleCommand {
                 }
 
                 @Override
-                public void onFailure(Throwable var1) {
-                    tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
+                public void onFailure(Throwable throwable) {
+                    tellError(throwable.getMessage());
                 }
             });
         } else {
@@ -181,7 +181,7 @@ public final class CreditCommand extends SimpleCommand {
 
                 @Override
                 public void onFailure(Throwable throwable) {
-                    tellError("&cLe joueur &f" + targetName + " &cn'existe pas.");
+                    tellError(throwable.getMessage());
                 }
             });
         } else {

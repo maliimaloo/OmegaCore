@@ -125,14 +125,6 @@ public class PlayerManager {
         }, playerBean.getName(), playerBean.getOmega(), playerBean.getLastLogin().toString(), playerBean.getLastIp(), playerBean.getGroupId(), playerBean.getNickname(), Transcoder.encode(playerBean.getUniqueId().toString()));
     }
 
-    public void updatePlayerColumn(UUID uniqueId, String column, Object value) {
-        String updateQuery = "UPDATE " + PlayerBean.getTableName() + " " +
-                "SET " + column + " = ? " +
-                "WHERE " + PlayerBean.getFieldUniqueId() + " = ?";
-
-        this.databaseManager.asyncTransmission(updateQuery, value, uniqueId);
-    }
-
     // Méthode privée pour convertir le résultat de la requête en PlayerBean
     private PlayerBean convertToPlayerBean(MResultSet resultSet) {
         if (resultSet == null || !resultSet.next()) {
