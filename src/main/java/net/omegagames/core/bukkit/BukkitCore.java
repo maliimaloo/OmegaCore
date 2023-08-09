@@ -2,21 +2,17 @@ package net.omegagames.core.bukkit;
 
 import lombok.Getter;
 import net.omegagames.core.bukkit.api.commands.CreditCommand;
-import net.omegagames.core.bukkit.api.commands.TestCommand;
 import net.omegagames.core.bukkit.api.expansion.player.PlayerPlaceholderExpansion;
 import net.omegagames.core.bukkit.api.expansion.server.ServerPlaceholderExpansion;
 import net.omegagames.core.bukkit.api.listeners.general.GlobalJoinListener;
-import net.omegagames.core.bukkit.api.scoreboard.ScoreboardManager;
 import net.omegagames.core.bukkit.api.settings.Settings;
 import net.omegagames.core.jedis.DatabaseConnector;
 import net.omegagames.core.jedis.RedisServer;
 import net.omegagames.core.persistanceapi.ServerServiceManager;
 import org.bukkit.Bukkit;
-import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.exception.FoException;
-import org.mineacademy.fo.model.HookManager;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
 import java.util.concurrent.Executors;
@@ -34,10 +30,12 @@ public class BukkitCore extends SimplePlugin {
     private DatabaseConnector databaseConnector;
     @Getter
     private DebugListener debugListener;
+
+    //@Getter
+    //private ScoreboardManager scoreboardManager;
+
     @Getter
     private ScheduledExecutorService executor;
-    @Getter
-    private ScoreboardManager scoreboardManager;
     @Getter
     private String serverName;
 
@@ -86,7 +84,7 @@ public class BukkitCore extends SimplePlugin {
         this.databaseConnector = this.initDatabaseconnector();
 
         this.api = new ApiImplementation(this);
-        this.scoreboardManager = new ScoreboardManager(this.api);
+        //this.scoreboardManager = new ScoreboardManager(this.api);
 
         this.initListeners();
         this.initCommands();
@@ -97,16 +95,6 @@ public class BukkitCore extends SimplePlugin {
     public boolean suggestPaper() {
         // Cette méthode est surchargée pour suggérer Paper pour une meilleure performance, mais renvoie false pour le moment.
         return false;
-    }
-
-    /**
-     * Obtient la version minimale de Minecraft requise par ce plugin.
-     *
-     * @return La version minimale de Minecraft requise.
-     */
-    @Override
-    public MinecraftVersion.V getMinimumVersion() {
-        return MinecraftVersion.V.v1_17;
     }
 
     /**
@@ -172,7 +160,5 @@ public class BukkitCore extends SimplePlugin {
     private void initPlaceholder() {
         new PlayerPlaceholderExpansion().register();
         new ServerPlaceholderExpansion(this.getApi()).register();
-
-        HookManager.addPlaceholder("test_scoreboard", (player) -> Boolean.toString(TestCommand.getParamValue()));
     }
 }

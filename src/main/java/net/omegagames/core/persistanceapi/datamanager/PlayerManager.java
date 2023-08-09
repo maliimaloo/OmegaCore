@@ -1,9 +1,9 @@
 package net.omegagames.core.persistanceapi.datamanager;
 
+import net.omegagames.core.bukkit.api.util.Callback;
 import net.omegagames.core.persistanceapi.ServerServiceManager;
 import net.omegagames.core.persistanceapi.beans.credit.CreditBean;
 import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
-import net.omegagames.core.bukkit.api.util.Callback;
 import net.omegagames.core.persistanceapi.database.DatabaseManager;
 import net.omegagames.core.persistanceapi.database.MResultSet;
 import net.omegagames.core.persistanceapi.utils.Transcoder;

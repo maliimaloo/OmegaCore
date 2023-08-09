@@ -26,7 +26,7 @@ public class PlayerPlaceholderExpansion {
      * ======================== */
     private String getPlayerEffectiveName(Player paramPlayer) {
         PlayerData paramPlayerData = ApiImplementation.getInstance().getPlayerManager().getPlayerData(paramPlayer.getUniqueId());
-        if (paramPlayerData.isLoaded()) {
+        if (paramPlayerData.isLoaded() && paramPlayerData.getEffectiveName() != null) {
             return paramPlayerData.getEffectiveName();
         }
 
@@ -35,7 +35,7 @@ public class PlayerPlaceholderExpansion {
 
     private String getCustomName(Player paramPlayer) {
         PlayerData paramPlayerData = ApiImplementation.getInstance().getPlayerManager().getPlayerData(paramPlayer.getUniqueId());
-        if (paramPlayerData.isLoaded()) {
+        if (paramPlayerData.isLoaded() && paramPlayerData.getCustomName() != null) {
             return paramPlayerData.getCustomName();
         }
 
@@ -44,7 +44,7 @@ public class PlayerPlaceholderExpansion {
 
     private String getDisplayName(Player paramPlayer) {
         PlayerData paramPlayerData = ApiImplementation.getInstance().getPlayerManager().getPlayerData(paramPlayer.getUniqueId());
-        if (paramPlayerData.isLoaded()) {
+        if (paramPlayerData.isLoaded() && paramPlayerData.getDisplayName() != null) {
             return paramPlayerData.getDisplayName();
         }
 
@@ -57,7 +57,7 @@ public class PlayerPlaceholderExpansion {
      * ======================== */
     private String getLastConnection(Player paramPlayer) {
         PlayerData paramPlayerData = ApiImplementation.getInstance().getPlayerManager().getPlayerData(paramPlayer.getUniqueId());
-        if (paramPlayerData.isLoaded()) {
+        if (paramPlayerData.isLoaded() && paramPlayerData.getLastLogin() != null) {
             return paramPlayerData.getLastLogin().toLocalDateTime().toString();
         }
 
@@ -66,7 +66,7 @@ public class PlayerPlaceholderExpansion {
 
     private String getFirstConnection(Player paramPlayer) {
         PlayerData paramPlayerData = ApiImplementation.getInstance().getPlayerManager().getPlayerData(paramPlayer.getUniqueId());
-        if (paramPlayerData.isLoaded()) {
+        if (paramPlayerData.isLoaded() && paramPlayerData.getFirstLogin() != null) {
             return paramPlayerData.getFirstLogin().toLocalDateTime().toString();
         }
 
@@ -75,7 +75,7 @@ public class PlayerPlaceholderExpansion {
 
     private String getLastIp(Player paramPlayer) {
         PlayerData paramPlayerData = ApiImplementation.getInstance().getPlayerManager().getPlayerData(paramPlayer.getUniqueId());
-        if (paramPlayerData.isLoaded()) {
+        if (paramPlayerData.isLoaded() && paramPlayerData.getLastIp() != null) {
             return paramPlayerData.getLastIp();
         }
 

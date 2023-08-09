@@ -5,10 +5,8 @@ import net.omegagames.api.player.IFinancialCallback;
 import net.omegagames.core.bukkit.ApiImplementation;
 import net.omegagames.core.persistanceapi.beans.credit.CreditBean;
 import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.Messenger;
+import org.mineacademy.fo.exception.FoException;
 import redis.clients.jedis.Jedis;
 
 import java.sql.Timestamp;
@@ -158,13 +156,13 @@ public class PlayerData extends AbstractPlayerData {
     }
 
     @Override
-    public void creditOmegaCoins(long amount, String reason, boolean applyMultiplier, IFinancialCallback financialCallback) {
-        this.creditEconomy(amount, reason, financialCallback);
+    public void creditOmegaCoins(long amount, IFinancialCallback financialCallback) {
+        this.creditEconomy(amount, financialCallback);
     }
 
     @Override
-    public void withdrawOmegaCoins(long amount, String reason, IFinancialCallback financialCallback) {
-        this.creditEconomy(-amount, reason, financialCallback);
+    public void withdrawOmegaCoins(long amount, IFinancialCallback financialCallback) {
+        this.creditEconomy(-amount, financialCallback);
     }
 
     @Override
@@ -172,17 +170,20 @@ public class PlayerData extends AbstractPlayerData {
         return this.getOmegaCoins() >= amount;
     }
 
-    private void creditEconomy(long amountFinal, String reason, IFinancialCallback financialCallback) {
+    private void creditEconomy(long amount, IFinancialCallback financialCallback) {
         Common.runAsync(() ->  {
-            try {
-                long result = Math.max(this.getOmegaCoins() + amountFinal, 0);
+            long newAmount = Math.max(this.getOmegaCoins() + amount, 0);
 
-                this.setHashValue("omega", Long.toString(result));
+            try {
+                this.setHashValue("omega", Long.toString(newAmount));
                 if (financialCallback != null) {
-                    financialCallback.done(result, amountFinal, null);
+                    financialCallback.done(newAmount, amount, null);
                 }
             } catch (Throwable throwable) {
                 Common.throwError(throwable);
+                if (financialCallback != null) {
+                    financialCallback.done(newAmount, amount, throwable);
+                }
             }
         });
     }

@@ -63,14 +63,25 @@ Scoreboard:
     # Le scoreboard à afficher si la condition n'est pas remplie
     if-condition-not-met: 'main_scoreboard'
     # Le titre du scoreboard
-    title: '&6&l%server_name% network'
+    title: '&6&l%arkacore_server_name% network'
     # Le temps d'update du scoreboard
     update_interval: 20
     # Le contenu du scoreboard
     contents:
       - "&7"
-      - "&7Joueurs: &b%online_players%"
+      - "&7Joueurs: &b%arkacore_server_player_online%"
     # Si le scoreboard est par défaut
     default: true
 
+Tablist:
+  Enable: true
+  Header:
+    - '&6&lArkaMC Network'
+    - ''
+  Footer:
+    - ''
+    - '&bDiscord: &7discord.gg/arkamc'
+    - '&cBoutique: &7www.arkamc.fr/tebex'
+    - ''
+    - '&6play.arkamc.fr &7(%arkacore_server_player_online%&7)'
 

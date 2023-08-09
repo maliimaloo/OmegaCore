@@ -1,7 +1,7 @@
 package net.omegagames.core.persistanceapi;
 
-import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
 import net.omegagames.core.bukkit.api.util.Callback;
+import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
 import net.omegagames.core.persistanceapi.database.DatabaseManager;
 import net.omegagames.core.persistanceapi.datamanager.PlayerManager;
 

@@ -1,19 +1,7 @@
 package net.omegagames.core.bukkit.api.scoreboard;
 
-import lombok.Getter;
-import net.omegagames.core.bukkit.ApiImplementation;
-import net.omegagames.core.bukkit.api.settings.Settings;
-import org.bukkit.entity.Player;
-import org.mineacademy.fo.Common;
-import org.mineacademy.fo.Valid;
-import org.mineacademy.fo.model.HookManager;
-import org.mineacademy.fo.remain.Remain;
-
-import java.util.Objects;
-import java.util.Set;
-
 public class ScoreboardManager {
-    @Getter
+    /*@Getter
     private final Set<ScoreboardData> cache;
 
     @Getter
@@ -58,5 +46,5 @@ public class ScoreboardManager {
 
     public ScoreboardData getScoreboard(Player player) {
         return this.getCache().stream().filter((scoreboard) -> scoreboard.isViewing(player)).findFirst().orElse(null);
-    }
+    }*/
 }

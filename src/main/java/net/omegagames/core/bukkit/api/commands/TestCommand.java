@@ -3,6 +3,7 @@ package net.omegagames.core.bukkit.api.commands;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.omegagames.core.bukkit.ApiImplementation;
+import net.omegagames.core.bukkit.api.model.CreditLogMenu;
 import net.omegagames.core.bukkit.api.player.PlayerData;
 import net.omegagames.core.persistanceapi.beans.credit.CreditBean;
 import org.bukkit.Bukkit;
@@ -44,18 +45,7 @@ public final class TestCommand extends SimpleCommand {
                 return;
             }
 
-            Timestamp timestamp = Timestamp.valueOf(ZonedDateTime.now(ZoneId.of("Europe/Paris")).toLocalDateTime());
-            final boolean resultAddLog = playerData.addLog(new CreditBean(player.getUniqueId(), timestamp, "give", "maliimaloo", "yamakajump", 500, "Achat de 5e en boutique"));
-            if (!resultAddLog) {
-                super.tellError("Error while adding log.");
-                return;
-            }
-
-            super.tellSuccess("Log added.");
-
-            for (CreditBean log : playerData.getLogs()) {
-                super.tell(log.toString());
-            }
+            new CreditLogMenu(ApiImplementation.getInstance(), playerData.getLogs()).displayTo(super.getPlayer());
         }
     }
 }

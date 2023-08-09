@@ -5,7 +5,6 @@ import net.omegagames.api.OmegaGamesAPI;
 import net.omegagames.core.bukkit.api.listeners.pubsub.GlobalUpdateListener;
 import net.omegagames.core.bukkit.api.player.PlayerDataManager;
 import net.omegagames.core.bukkit.api.pubsub.PubSubAPI;
-import net.omegagames.core.bukkit.api.scoreboard.ScoreboardManager;
 import net.omegagames.core.persistanceapi.ServerServiceManager;
 import redis.clients.jedis.Jedis;
 
@@ -86,9 +85,9 @@ public class ApiImplementation extends OmegaGamesAPI {
         return this.pubSub;
     }
 
-    public ScoreboardManager getScoreboardManager() {
+    /*public ScoreboardManager getScoreboardManager() {
         return this.plugin.getScoreboardManager();
-    }
+    }*/
 
     /* -------------------------------------------
      * Méthodes spécifiques à OmegaGames

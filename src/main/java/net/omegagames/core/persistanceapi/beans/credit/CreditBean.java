@@ -71,6 +71,6 @@ public class CreditBean {
 
     public static CreditBean fromString(UUID uniqueId, String creditString) {
         String[] creditStringArray = creditString.split(",");
-        return new CreditBean(uniqueId, Timestamp.valueOf(creditStringArray[0]), creditStringArray[1], creditStringArray[2], creditStringArray[3], Integer.parseInt(creditStringArray[4]), creditStringArray[5]);
+        return new CreditBean(uniqueId, Timestamp.valueOf(creditStringArray[0]), creditStringArray[1], creditStringArray[2], creditStringArray[3], Integer.parseInt(creditStringArray[4]), creditStringArray[5] == null ? "" : creditStringArray[5]);
     }
 }

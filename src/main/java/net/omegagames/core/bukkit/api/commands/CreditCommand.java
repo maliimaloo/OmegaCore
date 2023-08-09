@@ -3,12 +3,12 @@ package net.omegagames.core.bukkit.api.commands;
 import net.omegagames.core.bukkit.ApiImplementation;
 import net.omegagames.core.bukkit.api.player.PlayerData;
 import net.omegagames.core.bukkit.api.settings.Settings;
+import net.omegagames.core.bukkit.api.util.Callback;
 import net.omegagames.core.bukkit.api.util.CommandUtils;
 import net.omegagames.core.bukkit.api.util.LangUtils;
 import net.omegagames.core.bukkit.api.util.Utils;
 import net.omegagames.core.persistanceapi.beans.credit.CreditBean;
 import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
-import net.omegagames.core.bukkit.api.util.Callback;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
@@ -22,8 +22,8 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public final class CreditCommand extends SimpleCommand {
     private final ApiImplementation api;
@@ -51,6 +51,7 @@ public final class CreditCommand extends SimpleCommand {
         final String targetName = super.args.length > 1 ? super.args[1] : "";
         final String amountArgs = super.args.length > 2 ? super.args[2] : "";
         final String reason = super.args.length > 3 ? Common.joinRange(3, super.args) : "";
+        final int page = super.args.length > 2 ? super.findNumber(2, "Le numéro de page doit être un nombre.") : 1;
 
         switch (param) {
             case HELP:
@@ -68,6 +69,10 @@ public final class CreditCommand extends SimpleCommand {
             case SHOW:
                 handleShowCommand(targetName);
                 break;
+
+            case LOG:
+                handleLogCommand(targetName, page);
+                break;
         }
     }
 
@@ -75,7 +80,8 @@ public final class CreditCommand extends SimpleCommand {
         HELP("help", "?"),
         GIVE("give", "g"),
         TAKE("take", "t"),
-        SHOW("show", "s");
+        SHOW("show", "s"),
+        LOG("log", "l");
 
         private final String label;
         private final String[] aliases;
@@ -151,6 +157,28 @@ public final class CreditCommand extends SimpleCommand {
         } else {
             withdrawPlayer(paramTargetPlayer.getUniqueId(), amount, reason, paramTargetPlayer);
         }
+    }
+
+    private void handleLogCommand(String targetName, int page) {
+        if (Utils.hasPermission(super.getSender(), "arkacore.credit.log") && !Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
+            super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, Collections.singletonMap("{permission}", super.getPermission())));
+            return;
+        }
+
+        final Player paramTargetPlayer = Bukkit.getPlayer(targetName);
+        if (paramTargetPlayer == null) {
+
+        } else {
+            PlayerData targetData = this.api.getPlayerManager().getPlayerData(paramTargetPlayer.getUniqueId());
+            if (!targetData.isLoaded()) {
+                tellError("&cUne erreur est survenue lors de la récupération des données du joueur en ligne.");
+                return;
+            }
+
+            List<String> targetLogs = targetData.getLogs().stream().map(CreditBean::toString).collect(Collectors.toList());
+            handleSendLogs(targetLogs, page);
+        }
+
     }
 
     private void handleShowCommand(String targetName) {
@@ -250,17 +278,18 @@ public final class CreditCommand extends SimpleCommand {
                 }
             });
         } else {
-            paramTargetData.creditOmegaCoins(amount, reason, false, (result, amountFinal, throwable) -> {
+            paramTargetData.creditOmegaCoins(amount, (result, amountFinal, throwable) -> {
                 if (throwable != null) {
-                    this.tellError("&cUne erreur est survenue lors de l'ajout des crédits! Cause: " + throwable.getMessage());
+                    tellError("&cUne erreur est survenue lors de l'ajout des crédits! Cause: " + throwable.getMessage());
                     return;
                 }
 
-                this.handleSaveTransactionOnline(paramTargetData, amount, reason, "give");
+                handleSaveTransactionOnline(paramTargetData, amountFinal, reason, "give");
 
                 this.tellSuccess("&fVous avez ajouté &a" + amount + " omegas &fà &a" + paramTargetData.getEffectiveName() + "&a. &7(&f" + reason + "&7)");
                 if (targetPlayer != null) {
                     Messenger.success(targetPlayer, "&fVous avez reçu &a" + amountFinal + " omegas &fde &a" + super.getSender().getName() + "&a. &7(&f" + reason + "&7)");
+                    Messenger.success(targetPlayer, "&fNouveau solde: &a" + result + " omegas&f.");
                 }
             });
         }
@@ -287,17 +316,18 @@ public final class CreditCommand extends SimpleCommand {
                 }
             });
         } else {
-            playerData.withdrawOmegaCoins(amount, reason, (updatedAmount, newBalance, throwable) -> {
+            playerData.withdrawOmegaCoins(amount, (result, amountFinal, throwable) -> {
                 if (throwable != null) {
                     this.tellError("&cUne erreur est survenue lors du retrait des crédits! Cause: " + throwable.getMessage());
                     return;
                 }
 
-                this.handleSaveTransactionOnline(playerData, amount, reason, "take");
+                handleSaveTransactionOnline(playerData, amountFinal, reason, "take");
 
-                this.tellSuccess("&fVous avez retiré &a" + amount + " omegas &fà &a" + playerData.getEffectiveName() + "&f. &7(&f" + reason + "&7)");
+                tellSuccess("&fVous avez retiré &a" + amount + " omegas &fà &a" + playerData.getEffectiveName() + "&f. &7(&f" + reason + "&7)");
                 if (targetPlayer != null) {
                     Messenger.success(targetPlayer, "&fVous avez perdu &a" + amount + " omegas &fde &a" + super.getSender().getName() + "&f. &7(&f" + reason + "&7)");
+                    Messenger.success(targetPlayer, "&fNouveau solde: &a" + result + " omegas&f.");
                 }
             });
         }
@@ -312,7 +342,35 @@ public final class CreditCommand extends SimpleCommand {
         return Math.max(Long.parseLong(args), 0);
     }
 
+
+    private void handleSendLogs(List<String> targetLogs, int page) {
+        int totalPages = (int) Math.ceil((double) targetLogs.size() / 10);
+        if (page < 1 || page > totalPages) {
+            super.tellError("&cLa page doit être comprise entre 1 et " + totalPages + ".");
+            return;
+        }
+
+        super.getSender().sendMessage(Common.colorize("&6---- Logs de oméga - Page &a" + page + "&6/&a" + totalPages + "&6 ----"));
+        if (targetLogs.isEmpty()) {
+            return;
+        }
+
+        int startIndex = (page - 1) * 10;
+        int endIndex = Math.min(startIndex + 10, targetLogs.size());
+
+        StringJoiner joiner = new StringJoiner("\n");
+        for (int i = startIndex; i < endIndex; i++) {
+            joiner.add(" * " + targetLogs.get(i));
+        }
+
+        super.getSender().sendMessage(Common.colorize(joiner.toString()));
+    }
+
     private void handleSaveTransactionOffline(PlayerBean playerBean, long amount, String reason, String param) {
+        if (reason == null || reason.isEmpty()) {
+            reason = "Aucune raison spécifiée.";
+        }
+
         LocalDateTime currentTime = ZonedDateTime.now(ZoneId.of("Europe/Paris")).toLocalDateTime();
         Timestamp timestamp = Timestamp.valueOf(currentTime);
         CreditBean creditBean = new CreditBean(playerBean.getUniqueId(), timestamp, param, super.getSender().getName(), playerBean.getName(), (int) amount, reason);
@@ -320,6 +378,10 @@ public final class CreditCommand extends SimpleCommand {
     }
 
     private void handleSaveTransactionOnline(PlayerData playerData, long amount, String reason, String param) {
+        if (reason == null || reason.isEmpty()) {
+            reason = "Aucune raison spécifiée.";
+        }
+
         LocalDateTime currentTime = ZonedDateTime.now(ZoneId.of("Europe/Paris")).toLocalDateTime();
         Timestamp timestamp = Timestamp.valueOf(currentTime);
         CreditBean creditBean = new CreditBean(playerData.getUniqueId(), timestamp, param, super.getSender().getName(), playerData.getEffectiveName(), (int) amount, reason);

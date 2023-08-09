@@ -22,16 +22,24 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
-@AutoRegister
+//AutoRegister
 public final class ScoreboardCommand extends SimpleCommand {
-    private final String prefix = Settings.PLUGIN_PREFIX + " ";
+    private ScoreboardCommand(String label) {
+        super(label);
+    }
+
+    @Override
+    protected void onCommand() {
+
+    }
+    /*private final String prefix = Settings.PLUGIN_PREFIX + " ";
 
     @Getter (value = AccessLevel.PRIVATE)
     private static final ScoreboardCommand instance = new ScoreboardCommand();
 
     /**
      * Constructeur de la classe `ScoreboardManagerCommand`
-     */
+     *
     public ScoreboardCommand() {
         super("ascoreboard");
         super.setAutoHandleHelp(false);
@@ -73,7 +81,7 @@ public final class ScoreboardCommand extends SimpleCommand {
 
     /**
      * Enum pour représenter les différentes actions possibles pour la commande /credit
-     */
+     *
     private enum Param {
         HELP("help", "?"),
         GIVE("show", "s"),
@@ -89,7 +97,7 @@ public final class ScoreboardCommand extends SimpleCommand {
 
         /**
          * Trouver l'action correspondant au paramètre donné
-         */
+         *
         @Nullable
         private static Param find(String paramArgument) {
             String finalParamArgument = paramArgument.toLowerCase();
@@ -198,5 +206,5 @@ public final class ScoreboardCommand extends SimpleCommand {
                 .append("\n" + this.prefix + "&f&nSurvolez la commande pour plus d'informations.")
                 .append("\n&f" + Common.chatLine())
                 .send(super.getSender());
-    }
+    }*/
 }

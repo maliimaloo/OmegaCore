@@ -1,18 +1,16 @@
 package net.omegagames.core.bukkit.api.scoreboard;
 
-import lombok.Getter;
-import lombok.NonNull;
-import net.omegagames.core.bukkit.ApiImplementation;
-import org.bukkit.entity.Player;
 import org.mineacademy.fo.collection.SerializedMap;
 import org.mineacademy.fo.model.ConfigSerializable;
 import org.mineacademy.fo.model.SimpleScoreboard;
-import org.mineacademy.fo.model.Variables;
-
-import java.util.List;
 
 public class ScoreboardData extends SimpleScoreboard implements ConfigSerializable {
-    @Getter
+    @Override
+    public SerializedMap serialize() {
+        return null;
+    }
+
+    /*@Getter
     private final String stripTitle;
 
     @Getter
@@ -37,7 +35,7 @@ public class ScoreboardData extends SimpleScoreboard implements ConfigSerializab
      * @param isDefault si le scoreboard est le scoreboard par défaut
      * @param display_condition la condition d'affichage du scoreboard
      * @param if_condition_not_met le message à afficher si la condition d'affichage n'est pas respectée
-     */
+     *
     public ScoreboardData(String unique_id, String title, Integer update_interval, List<String> contents, Boolean isDefault, String display_condition, String if_condition_not_met) {
         super(title);
         super.setUpdateDelayTicks(update_interval);
@@ -88,7 +86,7 @@ public class ScoreboardData extends SimpleScoreboard implements ConfigSerializab
      * Sérialise les données du scoreboard en une instance de SerializedMap.
      *
      * @return une instance de SerializedMap contenant les données du scoreboard
-     */
+     *
     @Override
     public SerializedMap serialize() {
         return SerializedMap.ofArray(
@@ -107,7 +105,7 @@ public class ScoreboardData extends SimpleScoreboard implements ConfigSerializab
      *
      * @param serializedMap l'instance de SerializedMap contenant les données du scoreboard
      * @return une instance de ScoreboardData contenant les données du scoreboard
-     */
+     *
     public static ScoreboardData deserialize(SerializedMap serializedMap) {
         return new ScoreboardData(
                 serializedMap.getString("UniqueId"),
@@ -118,5 +116,5 @@ public class ScoreboardData extends SimpleScoreboard implements ConfigSerializab
                 serializedMap.getString("display_condition"),
                 serializedMap.getString("if_condition_not_met")
         );
-    }
+    }*/
 }

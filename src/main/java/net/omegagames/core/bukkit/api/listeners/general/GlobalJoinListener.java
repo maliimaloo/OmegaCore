@@ -2,7 +2,6 @@ package net.omegagames.core.bukkit.api.listeners.general;
 
 import net.omegagames.core.bukkit.BukkitCore;
 import net.omegagames.core.bukkit.api.player.PlayerData;
-import net.omegagames.core.bukkit.api.scoreboard.ScoreboardData;
 import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -134,12 +133,12 @@ public class GlobalJoinListener extends APIListener {
             String paramHostAddress = Objects.requireNonNull(paramPlayer.getAddress()).getHostString();
             paramPlayerData.setLastIp(paramHostAddress);
 
-            for (ScoreboardData scoreboard : this.api.getPlugin().getScoreboardManager().getCache()) {
+            /*for (ScoreboardData scoreboard : this.api.getPlugin().getScoreboardManager().getCache()) {
                 if (scoreboard.getIsDefault()) {
                     scoreboard.showScoreboard(paramPlayer);
                     break;
                 }
-            }
+            }*/
 
             Common.log("Join Time: " + (System.currentTimeMillis() - startTime) + "ms.");
         } catch (Throwable throwable) {
