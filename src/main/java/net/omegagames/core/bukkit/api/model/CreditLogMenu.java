@@ -15,41 +15,25 @@ import org.mineacademy.fo.remain.CompMaterial;
 import java.util.List;
 
 public class CreditLogMenu extends MenuPagged<CreditBean> {
-    private final ApiImplementation api;
-
     public CreditLogMenu(ApiImplementation api, List<CreditBean> playerLogs) {
         super(9, playerLogs);
-        this.api = api;
 
-        super.setSlotNumbersVisible();
-        super.setTitle("Liste des transactions !");
-        super.setSize(9 * 2);
+        initializeMenu();
     }
 
-    @Override
-    protected ItemStack convertToItemStack(CreditBean creditBean) {
-        return ItemCreator.of(CompMaterial.PAPER,
-                creditBean.getTimestamp().toLocalDateTime().toString(),
-                " - Date: " + creditBean.getTimestamp().toLocalDateTime().toString(),
-                " - Type: " + creditBean.getType(),
-                " - Sender: " + creditBean.getSender(),
-                " - Receiver: " + creditBean.getReceiver(),
-                " - Quantité: " + creditBean.getAmount(),
-                " - Raison: " + creditBean.getReason()).make();
-    }
-
-    @Override
-    protected void onPageClick(Player player, CreditBean creditBean, ClickType clickType) {
-
+    // Initialize menu settings
+    private void initializeMenu() {
+        setTitle("Liste des transactions !");
+        setSize(9 * 2);
     }
 
     @Override
     public ItemStack getItemAt(int slot) {
-        if (super.getItemAt(slot) == null || super.getItemAt(slot).getType() == CompMaterial.AIR.toMaterial()) {
+        ItemStack item = super.getItemAt(slot);
+        if (item == null || item.getType() == CompMaterial.AIR.toMaterial()) {
             return ItemCreator.of(CompMaterial.WHITE_STAINED_GLASS_PANE, " ", " ").make();
         }
-
-        return super.getItemAt(slot);
+        return item;
     }
 
     @Override
@@ -94,5 +78,22 @@ public class CreditLogMenu extends MenuPagged<CreditBean> {
                         .make();
             }
         };
+    }
+
+    @Override
+    protected ItemStack convertToItemStack(CreditBean creditBean) {
+        return ItemCreator.of(CompMaterial.PAPER,
+                creditBean.getTimestamp().toLocalDateTime().toString(),
+                " - Date: " + creditBean.getTimestamp().toLocalDateTime().toString(),
+                " - Type: " + creditBean.getType(),
+                " - Sender: " + creditBean.getSender(),
+                " - Receiver: " + creditBean.getReceiver(),
+                " - Quantité: " + creditBean.getAmount(),
+                " - Raison: " + creditBean.getReason()).make();
+    }
+
+    @Override
+    protected void onPageClick(Player player, CreditBean creditBean, ClickType clickType) {
+
     }
 }
