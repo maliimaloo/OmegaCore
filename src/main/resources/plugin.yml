@@ -5,7 +5,7 @@ author: ${author}
 load: STARTUP
 
 depend: []
-softdepend: []
+softdepend: [HeadDatabase]
 
 libraries:
   # DO NOT EDIT THE FIRST LIBRARY, required to make your plugin work under Java 15+

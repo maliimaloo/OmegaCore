@@ -6,7 +6,6 @@ import net.omegagames.core.bukkit.ApiImplementation;
 import net.omegagames.core.persistanceapi.beans.credit.CreditBean;
 import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.exception.FoException;
 import redis.clients.jedis.Jedis;
 
 import java.sql.Timestamp;
@@ -130,7 +129,6 @@ public class PlayerData extends AbstractPlayerData {
         try (Jedis jedis = this.api.getBungeeResource()) {
             List<CreditBean> logs = new ArrayList<>();
             for (String log : jedis.lrange(this.jedisCreditLogsKey, 0, -1)) {
-                Common.log(log);
                 logs.add(CreditBean.fromString(this.getUniqueId(), log));
             }
 

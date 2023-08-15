@@ -39,13 +39,4 @@ public final class Settings extends SimpleSettings {
             BUNGEE_PORT = Settings.getInteger("Bungee_Port", 4242);
         }
     }
-
-    /*public final static class Scoreboard {
-        public static Set<ScoreboardData> SCOREBOARD_DATA;
-
-        private static void init() {
-            Settings.setPathPrefix(null);
-            SCOREBOARD_DATA = Settings.getSet("Scoreboard", ScoreboardData.class);
-        }
-    }*/
 }

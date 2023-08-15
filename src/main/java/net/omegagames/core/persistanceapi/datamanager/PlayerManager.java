@@ -1,7 +1,7 @@
 package net.omegagames.core.persistanceapi.datamanager;
 
-import net.omegagames.core.bukkit.api.util.Callback;
-import net.omegagames.core.persistanceapi.ServerServiceManager;
+import net.omegagames.core.bukkit.api.util.model.Callback;
+import net.omegagames.core.persistanceapi.SqlServiceManager;
 import net.omegagames.core.persistanceapi.beans.credit.CreditBean;
 import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
 import net.omegagames.core.persistanceapi.database.DatabaseManager;
@@ -21,7 +21,7 @@ import java.util.UUID;
 public class PlayerManager {
     private final DatabaseManager databaseManager;
 
-    public PlayerManager(ServerServiceManager manager) {
+    public PlayerManager(SqlServiceManager manager) {
         this.databaseManager = manager.getDatabaseManager();
     }
 

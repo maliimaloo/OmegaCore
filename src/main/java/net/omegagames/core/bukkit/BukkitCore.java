@@ -8,7 +8,7 @@ import net.omegagames.core.bukkit.api.listeners.general.GlobalJoinListener;
 import net.omegagames.core.bukkit.api.settings.Settings;
 import net.omegagames.core.jedis.DatabaseConnector;
 import net.omegagames.core.jedis.RedisServer;
-import net.omegagames.core.persistanceapi.ServerServiceManager;
+import net.omegagames.core.persistanceapi.SqlServiceManager;
 import org.bukkit.Bukkit;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.debug.Debugger;
@@ -25,14 +25,11 @@ public class BukkitCore extends SimplePlugin {
     @Getter
     private ApiImplementation api;
     @Getter
-    private ServerServiceManager serverServiceManager;
+    private SqlServiceManager sqlServiceManager;
     @Getter
     private DatabaseConnector databaseConnector;
     @Getter
     private DebugListener debugListener;
-
-    //@Getter
-    //private ScoreboardManager scoreboardManager;
 
     @Getter
     private ScheduledExecutorService executor;
@@ -58,8 +55,8 @@ public class BukkitCore extends SimplePlugin {
             this.databaseConnector.killConnection();
         }
 
-        if (this.serverServiceManager != null && this.serverServiceManager.getDatabaseManager() != null) {
-            this.serverServiceManager.getDatabaseManager().close();
+        if (this.sqlServiceManager != null && this.sqlServiceManager.getDatabaseManager() != null) {
+            this.sqlServiceManager.getDatabaseManager().close();
         }
     }
 
@@ -80,11 +77,10 @@ public class BukkitCore extends SimplePlugin {
 
         this.debugListener = new DebugListener();
 
-        this.serverServiceManager = this.initServerServiceManager();
+        this.sqlServiceManager = this.initServerServiceManager();
         this.databaseConnector = this.initDatabaseconnector();
 
         this.api = new ApiImplementation(this);
-        //this.scoreboardManager = new ScoreboardManager(this.api);
 
         this.initListeners();
         this.initCommands();
@@ -135,12 +131,12 @@ public class BukkitCore extends SimplePlugin {
      *
      * @return Le gestionnaire de services du serveur.
      */
-    private ServerServiceManager initServerServiceManager() {
+    private SqlServiceManager initServerServiceManager() {
         final String paramDatabaseUrl = Settings.Database.URL;
         final String paramDatabaseUsername = Settings.Database.USERNAME;
         final String paramDatabasePassword = Settings.Database.PASSWORD;
 
-        return new ServerServiceManager(paramDatabaseUrl, paramDatabaseUsername, paramDatabasePassword);
+        return new SqlServiceManager(paramDatabaseUrl, paramDatabaseUsername, paramDatabasePassword);
     }
 
     /**

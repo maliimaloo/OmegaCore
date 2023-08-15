@@ -89,10 +89,10 @@ public class GlobalJoinListener extends APIListener {
         String playerIp = paramEvent.getAddress().getHostAddress();
         LocalDateTime paramLocalDateTime = ZonedDateTime.now(ZoneId.of("Europe/Paris")).toLocalDateTime();
 
-        PlayerBean playerBean = this.api.getServerServiceManager().getPlayer(paramPlayerData.getUniqueId());
+        PlayerBean playerBean = this.api.getSQLServiceManager().getPlayer(paramPlayerData.getUniqueId());
         if (playerBean == null) {
             playerBean = new PlayerBean(playerUniqueId, playerName, "", 0, Timestamp.valueOf(paramLocalDateTime), Timestamp.valueOf(paramLocalDateTime), playerIp, 0, new ArrayList<>());
-            boolean isCreate = this.api.getServerServiceManager().createPlayer(playerBean);
+            boolean isCreate = this.api.getSQLServiceManager().createPlayer(playerBean);
             if (!isCreate) {
                 paramEvent.setKickMessage("Erreur lors de la création de votre profil à partir de la BDD.");
                 paramEvent.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
@@ -180,7 +180,7 @@ public class GlobalJoinListener extends APIListener {
 
     // Méthode pour gérer l'événement de déconnexion lorsque le statut en ligne est false
     private void handlePlayerQuitOnlineStatusFalse(PlayerData paramPlayerData) {
-        this.api.getServerServiceManager().updatePlayer(paramPlayerData.getPlayerBean(), (response) -> {
+        this.api.getSQLServiceManager().updatePlayer(paramPlayerData.getPlayerBean(), (response) -> {
             if (response == 0) {
                 Common.throwError(new FoException("Erreur lors de la mise à jour du profil de " + paramPlayerData.getEffectiveName() + "."));
                 return;
@@ -193,7 +193,7 @@ public class GlobalJoinListener extends APIListener {
 
     // Méthode pour gérer les exceptions lors de l'événement de déconnexion lorsque le statut en ligne est false
     private void handlePlayerQuitOnlineStatusException(PlayerData paramPlayerData) {
-        this.api.getServerServiceManager().updatePlayer(paramPlayerData.getPlayerBean(), (response) -> {
+        this.api.getSQLServiceManager().updatePlayer(paramPlayerData.getPlayerBean(), (response) -> {
             if (response == 0) {
                 Common.throwError(new FoException("Erreur lors de la mise à jour du profil de " + paramPlayerData.getEffectiveName() + "."));
                 return;

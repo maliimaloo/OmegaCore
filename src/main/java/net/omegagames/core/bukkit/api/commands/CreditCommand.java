@@ -3,7 +3,7 @@ package net.omegagames.core.bukkit.api.commands;
 import net.omegagames.core.bukkit.ApiImplementation;
 import net.omegagames.core.bukkit.api.player.PlayerData;
 import net.omegagames.core.bukkit.api.settings.Settings;
-import net.omegagames.core.bukkit.api.util.Callback;
+import net.omegagames.core.bukkit.api.util.model.Callback;
 import net.omegagames.core.bukkit.api.util.CommandUtils;
 import net.omegagames.core.bukkit.api.util.LangUtils;
 import net.omegagames.core.bukkit.api.util.Utils;
@@ -22,7 +22,10 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.StringJoiner;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class CreditCommand extends SimpleCommand {
@@ -194,7 +197,7 @@ public final class CreditCommand extends SimpleCommand {
                 public void onSuccess(UUID uniqueId) {
                     PlayerData paramTargetData = api.getPlayerManager().getPlayerData(uniqueId);
                     if (!paramTargetData.isLoaded()) {
-                        PlayerBean playerBean = api.getServerServiceManager().getPlayer(uniqueId);
+                        PlayerBean playerBean = api.getSQLServiceManager().getPlayer(uniqueId);
                         if (playerBean == null) {
                             tellError("&cUne erreur est survenue lors de la récupération des données du joueur hors-ligne.");
                             return;
@@ -260,7 +263,7 @@ public final class CreditCommand extends SimpleCommand {
     private void creditPlayer(UUID uniqueId, long amount, String reason, Player targetPlayer) {
         PlayerData paramTargetData = this.api.getPlayerManager().getPlayerData(uniqueId);
         if (!paramTargetData.isLoaded()) {
-            this.api.getServerServiceManager().getPlayer(uniqueId, new Callback<PlayerBean>() {
+            this.api.getSQLServiceManager().getPlayer(uniqueId, new Callback<PlayerBean>() {
                 @Override
                 public void onSuccess(PlayerBean playerBean) {
                     final long newAmount = playerBean.getOmega() + amount;
@@ -269,7 +272,7 @@ public final class CreditCommand extends SimpleCommand {
                     handleSaveTransactionOffline(playerBean, amount, reason, "give");
 
                     tellSuccess("&fVous avez ajouté &a" + amount + " omegas &fà &a" + playerBean.getName() + "&a.");
-                    api.getServerServiceManager().updatePlayer(playerBean, null);
+                    api.getSQLServiceManager().updatePlayer(playerBean, null);
                 }
 
                 @Override
@@ -298,7 +301,7 @@ public final class CreditCommand extends SimpleCommand {
     private void withdrawPlayer(UUID playerId, long amount, String reason, Player targetPlayer) {
         PlayerData playerData = api.getPlayerManager().getPlayerData(playerId);
         if (!playerData.isLoaded()) {
-            this.api.getServerServiceManager().getPlayer(playerId, new Callback<PlayerBean>() {
+            this.api.getSQLServiceManager().getPlayer(playerId, new Callback<PlayerBean>() {
                 @Override
                 public void onSuccess(PlayerBean playerBean) {
                     long newAmount = Math.max(playerBean.getOmega() - amount, 0);
@@ -307,7 +310,7 @@ public final class CreditCommand extends SimpleCommand {
                     handleSaveTransactionOffline(playerBean, amount, reason, "take");
 
                     tellSuccess("&fVous avez retiré &a" + amount + " omegas &fà &a" + playerBean.getName() + "&a.");
-                    api.getServerServiceManager().updatePlayer(playerBean, null);
+                    api.getSQLServiceManager().updatePlayer(playerBean, null);
                 }
 
                 @Override

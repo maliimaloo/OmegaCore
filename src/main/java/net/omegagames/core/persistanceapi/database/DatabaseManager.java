@@ -1,7 +1,7 @@
 package net.omegagames.core.persistanceapi.database;
 
 import net.omegagames.core.bukkit.api.settings.Settings;
-import net.omegagames.core.bukkit.api.util.Callback;
+import net.omegagames.core.bukkit.api.util.model.Callback;
 import net.omegagames.core.persistanceapi.beans.credit.CreditBean;
 import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
 import org.mineacademy.fo.Common;

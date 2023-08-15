@@ -5,7 +5,7 @@ import net.omegagames.api.OmegaGamesAPI;
 import net.omegagames.core.bukkit.api.listeners.pubsub.GlobalUpdateListener;
 import net.omegagames.core.bukkit.api.player.PlayerDataManager;
 import net.omegagames.core.bukkit.api.pubsub.PubSubAPI;
-import net.omegagames.core.persistanceapi.ServerServiceManager;
+import net.omegagames.core.persistanceapi.SqlServiceManager;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -36,7 +36,6 @@ public class ApiImplementation extends OmegaGamesAPI {
         GlobalUpdateListener listener = new GlobalUpdateListener(this);
         this.pubSub.subscribe("omegacore:player:online_status_check", listener);
         this.pubSub.subscribe("omegacore:player:online_status_response", listener);
-        this.pubSub.subscribe("__keyevent@0__:expired", listener);
 
         this.playerDataManager = new PlayerDataManager(this);
     }
@@ -85,10 +84,6 @@ public class ApiImplementation extends OmegaGamesAPI {
         return this.pubSub;
     }
 
-    /*public ScoreboardManager getScoreboardManager() {
-        return this.plugin.getScoreboardManager();
-    }*/
-
     /* -------------------------------------------
      * Méthodes spécifiques à OmegaGames
      * ------------------------------------------- */
@@ -98,8 +93,8 @@ public class ApiImplementation extends OmegaGamesAPI {
      *
      * @return Le gestionnaire de services du serveur.
      */
-    public ServerServiceManager getServerServiceManager() {
-        return this.plugin.getServerServiceManager();
+    public SqlServiceManager getSQLServiceManager() {
+        return this.plugin.getSqlServiceManager();
     }
 
     /**

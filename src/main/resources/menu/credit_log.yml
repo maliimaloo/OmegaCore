@@ -1,0 +1,175 @@
+# ---------------------------------------------
+# Ne pas modifier la valeur de Version.
+# ---------------------------------------------
+Version: 1
+
+# ---------------------------------------------
+# Titre afficher du menu
+# ---------------------------------------------
+Title: '&6Liste des logs de crédits'
+
+# ---------------------------------------------
+# Taille du menu
+# ---------------------------------------------
+Row: 4
+
+# ---------------------------------------------
+# La taille d'élément afficher par page
+# ---------------------------------------------
+Page_Size: 9
+
+# ---------------------------------------------
+# La liste des items afficher dans le menu
+#
+# Placeholders:
+#   - {credit_log_date} : La date du log
+#   - {credit_log_type} : Le type du log
+#   - {credit_log_sender} : Le donneur du log
+#   - {credit_log_receiver} : Le receveur du log
+#   - {credit_log_amount} : Le montant du log
+#   - {credit_log_reason} : La raison du log
+#
+# Action:
+#   - NONE : Aucune action
+#   - OPEN_MENU : Ouvre un menu # Action_Value: <MENU_ID>  # Cette fonctionnalité n'est pas encore disponible
+#   - CLOSE_MENU : Ferme le menu
+#   - RUN_PLAYER_COMMAND : Execute une commande pour le joueur
+#   - RUN_SERVER_COMMAND : Execute une commande pour le serveur
+#   - OPEN_URL : Ouvre une url
+#   - SUGGEST_COMMAND : Suggère une commande
+# ---------------------------------------------
+Contents:
+  # ---------------------------------------------
+  # La liste des items qui ne sont pas supprimables.
+  # ---------------------------------------------
+  Immutable_Content:
+    Log_Item:
+      # ----------------------------------------------------
+      # Le nom de l'item afficher
+      # ----------------------------------------------------
+      Title: '{credit_log_date}'
+
+      # ----------------------------------------------------
+      # Le type d'objet à afficher
+      #
+      # Pour une tête de joueur, veuillez mettre 'SKULL-<OWNER>'
+      # Pour une tête via HeadDatabase, veuillez mettre 'HDB-<ID>'
+      # ----------------------------------------------------
+      Material: 'PAPER'
+
+      # ----------------------------------------------------
+      # Un effet d'enchantement doit-il être mis sur l'item ?
+      # ----------------------------------------------------
+      Glow: false
+
+      # ----------------------------------------------------
+      # La description afficher de l'item
+      # ----------------------------------------------------
+      Lore:
+        - '&7Date: &b{credit_log_date}'
+        - '&7Type: &b{credit_log_type}'
+        - '&7Donneur: &b{credit_log_sender}'
+        - '&7Receveur: &b{credit_log_receiver}'
+        - '&7Montant: &b{credit_log_amount}'
+        - '&7Raison: &b{credit_log_reason}'
+
+    Previous_Page:
+      # ----------------------------------------------------
+      # Le nom de l'item afficher
+      # ----------------------------------------------------
+      Title: '&cPage précédente'
+
+      # ----------------------------------------------------
+      # Le type d'objet à afficher
+      #
+      # Pour une tête de joueur, veuillez mettre 'SKULL-<OWNER>|<URL>'
+      # Pour une tête via HeadDatabase, veuillez mettre 'HDB-<ID>'
+      # ----------------------------------------------------
+      Material: 'ARROW'
+
+      # ----------------------------------------------------
+      # Liste des slots ou seront affiché les objets
+      # ----------------------------------------------------
+      Slots:
+        - '33'
+
+      # ----------------------------------------------------
+      # Un effet d'enchantement doit-il être mis sur l'item ?
+      # ----------------------------------------------------
+      Glow: false
+
+      # ----------------------------------------------------
+      # La description afficher de l'item
+      # ----------------------------------------------------
+      Lore:
+        - '&7Cliquez pour afficher la page précédente'
+
+    Next_Page:
+      # ----------------------------------------------------
+      # Le nom de l'item afficher
+      # ----------------------------------------------------
+      Title: '&aPage suivante'
+
+      # ----------------------------------------------------
+      # Le type d'objet à afficher
+      #
+      # Pour une tête de joueur, veuillez mettre 'SKULL-<OWNER>|<URL>'
+      # Pour une tête via HeadDatabase, veuillez mettre 'HDB-<ID>'
+      # ----------------------------------------------------
+      Material: 'ARROW'
+
+      # ----------------------------------------------------
+      # Liste des slots ou seront affiché les objets
+      # ----------------------------------------------------
+      Slots:
+        - '35'
+
+      # ----------------------------------------------------
+      # Un effet d'enchantement doit-il être mis sur l'item ?
+      # ----------------------------------------------------
+      Glow: false
+
+      # ----------------------------------------------------
+      # La description afficher de l'item
+      # ----------------------------------------------------
+      Lore:
+        - '&7Cliquez pour afficher la page suivante'
+
+  Content:
+    Item_Test:
+      # ----------------------------------------------------
+      # Le nom de l'item afficher
+      # ----------------------------------------------------
+      Title: '&aTest'
+
+      # ----------------------------------------------------
+      # Le type d'objet à afficher
+      #
+      # Pour une tête de joueur, veuillez mettre 'SKULL-<OWNER>|<URL>'
+      # Pour une tête via HeadDatabase, veuillez mettre 'HDB-<ID>'
+      # ----------------------------------------------------
+      Material: 'SKULL-maliimaloo'
+
+      slots:
+        - '9'
+        - '10'
+        - '11'
+        - '13'
+        - '15'
+        - '16'
+        - '17'
+
+      # ----------------------------------------------------
+      # Un effet d'enchantement doit-il être mis sur l'item ?
+      # ----------------------------------------------------
+      Glow: true
+
+      # ----------------------------------------------------
+      # La description afficher de l'item
+      # ----------------------------------------------------
+      Lore:
+        - "&7Voici un test d'item"
+
+
+
+

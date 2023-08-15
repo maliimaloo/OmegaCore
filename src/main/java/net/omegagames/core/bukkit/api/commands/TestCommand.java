@@ -3,17 +3,12 @@ package net.omegagames.core.bukkit.api.commands;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.omegagames.core.bukkit.ApiImplementation;
-import net.omegagames.core.bukkit.api.model.CreditLogMenu;
+import net.omegagames.core.bukkit.api.menu.MenuCreditLog;
 import net.omegagames.core.bukkit.api.player.PlayerData;
-import net.omegagames.core.persistanceapi.beans.credit.CreditBean;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.command.SimpleCommand;
-
-import java.sql.Timestamp;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 @AutoRegister
 public final class TestCommand extends SimpleCommand {
@@ -45,7 +40,7 @@ public final class TestCommand extends SimpleCommand {
                 return;
             }
 
-            new CreditLogMenu(ApiImplementation.getInstance(), playerData.getLogs()).displayTo(super.getPlayer());
+            new MenuCreditLog(playerData.getLogs()).displayTo(player);
         }
     }
 }

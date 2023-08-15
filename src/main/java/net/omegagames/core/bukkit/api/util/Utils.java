@@ -1,5 +1,6 @@
 package net.omegagames.core.bukkit.api.util;
 
+import net.omegagames.core.bukkit.api.util.model.Callback;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
