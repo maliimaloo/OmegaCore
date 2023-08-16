@@ -1,6 +1,7 @@
 package net.omegagames.core.bukkit.api.commands;
 
 import net.omegagames.core.bukkit.ApiImplementation;
+import net.omegagames.core.bukkit.api.menu.MenuCreditLog;
 import net.omegagames.core.bukkit.api.player.PlayerData;
 import net.omegagames.core.bukkit.api.settings.Settings;
 import net.omegagames.core.bukkit.api.util.model.Callback;
@@ -23,14 +24,19 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
-import java.util.List;
-import java.util.StringJoiner;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
+/**
+ * Une commande personnalisée pour gérer les crédits des joueurs.
+ */
 public final class CreditCommand extends SimpleCommand {
     private final ApiImplementation api;
 
+    /**
+     * Constructeur pour la commande des crédits.
+     *
+     * @param api L'instance de l'API.
+     */
     public CreditCommand(ApiImplementation api) {
         super("acredit");
         super.setAutoHandleHelp(false);
@@ -38,6 +44,10 @@ public final class CreditCommand extends SimpleCommand {
         this.api = api;
     }
 
+    /**
+     * Méthode appelée lors de l'exécution de la commande.
+     * Gère les différentes sous-commandes et leurs paramètres.
+     */
     @Override
     protected void onCommand() {
         if (super.args.length == 0) {
@@ -54,7 +64,6 @@ public final class CreditCommand extends SimpleCommand {
         final String targetName = super.args.length > 1 ? super.args[1] : "";
         final String amountArgs = super.args.length > 2 ? super.args[2] : "";
         final String reason = super.args.length > 3 ? Common.joinRange(3, super.args) : "";
-        final int page = super.args.length > 2 ? super.findNumber(2, "Le numéro de page doit être un nombre.") : 1;
 
         switch (param) {
             case HELP:
@@ -73,18 +82,21 @@ public final class CreditCommand extends SimpleCommand {
                 handleShowCommand(targetName);
                 break;
 
-            case LOG:
-                handleLogCommand(targetName, page);
+            case LOGS:
+                handleLogCommand(targetName);
                 break;
         }
     }
 
+    /**
+     * Enumeration pour les différentes sous-commandes de la commande /acredit.
+     */
     private enum Param {
         HELP("help", "?"),
         GIVE("give", "g"),
         TAKE("take", "t"),
         SHOW("show", "s"),
-        LOG("log", "l");
+        LOGS("logs", "l");
 
         private final String label;
         private final String[] aliases;
@@ -94,6 +106,12 @@ public final class CreditCommand extends SimpleCommand {
             this.aliases = paramAliases;
         }
 
+        /**
+         * Trouve un paramètre à partir de l'argument donné.
+         *
+         * @param paramArgument L'argument de la sous-commande.
+         * @return Le Param correspondant ou null si non trouvé.
+         */
         @Nullable
         private static Param find(String paramArgument) {
             String finalParamArgument = paramArgument.toLowerCase();
@@ -110,6 +128,10 @@ public final class CreditCommand extends SimpleCommand {
         }
     }
 
+    /**
+     * Gère les commandes liées aux crédits, telles que donner, retirer, afficher et journaliser les crédits des joueurs.
+     * Contient des méthodes pour chaque action de commande spécifique.
+     */
     private void handleGiveCommand(String targetName, String reason, String amountArgs) {
         if (!Utils.hasPermission(super.getSender(), "arkacore.credit.give") && !Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
             super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, Collections.singletonMap("permission", "arkacore.credit.give")));
@@ -136,6 +158,9 @@ public final class CreditCommand extends SimpleCommand {
         }
     }
 
+    /**
+     * Gère la commande pour retirer des crédits à un joueur.
+     */
     private void handleTakeCommand(String targetName, String reason, String amountArgs) {
         if (Utils.hasPermission(super.getSender(), "arkacore.credit.take") && !Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
             super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, Collections.singletonMap("{permission}", super.getPermission())));
@@ -162,7 +187,10 @@ public final class CreditCommand extends SimpleCommand {
         }
     }
 
-    private void handleLogCommand(String targetName, int page) {
+    /**
+     * Gère la commande pour journaliser les informations liées aux crédits pour un joueur.
+     */
+    private void handleLogCommand(String targetName) {
         if (Utils.hasPermission(super.getSender(), "arkacore.credit.log") && !Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
             super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, Collections.singletonMap("{permission}", super.getPermission())));
             return;
@@ -170,7 +198,28 @@ public final class CreditCommand extends SimpleCommand {
 
         final Player paramTargetPlayer = Bukkit.getPlayer(targetName);
         if (paramTargetPlayer == null) {
+            Utils.getUUIDFromUsernameAsync(targetName, new Callback<UUID>() {
+                @Override
+                public void onSuccess(UUID uniqueId) {
+                    PlayerData paramTargetData = api.getPlayerManager().getPlayerData(uniqueId);
+                    if (!paramTargetData.isLoaded()) {
+                        PlayerBean playerBean = api.getSQLServiceManager().getPlayer(uniqueId);
+                        if (playerBean == null) {
+                            tellError("&cJoueur introuvable !");
+                            return;
+                        }
 
+                        new MenuCreditLog(playerBean.getCreditLogs()).displayTo(CreditCommand.super.getPlayer());
+                    }
+
+                    new MenuCreditLog(paramTargetData.getLogs()).displayTo(CreditCommand.super.getPlayer());
+                }
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    tellError(throwable.getMessage());
+                }
+            });
         } else {
             PlayerData targetData = this.api.getPlayerManager().getPlayerData(paramTargetPlayer.getUniqueId());
             if (!targetData.isLoaded()) {
@@ -178,12 +227,13 @@ public final class CreditCommand extends SimpleCommand {
                 return;
             }
 
-            List<String> targetLogs = targetData.getLogs().stream().map(CreditBean::toString).collect(Collectors.toList());
-            handleSendLogs(targetLogs, page);
+            new MenuCreditLog(targetData.getLogs()).displayTo(super.getPlayer());
         }
-
     }
 
+    /**
+     * Gère la commande pour afficher le montant de crédits d'un joueur.
+     */
     private void handleShowCommand(String targetName) {
         if (Utils.hasPermission(super.getSender(), "arkacore.credit.show.others") && !Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
             super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, Collections.singletonMap("{permission}", super.getPermission())));
@@ -199,15 +249,15 @@ public final class CreditCommand extends SimpleCommand {
                     if (!paramTargetData.isLoaded()) {
                         PlayerBean playerBean = api.getSQLServiceManager().getPlayer(uniqueId);
                         if (playerBean == null) {
-                            tellError("&cUne erreur est survenue lors de la récupération des données du joueur hors-ligne.");
+                            tellError("&cJoueur introuvable !");
                             return;
                         }
 
-                        tellSuccess("&aLe joueur &f" + playerBean.getName() + " &aà &f" + playerBean.getOmega() + " &aoméga.");
+                        tellSuccess("&aLe joueur &f" + playerBean.getName() + " &aà &f" + playerBean.getOmega() + " &acrédits.");
                         return;
                     }
 
-                    tellSuccess("&aLe joueur &f" + paramTargetData.getEffectiveName() + " &aà &f" + paramTargetData.getOmegaCoins() + " &aoméga.");
+                    tellSuccess("&aLe joueur &f" + paramTargetData.getEffectiveName() + " &aà &f" + paramTargetData.getOmegaCoins() + " &acrédits.");
                 }
 
                 @Override
@@ -226,6 +276,9 @@ public final class CreditCommand extends SimpleCommand {
         }
     }
 
+    /**
+     * Gère la commande pour fournir des informations d'aide concernant les commandes liées aux crédits.
+     */
     private void handleHelpCommand() {
         if (!Utils.hasPermission(super.getSender(), "arkacore.credit.help") && !Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
             super.tellError(LangUtils.of(SimpleLocalization.NO_PERMISSION, Collections.singletonMap("{permission}", "arkacore.scoreboard.help")));
@@ -250,7 +303,11 @@ public final class CreditCommand extends SimpleCommand {
         }
 
         if (Utils.hasPermission(super.getSender(), "arkacore.credit.show") || Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
-            CommandUtils.createCommandComponent(commandComponent, "&f" + super.getCurrentLabel(), super.getPlayer(), "show", "<joueur>", Collections.singletonList("\n &f- &cVoir &fles crédits"), "arkacore.credit.show|arkacore.credit.admin", CommandUtils.Action.SUGGEST_COMMAND.getHover());
+            CommandUtils.createCommandComponent(commandComponent, "&f" + super.getCurrentLabel(), super.getPlayer(), "show", "<joueur>", Collections.singletonList("\n &f- &cAfficher &fles crédits"), "arkacore.credit.show|arkacore.credit.admin", CommandUtils.Action.SUGGEST_COMMAND.getHover());
+        }
+
+        if (Utils.hasPermission(super.getSender(), "arkacore.credit.logs") || Utils.hasPermission(super.getSender(), "arkacore.credit.admin")) {
+            CommandUtils.createCommandComponent(commandComponent, "&f" + super.getCurrentLabel(), super.getPlayer(), "logs", "<joueur>", Collections.singletonList("\n &f- &cAfficher &fles logs du joueur"), "arkacore.credit.logs|arkacore.credit.admin", CommandUtils.Action.SUGGEST_COMMAND.getHover());
         }
 
         commandComponent
@@ -260,6 +317,14 @@ public final class CreditCommand extends SimpleCommand {
                 .send(super.getSender());
     }
 
+    /**
+     * Crédite un joueur avec un montant spécifié et enregistre la transaction.
+     *
+     * @param uniqueId      L'UUID du joueur à créditer.
+     * @param amount        Le montant de crédits à donner.
+     * @param reason        La raison de donner des crédits.
+     * @param targetPlayer  Le joueur qui reçoit les crédits.
+     */
     private void creditPlayer(UUID uniqueId, long amount, String reason, Player targetPlayer) {
         PlayerData paramTargetData = this.api.getPlayerManager().getPlayerData(uniqueId);
         if (!paramTargetData.isLoaded()) {
@@ -298,6 +363,14 @@ public final class CreditCommand extends SimpleCommand {
         }
     }
 
+    /**
+     * Retire des crédits du compte d'un joueur et enregistre la transaction.
+     *
+     * @param playerId      L'UUID du joueur à retirer les crédits.
+     * @param amount        Le montant de crédits à retirer.
+     * @param reason        La raison de retirer des crédits.
+     * @param targetPlayer  Le joueur qui perd les crédits.
+     */
     private void withdrawPlayer(UUID playerId, long amount, String reason, Player targetPlayer) {
         PlayerData playerData = api.getPlayerManager().getPlayerData(playerId);
         if (!playerData.isLoaded()) {
@@ -336,6 +409,12 @@ public final class CreditCommand extends SimpleCommand {
         }
     }
 
+    /**
+     * Analyse l'argument de chaîne donné en un montant de crédits valide.
+     *
+     * @param args  L'argument contenant le montant de crédits.
+     * @return      Le montant de crédits analysé.
+     */
     private long parseAmount(String args) {
         if (!Utils.isInteger(args)) {
             super.tellError("&cLe montant doit être un nombre entier.");
@@ -345,30 +424,14 @@ public final class CreditCommand extends SimpleCommand {
         return Math.max(Long.parseLong(args), 0);
     }
 
-
-    private void handleSendLogs(List<String> targetLogs, int page) {
-        int totalPages = (int) Math.ceil((double) targetLogs.size() / 10);
-        if (page < 1 || page > totalPages) {
-            super.tellError("&cLa page doit être comprise entre 1 et " + totalPages + ".");
-            return;
-        }
-
-        super.getSender().sendMessage(Common.colorize("&6---- Logs de oméga - Page &a" + page + "&6/&a" + totalPages + "&6 ----"));
-        if (targetLogs.isEmpty()) {
-            return;
-        }
-
-        int startIndex = (page - 1) * 10;
-        int endIndex = Math.min(startIndex + 10, targetLogs.size());
-
-        StringJoiner joiner = new StringJoiner("\n");
-        for (int i = startIndex; i < endIndex; i++) {
-            joiner.add(" * " + targetLogs.get(i));
-        }
-
-        super.getSender().sendMessage(Common.colorize(joiner.toString()));
-    }
-
+    /**
+     * Gère l'enregistrement d'une transaction de crédit pour un joueur hors ligne.
+     *
+     * @param playerBean    La structure de données du joueur.
+     * @param amount        Le montant de crédits impliqué.
+     * @param reason        La raison de la transaction.
+     * @param param         Le type de transaction (donner ou retirer).
+     */
     private void handleSaveTransactionOffline(PlayerBean playerBean, long amount, String reason, String param) {
         if (reason == null || reason.isEmpty()) {
             reason = "Aucune raison spécifiée.";
@@ -380,6 +443,14 @@ public final class CreditCommand extends SimpleCommand {
         playerBean.getCreditLogs().add(creditBean);
     }
 
+    /**
+     * Gère l'enregistrement d'une transaction de crédit pour un joueur en ligne.
+     *
+     * @param playerData    L'objet de données du joueur.
+     * @param amount        Le montant de crédits impliqué.
+     * @param reason        La raison de la transaction.
+     * @param param         Le type de transaction (donner ou retirer).
+     */
     private void handleSaveTransactionOnline(PlayerData playerData, long amount, String reason, String param) {
         if (reason == null || reason.isEmpty()) {
             reason = "Aucune raison spécifiée.";

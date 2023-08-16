@@ -55,6 +55,36 @@ public class PlayerManager {
         return null;
     }
 
+    /**
+     * Récupère un joueur à partir de son DisplayName.
+     *
+     * @param displayName Le nickname du joueur
+     * @param callback Le callback appelé lorsqu'un joueur est récupéré ou lorsque l'opération échoue.
+     * @return Le bean du joueur si trouvé, sinon null.
+     */
+    public PlayerBean getPlayer(String displayName, Callback<PlayerBean> callback) {
+        String query = "SELECT * FROM " + PlayerBean.getTableName() +
+                " INNER JOIN " + CreditBean.getTableName() +
+                " ON " + PlayerBean.getTableName() + "." + PlayerBean.getFieldUniqueId() + " = " + CreditBean.getTableName() + "." + CreditBean.getFieldUniqueId() +
+                " WHERE " + PlayerBean.getFieldName() + " = ?";
+
+        MResultSet resultSet = this.databaseManager.request(query, displayName);
+        if (resultSet.next()) {
+            PlayerBean playerBean = convertToPlayerBean(resultSet);
+            if (callback != null) {
+                callback.onSuccess(playerBean);
+            }
+
+            return playerBean;
+        }
+
+        if (callback != null) {
+            callback.onFailure(new FoException("Impossible de récupérer le joueur dans la base de données."));
+        }
+
+        return null;
+    }
+
 
     /**
      * Crée un nouveau joueur dans la base de données.

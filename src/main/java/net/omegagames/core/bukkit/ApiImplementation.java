@@ -2,24 +2,16 @@ package net.omegagames.core.bukkit;
 
 import lombok.Getter;
 import net.omegagames.api.OmegaGamesAPI;
-import net.omegagames.core.bukkit.api.listeners.pubsub.GlobalUpdateListener;
 import net.omegagames.core.bukkit.api.player.PlayerDataManager;
 import net.omegagames.core.bukkit.api.pubsub.PubSubAPI;
 import net.omegagames.core.persistanceapi.SqlServiceManager;
 import redis.clients.jedis.Jedis;
 
-/**
- * Classe d'implémentation de l'API personnalisée pour OmegaGames dans Bukkit.
- * Cette classe étend {@link OmegaGamesAPI} et fournit des fonctionnalités spécifiques à OmegaGames dans l'environnement Bukkit.
- */
-@SuppressWarnings("unused")
 public class ApiImplementation extends OmegaGamesAPI {
     @Getter
     private static ApiImplementation instance;
 
     private final BukkitCore plugin;
-    private final PlayerDataManager playerDataManager;
-    private final PubSubAPI pubSub;
 
     /**
      * Constructeur de la classe ApiImplementation.
@@ -30,14 +22,6 @@ public class ApiImplementation extends OmegaGamesAPI {
         super(plugin);
         instance = this;
         this.plugin = plugin;
-
-        // Initialisation de la messagerie publique-privée pour la communication entre serveurs
-        this.pubSub = new PubSubAPI(this);
-        GlobalUpdateListener listener = new GlobalUpdateListener(this);
-        this.pubSub.subscribe("omegacore:player:online_status_check", listener);
-        this.pubSub.subscribe("omegacore:player:online_status_response", listener);
-
-        this.playerDataManager = new PlayerDataManager(this);
     }
 
     /* -------------------------------------------
@@ -71,7 +55,7 @@ public class ApiImplementation extends OmegaGamesAPI {
      */
     @Override
     public PlayerDataManager getPlayerManager() {
-        return this.playerDataManager;
+        return this.plugin.getPlayerDataManager();
     }
 
     /**
@@ -81,7 +65,7 @@ public class ApiImplementation extends OmegaGamesAPI {
      */
     @Override
     public PubSubAPI getPubSub() {
-        return this.pubSub;
+        return this.plugin.getPubSubAPI();
     }
 
     /* -------------------------------------------

@@ -2,6 +2,28 @@ Version: 1
 
 Server_Name: "server_name"
 
+# -------------------------------------------------------------------------------------------------
+# Ceci est le prefix affiché avant les messages
+# -------------------------------------------------------------------------------------------------
+Prefix: '&6&lArkaCore »&f '
+
+# -------------------------------------------------------------------------------------------------
+# Ceci est le prefix affiché dans la console avant les messages
+# -------------------------------------------------------------------------------------------------
+Log_Prefix: '&7[&9ArkaCore&è]&f '
+
+# -------------------------------------------------------------------------------------------------
+# Quelle LANGUE souhaitez-vous utiliser à partir du fichier localization/messages_LANGUAGE.yml ?
+#
+# Disponible : "fr" (français), vous pouvez également créer votre propre langue si vous le souhaitez !
+# -------------------------------------------------------------------------------------------------
+Locale: fr
+
+# -------------------------------------------------------------------------------------------------
+# Quels sont les alias de commande pour ce plugin ?
+# -------------------------------------------------------------------------------------------------
+Aliases: []
+
 Database:
   # -------------------------------------------------------------------------------------------------
   # Prefix utilisé avant les messages dans la console liés à la base de données.
@@ -43,45 +65,3 @@ Jedis:
   # Le password de connection à la base de donnée Redis
   # -------------------------------------------------------------------------------------------------
   Bungee_Password: "password"
-
-Scoreboard:
-  # Example:
-  # - UniqueId: 'exemple_scoreboard'
-  #   display_condition: ''
-  #   if-condition-not-met: 'main_scoreboard'
-  #   title: ''§6§l%server_name% network'
-  #   updateTime: 20
-  #   content:
-  #     - "§7"
-  #     - "§7Joueurs: §b%online_players%"
-  #   default: true
-  #
-  - UniqueId: 'main_scoreboard'
-    # La condition d'affichage du scoreboard, si vide le display_condition ainsi
-    # que l'if-condition-not-met ne seront pas pris en compte.
-    display_condition: ''
-    # Le scoreboard à afficher si la condition n'est pas remplie
-    if-condition-not-met: 'main_scoreboard'
-    # Le titre du scoreboard
-    title: '&6&l%arkacore_server_name% network'
-    # Le temps d'update du scoreboard
-    update_interval: 20
-    # Le contenu du scoreboard
-    contents:
-      - "&7"
-      - "&7Joueurs: &b%arkacore_server_player_online%"
-    # Si le scoreboard est par défaut
-    default: true
-
-Tablist:
-  Enable: true
-  Header:
-    - '&6&lArkaMC Network'
-    - ''
-  Footer:
-    - ''
-    - '&bDiscord: &7discord.gg/arkamc'
-    - '&cBoutique: &7www.arkamc.fr/tebex'
-    - ''
-    - '&6play.arkamc.fr &7(%arkacore_server_player_online%&7)'
-

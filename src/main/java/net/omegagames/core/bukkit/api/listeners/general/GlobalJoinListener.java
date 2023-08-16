@@ -1,5 +1,6 @@
 package net.omegagames.core.bukkit.api.listeners.general;
 
+import lombok.Getter;
 import net.omegagames.core.bukkit.BukkitCore;
 import net.omegagames.core.bukkit.api.player.PlayerData;
 import net.omegagames.core.persistanceapi.beans.players.PlayerBean;
@@ -22,22 +23,23 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Écouteur pour les événements globaux de connexion/déconnexion des joueurs.
+ * Cette classe gère les événements liés à la connexion et à la déconnexion des joueurs.
+ *
+ * @version 1.0
+ * @since 2023-07-21
  */
 public class GlobalJoinListener extends APIListener {
-    // Map pour stocker les statuts de connexion en cours pour chaque joueur
+
+    @Getter
     private static final Map<UUID, CompletableFuture<Boolean>> onlineStatus = new HashMap<>();
 
+    /**
+     * Crée une nouvelle instance de l'écouteur avec le plugin BukkitCore.
+     *
+     * @param plugin Le plugin BukkitCore auquel l'écouteur est associé.
+     */
     public GlobalJoinListener(BukkitCore plugin) {
         super(plugin);
-    }
-
-    /**
-     * Obtient la liste des statuts de connexion en cours pour chaque joueur.
-     *
-     * @return Une map associant l'UUID du joueur à son statut de connexion en cours.
-     */
-    public static Map<UUID, CompletableFuture<Boolean>> getOnlineStatus() {
-        return onlineStatus;
     }
 
     // Gestionnaire d'événements pour le pré-connexion d'un joueur
@@ -70,7 +72,14 @@ public class GlobalJoinListener extends APIListener {
         }
     }
 
-    // Méthode pour gérer l'événement de pré-connexion d'un joueur
+    /**
+     * Gère les étapes pré-connexion du joueur.
+     * Cette méthode est appelée lorsqu'un joueur tente de se connecter au serveur.
+     * Elle vérifie si les données du joueur sont déjà chargées, sinon elle appelle
+     * la méthode `handlePlayerPreJoinLoaded` pour diriger le chargement initial.
+     *
+     * @param paramEvent L'événement de pré-connexion du joueur.
+     */
     private void handlePlayerPreJoin(AsyncPlayerPreLoginEvent paramEvent) {
         long startTime = System.currentTimeMillis();
         UUID playerUniqueId = paramEvent.getUniqueId();
@@ -82,7 +91,16 @@ public class GlobalJoinListener extends APIListener {
         Common.log("Join Time: " + (System.currentTimeMillis() - startTime) + "ms.");
     }
 
-    // Méthode pour gérer le chargement du joueur lors de l'événement de pré-connexion
+    /**
+     * Gère le chargement initial des données du joueur lors de la pré-connexion.
+     * Cette méthode est appelée lorsque les données du joueur ne sont pas encore chargées.
+     * Elle récupère les informations de pré-connexion telles que l'UUID, le nom, l'adresse IP,
+     * puis crée un enregistrement de joueur s'il n'existe pas déjà dans la base de données.
+     * Ensuite, elle tente de charger les données du joueur dans Jedis pour une utilisation ultérieure.
+     *
+     * @param paramEvent     L'événement de pré-connexion du joueur.
+     * @param paramPlayerData Les données du joueur.
+     */
     private void handlePlayerPreJoinLoaded(AsyncPlayerPreLoginEvent paramEvent, PlayerData paramPlayerData) {
         UUID playerUniqueId = paramEvent.getUniqueId();
         String playerName = paramEvent.getName();
@@ -107,14 +125,29 @@ public class GlobalJoinListener extends APIListener {
         }
     }
 
-    // Méthode pour gérer les exceptions lors de l'événement de pré-connexion
+    /**
+     * Gère les exceptions survenues lors de la pré-connexion du joueur.
+     * Cette méthode est appelée en cas d'erreur lors du traitement de la pré-connexion.
+     * Elle génère un message d'erreur pour le joueur et déclenche une exception
+     * pour informer les administrateurs ou les développeurs du problème.
+     *
+     * @param paramEvent  L'événement de pré-connexion du joueur.
+     * @param throwable L'exception survenue.
+     */
     private void handlePreJoinException(AsyncPlayerPreLoginEvent paramEvent, Throwable throwable) {
         Common.throwError(throwable, "Erreur lors de la pré-connexion du joueur " + paramEvent.getName() + " (" + paramEvent.getUniqueId() + ").");
         paramEvent.setKickMessage("Erreur lors du chargement de votre profil.");
         paramEvent.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
     }
 
-    // Méthode pour gérer l'événement de connexion d'un joueur
+    /**
+     * Gère l'événement de connexion d'un joueur.
+     * Cette méthode est appelée lorsqu'un joueur se connecte au serveur.
+     * Elle met à jour les informations du joueur, telles que son nom effectif,
+     * son heure de dernière connexion et son adresse IP.
+     *
+     * @param paramEvent L'événement de connexion du joueur.
+     */
     private void handlePlayerJoin(PlayerJoinEvent paramEvent) {
         long startTime = System.currentTimeMillis();
         Player paramPlayer = paramEvent.getPlayer();
@@ -133,26 +166,36 @@ public class GlobalJoinListener extends APIListener {
             String paramHostAddress = Objects.requireNonNull(paramPlayer.getAddress()).getHostString();
             paramPlayerData.setLastIp(paramHostAddress);
 
-            /*for (ScoreboardData scoreboard : this.api.getPlugin().getScoreboardManager().getCache()) {
-                if (scoreboard.getIsDefault()) {
-                    scoreboard.showScoreboard(paramPlayer);
-                    break;
-                }
-            }*/
-
             Common.log("Join Time: " + (System.currentTimeMillis() - startTime) + "ms.");
         } catch (Throwable throwable) {
             this.handleJoinException(paramPlayer, throwable);
         }
     }
 
-    // Méthode pour gérer l'événement de connexion lorsque l'exception est lancée
+
+    /**
+     * Gère les exceptions survenues lors de la connexion d'un joueur.
+     * Cette méthode est appelée en cas d'erreur lors du traitement de la connexion.
+     * Elle génère un message d'erreur pour le joueur, le déconnecte et déclenche
+     * une exception pour informer les administrateurs ou les développeurs du problème.
+     *
+     * @param paramPlayer Le joueur qui a tenté de se connecter.
+     * @param throwable   L'exception survenue.
+     */
     private void handleJoinException(Player paramPlayer, Throwable throwable) {
         paramPlayer.kickPlayer("Erreur lors du chargement de votre profil.");
         throw new FoException(throwable, "Erreur lors de la connexion du joueur " + paramPlayer.getName() + " (" + paramPlayer.getUniqueId() + ").");
     }
 
-    // Méthode pour gérer l'événement de déconnexion d'un joueur
+    /**
+     * Gère l'événement de déconnexion d'un joueur.
+     * Cette méthode est appelée lorsqu'un joueur se déconnecte du serveur.
+     * Elle vérifie si le joueur est encore en ligne en interrogeant Jedis
+     * pour obtenir son statut. Si le joueur n'est plus en ligne, elle
+     * met à jour les données du joueur et les enregistre dans la base de données.
+     *
+     * @param paramPlayer Le joueur qui s'est déconnecté.
+     */
     private void handlePlayerQuit(Player paramPlayer) {
         UUID playerUuid = paramPlayer.getUniqueId();
         PlayerData paramPlayerData = this.api.getPlayerManager().getPlayerData(playerUuid);
@@ -178,7 +221,14 @@ public class GlobalJoinListener extends APIListener {
         });
     }
 
-    // Méthode pour gérer l'événement de déconnexion lorsque le statut en ligne est false
+    /**
+     * Gère la mise à jour du profil du joueur lorsqu'il se déconnecte et est considéré hors ligne.
+     * Cette méthode est appelée lorsque le statut de connexion en ligne du joueur est faux,
+     * indiquant qu'il s'est déconnecté. Elle met à jour les informations du joueur dans la base
+     * de données et marque les données du joueur comme expirées.
+     *
+     * @param paramPlayerData Les données du joueur qui s'est déconnecté.
+     */
     private void handlePlayerQuitOnlineStatusFalse(PlayerData paramPlayerData) {
         this.api.getSQLServiceManager().updatePlayer(paramPlayerData.getPlayerBean(), (response) -> {
             if (response == 0) {
@@ -191,7 +241,14 @@ public class GlobalJoinListener extends APIListener {
         });
     }
 
-    // Méthode pour gérer les exceptions lors de l'événement de déconnexion lorsque le statut en ligne est false
+    /**
+     * Gère les exceptions survenues lors de la mise à jour du profil du joueur
+     * lorsqu'il se déconnecte et est considéré hors ligne.
+     * Cette méthode est appelée en cas d'erreur lors de la mise à jour des informations du joueur.
+     * Elle génère un message d'erreur, mais tente quand même de marquer les données du joueur comme expirées.
+     *
+     * @param paramPlayerData Les données du joueur qui s'est déconnecté.
+     */
     private void handlePlayerQuitOnlineStatusException(PlayerData paramPlayerData) {
         this.api.getSQLServiceManager().updatePlayer(paramPlayerData.getPlayerBean(), (response) -> {
             if (response == 0) {

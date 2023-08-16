@@ -6,7 +6,6 @@ import org.mineacademy.fo.Common;
 import org.mineacademy.fo.collection.SerializedMap;
 import org.mineacademy.fo.settings.YamlStaticConfig;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,9 +87,7 @@ public final class SettingsCreditLogMenu extends YamlStaticConfig {
 
                 if (content.containsKey("Slots")) {
                     List<Integer> slots = content.getList("Slots", Integer.class);
-                    slots.forEach((slot) -> {
-                        Common.log("Key: " + key + ", Slot: " + slot);
-                    });
+                    slots.forEach((slot) -> Common.log("Key: " + key + ", Slot: " + slot));
 
                     itemCreatorBuilder.slots(slots);
                 }

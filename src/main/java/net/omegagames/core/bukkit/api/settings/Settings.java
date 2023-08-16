@@ -2,12 +2,18 @@ package net.omegagames.core.bukkit.api.settings;
 
 import org.mineacademy.fo.settings.SimpleSettings;
 
+import java.util.List;
+
 public final class Settings extends SimpleSettings {
     public static String SERVER_NAME;
+    public static String LOG_PREFIX;
+    public static List<String> ALIASES;
 
     private static void init() {
         Settings.setPathPrefix(null);
         SERVER_NAME = Settings.getString("Server_Name");
+        LOG_PREFIX = getString("Log_Prefix");
+        ALIASES = getStringList("Aliases");
     }
 
     public final static class Database {

@@ -5,7 +5,7 @@ import net.omegagames.core.bukkit.ApiImplementation;
 
 import java.util.UUID;
 
-public class PlayerDataManager implements IPlayerDataManager {
+public final class PlayerDataManager implements IPlayerDataManager {
     private final ApiImplementation api;
 
     public PlayerDataManager(ApiImplementation api) {
