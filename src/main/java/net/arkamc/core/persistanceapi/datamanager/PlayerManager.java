@@ -97,7 +97,7 @@ public class PlayerManager {
                 PlayerBean.getFieldUniqueId() + ", " +
                 PlayerBean.getFieldName() + ", " +
                 PlayerBean.getFieldNickname() + ", " +
-                PlayerBean.getFieldOmega() + ", " +
+                PlayerBean.getFieldCredit() + ", " +
                 PlayerBean.getFieldLastLogin() + ", " +
                 PlayerBean.getFieldFirstLogin() + ", " +
                 PlayerBean.getFieldLastIp() + ", " +
@@ -116,7 +116,7 @@ public class PlayerManager {
     public void updatePlayer(PlayerBean playerBean, Callback<Integer> callback) {
         final String updateQuery = "UPDATE " + PlayerBean.getTableName() + " SET " +
                 PlayerBean.getFieldName() + " = ?, " +
-                PlayerBean.getFieldOmega() + " = ?, " +
+                PlayerBean.getFieldCredit() + " = ?, " +
                 PlayerBean.getFieldLastLogin() + " = ?, " +
                 PlayerBean.getFieldLastIp() + " = ?, " +
                 PlayerBean.getFieldGroupId() + " = ?, " +
@@ -181,7 +181,7 @@ public class PlayerManager {
         final String uniqueId = Transcoder.decode(resultSet.getString(PlayerBean.getFieldUniqueId()));
         final String name = resultSet.getString(PlayerBean.getFieldName());
         final String nickname = resultSet.getString(PlayerBean.getFieldNickname());
-        final int omega = resultSet.getInt(PlayerBean.getFieldOmega());
+        final int omega = resultSet.getInt(PlayerBean.getFieldCredit());
         final Timestamp lastLogin = Timestamp.valueOf(resultSet.getString(PlayerBean.getFieldLastLogin()));
         final Timestamp firstLogin = Timestamp.valueOf(resultSet.getString(PlayerBean.getFieldFirstLogin()));
         final String lastIP = resultSet.getString(PlayerBean.getFieldLastIp());

@@ -205,7 +205,7 @@ public class DatabaseManager extends SimpleDatabase {
                 .addDefault(PlayerBean.getFieldUniqueId(), "varchar(32)", null)
                 .addDefault(PlayerBean.getFieldName(), "varchar(255)", null)
                 .addDefault(PlayerBean.getFieldNickname(), "varchar(45)", null)
-                .addDefault(PlayerBean.getFieldOmega(), "int(16)", "0")
+                .addDefault(PlayerBean.getFieldCredit(), "int(16)", "0")
                 .addDefault(PlayerBean.getFieldLastLogin(), "timestamp", "CURRENT_TIMESTAMP")
                 .addDefault(PlayerBean.getFieldFirstLogin(), "timestamp", "CURRENT_TIMESTAMP")
                 .addDefault(PlayerBean.getFieldLastIp(), "varchar(15)", null)
