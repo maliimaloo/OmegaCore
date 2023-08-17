@@ -5,22 +5,14 @@
 
     <!-- Change to your own main package name. -->
     <groupId>net.arkamc</groupId>
-
-    <!-- Change to your plugin name, must be lowed cased and match your end package name. No spaces. -->
     <artifactId>ArkaCore</artifactId>
-
-    <!-- Change to your plugin's name. Can contain capital letters, but do NOT use spaces. -->
     <name>ArkaCore</name>
-
-    <!-- Change to the appropriate plugin's version, starting at 1.0.0. -->
     <version>1.0.0</version>
-
-    <!-- DO NOT EDIT. -->
     <packaging>jar</packaging>
 
     <properties>
         <author>maliimaloo</author>
-        <main.class.bukkit>net.omegagames.core.bukkit.BukkitCore</main.class.bukkit>
+        <main.class.bukkit>net.arkamc.core.bukkit.BukkitCore</main.class.bukkit>
         <java.version>8</java.version>
 
         <foundation.version>6.4.5</foundation.version>
@@ -44,8 +36,8 @@
         </dependency>
 
         <dependency>
-            <groupId>net.omegagames</groupId>
-            <artifactId>OmegaAPI</artifactId>
+            <groupId>net.arkamc</groupId>
+            <artifactId>ArkaAPI</artifactId>
             <version>1.0.0</version>
             <scope>provided</scope>
         </dependency>
@@ -54,6 +46,7 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>5.0.0-alpha2</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -108,7 +101,6 @@
                     <artifactSet>
                         <includes>
                             <include>${foundation.path}:Foundation*</include>
-                            <include>${smartinvs.path}:smart-invs*</include>
                         </includes>
                     </artifactSet>
                     <relocations>

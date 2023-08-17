@@ -4,20 +4,41 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="940e35d5-2514-4d4a-934b-03e782247ed0" name="Changes" comment="Init Commit">
+    <list default="true" id="940e35d5-2514-4d4a-934b-03e782247ed0" name="Changes" comment="Ajout de la javadoc">
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/commands/MsgPrivateCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/ApiImplementation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/ApiImplementation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/BukkitCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/BukkitCore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/commands/CreditCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/commands/CreditCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/commands/TestCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/expansion/player/PlayerPlaceholderExpansion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/expansion/player/PlayerPlaceholderExpansion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/expansion/server/ServerPlaceholderExpansion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/expansion/server/ServerPlaceholderExpansion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/general/GlobalJoinListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/general/GlobalJoinListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerDataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerDataManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/settings/Settings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/settings/Settings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/settings/SettingsCreditLogMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/settings/SettingsCreditLogMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/persistanceapi/datamanager/PlayerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/omegagames/core/persistanceapi/datamanager/PlayerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/ApiImplementation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/ApiImplementation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/BukkitCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/BukkitCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/DebugListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/DebugListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/commands/CreditCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/commands/CreditCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/expansion/player/PlayerPlaceholderExpansion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/expansion/player/PlayerPlaceholderExpansion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/expansion/server/ServerPlaceholderExpansion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/expansion/server/ServerPlaceholderExpansion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/general/APIListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/listeners/general/APIListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/general/GlobalJoinListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/listeners/general/GlobalJoinListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/listeners/pubsub/GlobalUpdateListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/listeners/pubsub/GlobalUpdateListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/menu/MenuCreditLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/menu/MenuCreditLog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/player/DataPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/player/PlayerDataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/player/DataPlayerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/pubsub/PubSubAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/pubsub/PubSubAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/pubsub/Sender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/pubsub/Sender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/pubsub/Subscriber.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/pubsub/Subscriber.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/settings/Settings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/settings/Settings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/settings/SettingsCreditLogMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/settings/SettingsCreditLogMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/util/CommandUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/util/CommandUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/util/LangUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/util/LangUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/util/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/util/Utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/util/model/Callback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/util/model/Callback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/bukkit/api/util/model/MenuItemCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/util/model/MenuItemCreator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/jedis/DatabaseConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/jedis/DatabaseConnector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/jedis/RedisServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/jedis/RedisServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/persistanceapi/SqlServiceManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/persistanceapi/SqlServiceManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/persistanceapi/beans/credit/CreditBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/persistanceapi/beans/credit/CreditBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/persistanceapi/beans/players/PlayerBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/persistanceapi/beans/players/PlayerBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/persistanceapi/database/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/persistanceapi/database/DatabaseManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/persistanceapi/database/MResultSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/persistanceapi/database/MResultSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/persistanceapi/datamanager/PlayerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/persistanceapi/datamanager/PlayerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/omegagames/core/persistanceapi/utils/Transcoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/core/persistanceapi/utils/Transcoder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/settings.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/settings.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -60,7 +81,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "C:/OmegaGames/OmegaApi",
+    "last_opened_file_path": "C:/Eclipse-ArkaMC/ArkaChat",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2"
@@ -302,7 +323,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692104346298</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Ajout de la javadoc">
+      <created>1692155253285</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1692155253285</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -319,6 +347,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Init commit" />
     <MESSAGE value="Init Commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Init Commit" />
+    <MESSAGE value="Ajout de la javadoc" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajout de la javadoc" />
   </component>
 </project>
