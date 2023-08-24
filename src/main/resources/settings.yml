@@ -66,26 +66,27 @@ Jedis:
   # -------------------------------------------------------------------------------------------------
   Bungee_Password: "password"
 
-Whisper:
-  # -------------------------------------------------------------------------------------------------
-  # Souhaitez-vous activer cette fonctionnalité ?
-  # -------------------------------------------------------------------------------------------------
-  Enabled: true
+Chat:
+  Whisper:
+    # -------------------------------------------------------------------------------------------------
+    # Souhaitez-vous activer cette fonctionnalité ?
+    # -------------------------------------------------------------------------------------------------
+    Enabled: true
 
-  # -------------------------------------------------------------------------------------------------
-  # Quelle est le format de chat pour ceux qui reçoive, envoie un message privée.
-  #
-  # Placeholders:
-  # {0} Le joueur qui a envoyé le message privé.
-  # {1} Le joueur qui reçoie le message privé.
-  # -------------------------------------------------------------------------------------------------
-  Format_Sender: '&f(&dMessage envoyé à &e&l{target_name}&f) &7&l► {message}'
-  Format_Receiving: '&f(&dMessage reçu de &e&l{sender_name}&f) &7&l► {message}'
+    # -------------------------------------------------------------------------------------------------
+    # Quelle est le format de chat pour ceux qui reçoive, envoie un message privée.
+    #
+    # Placeholders:
+    # {0} Le joueur qui a envoyé le message privé.
+    # {1} Le joueur qui reçoie le message privé.
+    # -------------------------------------------------------------------------------------------------
+    Format_Sender: '&f(&dMessage envoyé à &e&l{target_name}&f) &7&l► {message}'
+    Format_Receiving: '&f(&dMessage reçu de &e&l{sender_name}&f) &7&l► {message}'
 
-  # -------------------------------------------------------------------------------------------------
-  # Couleur utilisée dans le paramètre {message} des "Formats".
-  # -------------------------------------------------------------------------------------------------
-  Message_Color: '&f'
+    # -------------------------------------------------------------------------------------------------
+    # Couleur utilisée dans le paramètre {message} des "Formats".
+    # -------------------------------------------------------------------------------------------------
+    Message_Color: '&f'
 
   Socialspy:
     # -------------------------------------------------------------------------------------------------

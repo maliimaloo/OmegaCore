@@ -5,19 +5,24 @@
 
     <!-- Change to your own main package name. -->
     <groupId>net.arkamc</groupId>
-    <artifactId>ArkaCore</artifactId>
+    <artifactId>arkacore</artifactId>
     <name>ArkaCore</name>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
         <author>maliimaloo</author>
-        <main.class.bukkit>net.arkamc.core.bukkit.BukkitCore</main.class.bukkit>
+        <main.class.bukkit>net.arkamc.arkacore.bukkit.BukkitCore</main.class.bukkit>
         <java.version>8</java.version>
 
         <foundation.version>6.4.5</foundation.version>
         <foundation.path>com.github.kangarko</foundation.path>
 
+        <jedis.version>5.0.0-beta2</jedis.version>
+        <jedis.path>redis.clients</jedis.path>
+
+        <apache.version>2.11.1</apache.version>
+        <apache.path>org.apache.commons</apache.path>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -36,17 +41,15 @@
         </dependency>
 
         <dependency>
-            <groupId>net.arkamc</groupId>
-            <artifactId>ArkaAPI</artifactId>
-            <version>1.0.0</version>
-            <scope>provided</scope>
+            <groupId>${jedis.path}</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${jedis.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>5.0.0-alpha2</version>
-            <scope>provided</scope>
+            <groupId>${apache.path}</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <version>${apache.version}</version>
         </dependency>
 
         <dependency>
@@ -98,16 +101,37 @@
                 </executions>
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/**</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+
                     <artifactSet>
                         <includes>
                             <include>${foundation.path}:Foundation*</include>
+                            <include>${jedis.path}:jedis*</include>
+                            <include>${apache.path}:commons-pool2*</include>
                         </includes>
                     </artifactSet>
                     <relocations>
                         <!-- Move the Foundation library into your own package in "lib" subpackage to prevent interference. -->
                         <relocation>
                             <pattern>org.mineacademy.fo</pattern>
-                            <shadedPattern>${project.groupId}.${project.artifactId}.lib</shadedPattern>
+                            <shadedPattern>${project.groupId}.${project.artifactId}.lib.fo</shadedPattern>
+                        </relocation>
+
+                        <relocation>
+                            <pattern>redis.clients.jedis</pattern>
+                            <shadedPattern>${project.groupId}.${project.artifactId}.lib.jedis</shadedPattern>
+                        </relocation>
+
+                        <relocation>
+                            <pattern>org.apache.commons</pattern>
+                            <shadedPattern>${project.groupId}.${project.artifactId}.lib.apache</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

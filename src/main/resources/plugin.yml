@@ -2,7 +2,6 @@ name: ${project.name}
 version: ${project.version}
 main: ${main.class.bukkit}
 author: ${author}
-load: STARTUP
 
 depend: []
 softdepend: [HeadDatabase]
@@ -12,4 +11,4 @@ libraries:
   - org.openjdk.nashorn:nashorn-core:15.4
   - com.zaxxer:HikariCP:5.0.1
   - org.apache.commons:commons-pool2:2.11.1
-  - redis.clients:jedis:5.0.0-alpha2
+  - redis.clients:jedis:5.0.0-beta2
