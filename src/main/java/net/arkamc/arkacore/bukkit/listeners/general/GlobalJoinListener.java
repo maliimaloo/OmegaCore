@@ -1,6 +1,5 @@
 package net.arkamc.arkacore.bukkit.listeners.general;
 
-import github.scarsz.discordsrv.Debug;
 import lombok.Getter;
 import net.arkamc.arkacore.bukkit.BukkitCore;
 import net.arkamc.arkacore.bukkit.data.PlayerData;
