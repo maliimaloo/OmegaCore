@@ -8,12 +8,15 @@ public final class Settings extends SimpleSettings {
     public static String SERVER_NAME;
     public static String LOG_PREFIX;
     public static List<String> ALIASES;
+    public static Boolean IS_DEBUG;
 
     private static void init() {
         Settings.setPathPrefix(null);
+
         SERVER_NAME = Settings.getString("Server_Name");
-        LOG_PREFIX = getString("Log_Prefix");
-        ALIASES = getStringList("Aliases");
+        LOG_PREFIX = Settings.getString("Log_Prefix");
+        ALIASES = Settings.getStringList("Aliases");
+        IS_DEBUG = Settings.getBoolean("Debug");
     }
 
     public final static class Database {
