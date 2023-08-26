@@ -7,7 +7,6 @@ import net.arkamc.arkacore.persistanceapi.beans.players.PlayerBean;
 import net.arkamc.arkacore.persistanceapi.database.DatabaseManager;
 import net.arkamc.arkacore.persistanceapi.database.MResultSet;
 import net.arkamc.arkacore.persistanceapi.utils.Transcoder;
-import org.mineacademy.fo.Common;
 import org.mineacademy.fo.exception.FoException;
 
 import java.sql.Timestamp;

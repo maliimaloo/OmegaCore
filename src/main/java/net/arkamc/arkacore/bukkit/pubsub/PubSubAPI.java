@@ -18,10 +18,6 @@ public class PubSubAPI {
 
     boolean working = true;
 
-    private final Thread senderThread;
-    private Thread patternThread;
-    private Thread channelThread;
-
     // Avoid to init Threads before the subclass constructor is started (Fix possible atomicity violation)
     public PubSubAPI(ApiImplementation api) {
         this.api = api;
@@ -29,9 +25,6 @@ public class PubSubAPI {
         this.subscriberChannel = new Subscriber();
 
         this.sender = new Sender(api);
-        this.senderThread = new Thread(sender, "SenderThread");
-        this.senderThread.start();
-
         this.startThread();
     }
 
@@ -92,9 +85,5 @@ public class PubSubAPI {
             Thread.sleep(500);
         } catch (Exception ignored) {
         }
-
-        this.senderThread.interrupt();
-        this.patternThread.interrupt();
-        this.channelThread.interrupt();
     }
 }

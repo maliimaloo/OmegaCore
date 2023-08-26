@@ -3,7 +3,6 @@ package net.arkamc.arkacore.jedis;
 import net.arkamc.arkacore.bukkit.BukkitCore;
 import org.bukkit.Bukkit;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.exception.FoException;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -48,8 +47,6 @@ public class DatabaseConnector {
                 }
 
             } catch (Exception exception) {
-                Common.throwError(exception, "Error redis connection, trying to reconnect!");
-
                 if (this.reconnectAttempts < this.MAX_RECONNECT_ATTEMPTS) {
                     this.reconnectAttempts++;
                     this.connect();
@@ -74,7 +71,7 @@ public class DatabaseConnector {
 
             Common.logNoPrefix("&7[&9Jedis&7] &aConnection à la database.");
         } catch (Throwable throwable) {
-            Common.throwError(throwable, "Impossible de se connecter à la database, désactivation du plugin.");
+            Common.throwError(throwable, "Error redis connection, trying to reconnect!");
         }
     }
 }

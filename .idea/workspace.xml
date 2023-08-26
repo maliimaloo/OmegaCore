@@ -4,15 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="940e35d5-2514-4d4a-934b-03e782247ed0" name="Changes" comment="Ajout de la javadoc">
+    <list default="true" id="940e35d5-2514-4d4a-934b-03e782247ed0" name="Changes" comment="Correction de l'utilisation du CPU, DatabaseConnector">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/BukkitCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/BukkitCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/commands/CreditCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/commands/CreditCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/commands/WhisperCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/commands/WhisperCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/expansion/server/ServerPlaceholderExpansion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/expansion/server/ServerPlaceholderExpansion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/listeners/general/GlobalJoinListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/listeners/general/GlobalJoinListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/listeners/pubsub/GlobalUpdateListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/listeners/pubsub/GlobalUpdateListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/manager/PlayerDataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/manager/PlayerDataManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/menu/MenuCreditLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/menu/MenuCreditLog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/pubsub/PubSubAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/pubsub/PubSubAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/settings/StsCreditMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/settings/StsCreditMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/util/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/util/Utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/util/model/MenuItemCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/util/model/MenuItemCreator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/jedis/DatabaseConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/jedis/DatabaseConnector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/persistanceapi/beans/credit/CreditBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/persistanceapi/beans/credit/CreditBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/persistanceapi/beans/players/PlayerBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/persistanceapi/beans/players/PlayerBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/persistanceapi/datamanager/PlayerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/persistanceapi/datamanager/PlayerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/menu/credit_log.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/menu/credit_log.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +65,8 @@
     "last_opened_file_path": "C:/Users/malii/OneDrive/Bureau/SamaGamesCore-master",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2"
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -339,7 +348,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692911517026</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="Correction de l'utilisation du CPU, DatabaseConnector">
+      <created>1693034033974</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1693034033974</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -357,6 +373,7 @@
     <MESSAGE value="Init commit" />
     <MESSAGE value="Init Commit" />
     <MESSAGE value="Ajout de la javadoc" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajout de la javadoc" />
+    <MESSAGE value="Correction de l'utilisation du CPU, DatabaseConnector" />
+    <option name="LAST_COMMIT_MESSAGE" value="Correction de l'utilisation du CPU, DatabaseConnector" />
   </component>
 </project>

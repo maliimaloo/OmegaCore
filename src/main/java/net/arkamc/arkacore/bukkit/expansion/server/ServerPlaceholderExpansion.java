@@ -19,7 +19,7 @@ import java.time.ZonedDateTime;
  */
 public class ServerPlaceholderExpansion {
 
-    protected ApiImplementation api;
+    private final ApiImplementation api;
 
     /**
      * Constructeur de la classe.

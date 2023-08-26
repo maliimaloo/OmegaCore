@@ -24,21 +24,21 @@ public class CreditBean {
     */
 
     @Getter
-    private static String tableName = "t_lobby_credit_logs";
+    private final static String tableName = "t_lobby_credit_logs";
     @Getter
-    private static String fieldUniqueId = "players_uuid";
+    private final static String fieldUniqueId = "players_uuid";
     @Getter
-    private static String fieldTimestamp = "timestamp";
+    private final static String fieldTimestamp = "timestamp";
     @Getter
-    private static String fieldType = "type";
+    private final static String fieldType = "type";
     @Getter
-    private static String fieldSender = "sender";
+    private final static String fieldSender = "sender";
     @Getter
-    private static String fieldReceiver = "receiver";
+    private final static String fieldReceiver = "receiver";
     @Getter
-    private static String fieldAmount = "amount";
+    private final static String fieldAmount = "amount";
     @Getter
-    private static String fieldReason = "reason";
+    private final static String fieldReason = "reason";
 
     @Getter @Setter
     private UUID uniqueId;

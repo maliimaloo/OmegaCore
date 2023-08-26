@@ -3,7 +3,6 @@ package net.arkamc.arkacore.bukkit.listeners.general;
 import lombok.Getter;
 import net.arkamc.arkacore.bukkit.BukkitCore;
 import net.arkamc.arkacore.bukkit.data.PlayerData;
-import net.arkamc.arkacore.bukkit.listeners.pubsub.GlobalUpdateListener;
 import net.arkamc.arkacore.bukkit.util.DebuggerUtils;
 import net.arkamc.arkacore.persistanceapi.beans.players.PlayerBean;
 import org.bukkit.entity.Player;

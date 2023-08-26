@@ -28,25 +28,25 @@ public class PlayerBean {
     */
 
     @Getter
-    private static String tableName = "t_lobby_players";
+    private final static String tableName = "t_lobby_players";
     @Getter
-    private static String fieldUniqueId = "uuid";
+    private final static String fieldUniqueId = "uuid";
     @Getter
-    private static String fieldName = "name";
+    private final static String fieldName = "name";
     @Getter
-    private static String fieldNickname = "nickname";
+    private final static String fieldNickname = "nickname";
     @Getter
-    private static String fieldCredit = "credit";
+    private final static String fieldCredit = "credit";
     @Getter
-    private static String fieldLastLogin = "last_login";
+    private final static String fieldLastLogin = "last_login";
     @Getter
-    private static String fieldFirstLogin = "first_login";
+    private final static String fieldFirstLogin = "first_login";
     @Getter
-    private static String fieldLastIp = "last_ip";
+    private final static String fieldLastIp = "last_ip";
     @Getter
-    private static String fieldGroupId = "group_id";
+    private final static String fieldGroupId = "group_id";
     @Getter
-    private static String fieldWhisper = "whisper";
+    private final static String fieldWhisper = "whisper";
 
     @Getter @Setter
     UUID uniqueId;

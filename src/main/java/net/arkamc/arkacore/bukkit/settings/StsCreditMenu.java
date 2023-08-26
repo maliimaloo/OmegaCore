@@ -26,7 +26,7 @@ public final class StsCreditMenu extends YamlStaticConfig {
 
     public final static class Content  {
         @Getter
-        private static Map<UUID, MenuItemCreator> cache = new HashMap<>();
+        private final static Map<UUID, MenuItemCreator> cache = new HashMap<>();
 
         private static void init() {
             StsCreditMenu.setPathPrefix(null);
@@ -67,7 +67,7 @@ public final class StsCreditMenu extends YamlStaticConfig {
 
     public final static class ImmutableContent {
         @Getter
-        private static Map<UUID, MenuItemCreator> cache = new HashMap<>();
+        private final static Map<UUID, MenuItemCreator> cache = new HashMap<>();
 
         private static void init() {
             StsCreditMenu.setPathPrefix(null);

@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MenuCreditLog extends MenuPagged<ItemStack> {
-    private final String title = StsCreditMenu.TITLE;
-    private final Integer row = StsCreditMenu.ROW;
 
     private static final Integer pageSize = StsCreditMenu.PAGE_SIZE;
     private static final String keyItemLog = "Log_Item";
@@ -27,8 +25,11 @@ public class MenuCreditLog extends MenuPagged<ItemStack> {
     public MenuCreditLog(List<CreditBean> playerLogs) {
         super(pageSize, compileItem(playerLogs));
 
-        super.setTitle(this.title);
-        super.setSize(this.row * 9);
+        String title = StsCreditMenu.TITLE;
+        super.setTitle(title);
+
+        Integer row = StsCreditMenu.ROW;
+        super.setSize(row * 9);
         //super.setSlotNumbersVisible();
     }
 

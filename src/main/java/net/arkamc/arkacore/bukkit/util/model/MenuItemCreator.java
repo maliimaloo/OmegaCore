@@ -14,8 +14,9 @@ import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.nbt.NBTCompound;
 import org.mineacademy.fo.remain.nbt.NBTItem;
 
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public final class MenuItemCreator {

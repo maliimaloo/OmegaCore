@@ -150,8 +150,6 @@ public final class WhisperCommand extends SimpleCommand {
             WhisperData whisperData = new WhisperData(senderPlayer.getName(), receiverPlayer.getName(), message);
             whisperData.sendWhisper(senderPlayer);
             whisperData.sendWhisper(receiverPlayer);
-            //this.chat(senderPlayer, Settings.Whisper.FORMAT_SENDER, message);
-            //this.chat(receiverPlayer, Settings.Whisper.FORMAT_RECEIVING, message);
         }
     }
 }

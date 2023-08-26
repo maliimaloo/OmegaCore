@@ -1,14 +1,14 @@
 package net.arkamc.arkacore.bukkit;
 
 import lombok.Getter;
-import net.arkamc.arkacore.bukkit.commands.WhisperCommand;
-import net.arkamc.arkacore.bukkit.pubsub.PubSubAPI;
 import net.arkamc.arkacore.bukkit.commands.CreditCommand;
+import net.arkamc.arkacore.bukkit.commands.WhisperCommand;
 import net.arkamc.arkacore.bukkit.expansion.player.PlayerPlaceholderExpansion;
 import net.arkamc.arkacore.bukkit.expansion.server.ServerPlaceholderExpansion;
 import net.arkamc.arkacore.bukkit.listeners.general.GlobalJoinListener;
 import net.arkamc.arkacore.bukkit.listeners.pubsub.GlobalUpdateListener;
 import net.arkamc.arkacore.bukkit.manager.PlayerDataManager;
+import net.arkamc.arkacore.bukkit.pubsub.PubSubAPI;
 import net.arkamc.arkacore.bukkit.settings.Settings;
 import net.arkamc.arkacore.jedis.DatabaseConnector;
 import net.arkamc.arkacore.jedis.RedisServer;
