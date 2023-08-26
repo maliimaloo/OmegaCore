@@ -36,35 +36,25 @@ public class PubSubAPI {
     }
 
     private void startThread() {
-        this.patternThread = new Thread(() -> {
-            while (this.working) {
-                Jedis jedis = this.api.getBungeeResource();
-                try {
-                    String[] patternsSuscribed = this.subscriberPattern.getPatternsSuscribed();
-                    if(patternsSuscribed.length > 0)
-                        jedis.psubscribe(this.subscriberPattern, patternsSuscribed);
-                } catch (Exception e) {
-                    Common.throwError(e, "Error while subscribing to patterns");
+        Common.runAsync(() -> {
+            try (Jedis jedis = this.api.getBungeeResource()) {
+                String[] patternsSuscribed = this.subscriberPattern.getPatternsSuscribed();
+                if (patternsSuscribed.length > 0) {
+                    jedis.psubscribe(this.subscriberPattern, patternsSuscribed);
                 }
-                jedis.close();
+            } catch (Exception e) {
+                Common.throwError(e, "Error while subscribing to patterns");
             }
-        });
-        this.patternThread.start();
 
-        this.channelThread = new Thread(() -> {
-            while (this.working) {
-                Jedis jedis = this.api.getBungeeResource();
-                try {
-                    String[] channelsSuscribed = this.subscriberChannel.getChannelsSuscribed();
-                    if (channelsSuscribed.length > 0)
-                        jedis.subscribe(this.subscriberChannel, channelsSuscribed);
-                } catch (Exception e) {
-                    Common.throwError(e, "Error while subscribing to channels");
+            try (Jedis jedis = this.api.getBungeeResource()) {
+                String[] channelsSuscribed = this.subscriberChannel.getChannelsSuscribed();
+                if (channelsSuscribed.length > 0) {
+                    jedis.subscribe(this.subscriberChannel, channelsSuscribed);
                 }
-                jedis.close();
+            } catch (Exception e) {
+                Common.throwError(e, "Error while subscribing to channels");
             }
         });
-        this.channelThread.start();
     }
 
     public void subscribe(String channel, IPacketsReceiver receiver) {

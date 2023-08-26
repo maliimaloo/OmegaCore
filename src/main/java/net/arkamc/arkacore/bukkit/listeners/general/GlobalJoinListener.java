@@ -3,6 +3,8 @@ package net.arkamc.arkacore.bukkit.listeners.general;
 import lombok.Getter;
 import net.arkamc.arkacore.bukkit.BukkitCore;
 import net.arkamc.arkacore.bukkit.data.PlayerData;
+import net.arkamc.arkacore.bukkit.listeners.pubsub.GlobalUpdateListener;
+import net.arkamc.arkacore.bukkit.util.DebuggerUtils;
 import net.arkamc.arkacore.persistanceapi.beans.players.PlayerBean;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,7 +13,6 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.exception.FoException;
 
 import java.sql.Timestamp;
@@ -82,17 +83,18 @@ public class GlobalJoinListener extends APIListener {
      * @param paramEvent L'événement de pré-connexion du joueur.
      */
     private void handlePlayerPreJoin(AsyncPlayerPreLoginEvent paramEvent) {
-        long startTime = System.currentTimeMillis();
-        UUID playerUniqueId = paramEvent.getUniqueId();
+        final long startTime = System.currentTimeMillis();
+        final UUID playerUniqueId = paramEvent.getUniqueId();
+        final String playerName = paramEvent.getName();
 
         PlayerData paramPlayerData = this.api.getPlayerManager().getPlayerData(playerUniqueId);
         if (!paramPlayerData.isLoaded()) {
-            Debugger.printStackTrace("L'uniqueId: " + playerUniqueId + " n'existe pas dans jedis, récupération en cours...");
+            DebuggerUtils.printStackTrace("Le joueur [UUID:" + playerUniqueId + ", Name:" + playerName + "] n'existe pas dans jedis, récupération en cours...");
             this.handlePlayerPreJoinLoaded(paramEvent, paramPlayerData);
             return;
         }
 
-        Debugger.printStackTrace("Récupération réussie du joueur: " + playerUniqueId + " en " + (System.currentTimeMillis() - startTime) + "ms.");
+        DebuggerUtils.printStackTrace("Récupération réussie du joueur [UUID:" + playerUniqueId + ", Name:" + playerName + "] en " + (System.currentTimeMillis() - startTime) + "ms.");
     }
 
     /**
@@ -111,31 +113,31 @@ public class GlobalJoinListener extends APIListener {
         String playerIp = paramEvent.getAddress().getHostAddress();
         LocalDateTime paramLocalDateTime = ZonedDateTime.now(ZoneId.of("Europe/Paris")).toLocalDateTime();
 
-        Debugger.printStackTrace("Envoie de la requête SQL pour la recuperation du joueur [UUID:" + playerUniqueId + ", Name:" + playerName + "] en BDD.");
+        DebuggerUtils.printStackTrace("Envoie de la requête SQL pour la recuperation du joueur [UUID:" + playerUniqueId + ", Name:" + playerName + "] en BDD.");
         PlayerBean playerBean = this.api.getSQLServiceManager().getPlayer(playerUniqueId);
         if (playerBean == null) {
-            Debugger.printStackTrace("Le joueur [UUID:" + playerUniqueId + ", Name:" + playerName + "] n'existe pas, création en cours...");
+            DebuggerUtils.printStackTrace("Le joueur [UUID:" + playerUniqueId + ", Name:" + playerName + "] n'existe pas, création en cours...");
             playerBean = new PlayerBean(playerUniqueId, playerName, "", 0, Timestamp.valueOf(paramLocalDateTime), Timestamp.valueOf(paramLocalDateTime), playerIp, 0, false, new ArrayList<>());
             boolean isCreate = this.api.getSQLServiceManager().createPlayer(playerBean);
             if (!isCreate) {
-                Debugger.printStackTrace("Échec de la création du joueur [UUID:" + playerUniqueId + ", Name:" + playerName + "] en BDD.");
+                DebuggerUtils.printStackTrace("Échec de la création du joueur [UUID:" + playerUniqueId + ", Name:" + playerName + "] en BDD.");
                 paramEvent.setKickMessage("Erreur lors de la création de votre profil à partir de la BDD.");
                 paramEvent.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
                 return;
             }
 
-            Debugger.printStackTrace("Création réussie du joueur [UUID:" + playerUniqueId + ", Name:" + playerName + "] en BDD.");
+            DebuggerUtils.printStackTrace("Création réussie du joueur [UUID:" + playerUniqueId + ", Name:" + playerName + "] en BDD.");
         }
 
-        Debugger.printStackTrace("Essaie de l'enregistrement en cours du joueur  [UUID:" + playerUniqueId + ", Name:" + playerName + "] dans jedis...");
+        DebuggerUtils.printStackTrace("Essaie de l'enregistrement en cours du joueur [UUID:" + playerUniqueId + ", Name:" + playerName + "] dans jedis...");
         boolean isLoadedToJedis = paramPlayerData.loadToJedis(playerBean);
         if (!isLoadedToJedis) {
-            Debugger.printStackTrace("Enregistrement des données du joueur  [UUID:" + playerUniqueId + ", Name:" + playerName + "] dans Jedis");
+            DebuggerUtils.printStackTrace("Enregistrement des données du joueur  [UUID:" + playerUniqueId + ", Name:" + playerName + "] dans Jedis");
             paramEvent.setKickMessage("Erreur lors de l'enregistrement de vos données dans Jedis.");
             paramEvent.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
         }
 
-        Debugger.printStackTrace("Enregistrement réussie du joueur [UUID:" + playerUniqueId + ", Name:" + playerName + "] dans Jedis");
+        DebuggerUtils.printStackTrace("Enregistrement réussie du joueur [UUID:" + playerUniqueId + ", Name:" + playerName + "] dans Jedis");
     }
 
     /**
@@ -148,9 +150,11 @@ public class GlobalJoinListener extends APIListener {
      * @param throwable L'exception survenue.
      */
     private void handlePreJoinException(AsyncPlayerPreLoginEvent paramEvent, Throwable throwable) {
-        Common.throwError(throwable, "Erreur lors de la pré-connexion du joueur " + paramEvent.getName() + " (" + paramEvent.getUniqueId() + ").");
+        DebuggerUtils.printStackTrace("Erreur lors de la pré-connexion du joueur [UUID:" + paramEvent.getUniqueId() + ", Name:" + paramEvent.getName() + "]");
         paramEvent.setKickMessage("Erreur lors du chargement de votre profil.");
         paramEvent.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
+
+        Common.throwError(throwable);
     }
 
     /**

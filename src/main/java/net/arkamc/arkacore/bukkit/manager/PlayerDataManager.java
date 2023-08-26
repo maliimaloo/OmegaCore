@@ -5,7 +5,7 @@ import net.arkamc.arkacore.bukkit.data.PlayerData;
 
 import java.util.UUID;
 
-public final class PlayerDataManager{
+public final class PlayerDataManager {
     private final ApiImplementation api;
 
     public PlayerDataManager(ApiImplementation api) {

@@ -169,9 +169,9 @@ public class BukkitCore extends SimplePlugin {
     private void configurePubSub() {
         this.pubSubAPI = new PubSubAPI(this.api);
 
-        GlobalUpdateListener listener = new GlobalUpdateListener(this.api);
-        this.pubSubAPI.subscribe("omegacore:player:online_status_check", listener);
-        this.pubSubAPI.subscribe("omegacore:player:online_status_response", listener);
+        GlobalUpdateListener listener = new GlobalUpdateListener();
+        this.pubSubAPI.subscribe("arkacore:player:online_status_check", listener);
+        this.pubSubAPI.subscribe("arkacore:player:online_status_response", listener);
     }
 
     /**

@@ -5,50 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="940e35d5-2514-4d4a-934b-03e782247ed0" name="Changes" comment="Ajout de la javadoc">
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/data/WhisperData.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/manager/PlayerDataManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/util/model/IFinancialCallback.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/util/pubsub/IPacketsReceiver.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/util/pubsub/IPatternReceiver.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/util/pubsub/IPubSubAPI.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/util/pubsub/ISender.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/util/pubsub/PendingMessage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/ApiImplementation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/ApiImplementation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/BukkitCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/BukkitCore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/DebugListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/DebugListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/commands/CreditCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/commands/CreditCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/commands/MsgPrivateCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/commands/WhisperCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/expansion/player/PlayerPlaceholderExpansion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/expansion/player/PlayerPlaceholderExpansion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/expansion/server/ServerPlaceholderExpansion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/expansion/server/ServerPlaceholderExpansion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/listeners/general/APIListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/listeners/general/APIListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/listeners/general/GlobalJoinListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/listeners/general/GlobalJoinListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/listeners/pubsub/GlobalUpdateListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/listeners/pubsub/GlobalUpdateListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/menu/MenuCreditLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/menu/MenuCreditLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/player/DataPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/data/PlayerData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/player/DataPlayerManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/pubsub/PubSubAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/pubsub/PubSubAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/pubsub/Sender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/pubsub/Sender.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/pubsub/Subscriber.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/pubsub/Subscriber.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/settings/Settings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/settings/Settings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/settings/SettingsCreditLogMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/settings/StsCreditMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/util/CommandUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/util/CommandUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/util/LangUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/util/LangUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/util/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/util/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/util/model/Callback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/util/model/Callback.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/bukkit/util/model/MenuItemCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/util/model/MenuItemCreator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/jedis/DatabaseConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/jedis/DatabaseConnector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/jedis/RedisServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/jedis/RedisServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/persistanceapi/SqlServiceManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/persistanceapi/SqlServiceManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/persistanceapi/beans/credit/CreditBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/persistanceapi/beans/credit/CreditBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/persistanceapi/beans/players/PlayerBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/persistanceapi/beans/players/PlayerBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/persistanceapi/database/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/persistanceapi/database/DatabaseManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/persistanceapi/database/MResultSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/persistanceapi/database/MResultSet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/persistanceapi/datamanager/PlayerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/persistanceapi/datamanager/PlayerManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/core/persistanceapi/utils/Transcoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/persistanceapi/utils/Transcoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/BukkitCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/BukkitCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/listeners/general/GlobalJoinListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/listeners/general/GlobalJoinListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/listeners/pubsub/GlobalUpdateListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/listeners/pubsub/GlobalUpdateListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/manager/PlayerDataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/manager/PlayerDataManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/pubsub/PubSubAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/pubsub/PubSubAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/jedis/DatabaseConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/jedis/DatabaseConnector.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/settings.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/settings.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +54,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "C:/Eclipse-ArkaMC/ArkaChat",
+    "last_opened_file_path": "C:/Users/malii/OneDrive/Bureau/SamaGamesCore-master",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2"
@@ -361,7 +325,21 @@
       <option name="project" value="LOCAL" />
       <updated>1692910421034</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Ajout de la javadoc">
+      <created>1692910522857</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1692910522858</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Ajout de la javadoc">
+      <created>1692911517026</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1692911517026</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
