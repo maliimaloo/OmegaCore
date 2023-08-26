@@ -5,11 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="940e35d5-2514-4d4a-934b-03e782247ed0" name="Changes" comment="Ajout de la javadoc">
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/util/DebuggerUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/BukkitCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/BukkitCore.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/listeners/general/GlobalJoinListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/listeners/general/GlobalJoinListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/settings/Settings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/settings/Settings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/settings.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/settings.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/listeners/pubsub/GlobalUpdateListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/listeners/pubsub/GlobalUpdateListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/manager/PlayerDataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/manager/PlayerDataManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/pubsub/PubSubAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/bukkit/pubsub/PubSubAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/jedis/DatabaseConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/arkamc/arkacore/jedis/DatabaseConnector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +54,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "C:/Eclipse-ArkaMC/ArkaChat",
+    "last_opened_file_path": "C:/Users/malii/OneDrive/Bureau/SamaGamesCore-master",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2"
@@ -329,7 +332,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692910522858</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Ajout de la javadoc">
+      <created>1692911517026</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1692911517026</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

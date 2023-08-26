@@ -2,6 +2,7 @@ name: ${project.name}
 version: ${project.version}
 main: ${main.class.bukkit}
 author: ${author}
+load: STARTUP
 
 depend: []
 softdepend: [HeadDatabase]
@@ -10,5 +11,3 @@ libraries:
   # DO NOT EDIT THE FIRST LIBRARY, required to make your plugin work under Java 15+
   - org.openjdk.nashorn:nashorn-core:15.4
   - com.zaxxer:HikariCP:5.0.1
-  - org.apache.commons:commons-pool2:2.11.1
-  - redis.clients:jedis:5.0.0-beta2

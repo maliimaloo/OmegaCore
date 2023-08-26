@@ -16,10 +16,14 @@ public class DatabaseConnector {
     private JedisPool cachePool;
     private final RedisServer bungee;
 
+    private int reconnectAttempts = 0;
+    private final int MAX_RECONNECT_ATTEMPTS = 3;
+
     public DatabaseConnector(BukkitCore pluginBukkit, RedisServer bungee) {
         this.pluginBukkit = pluginBukkit;
         this.bungee = bungee;
 
+        this.connect();
         this.initiateConnection();
     }
 
@@ -37,29 +41,40 @@ public class DatabaseConnector {
 
         this.pluginBukkit.getExecutor().scheduleAtFixedRate(() -> {
             try {
-                this.cachePool.getResource().close();
-            } catch (FoException exception) {
-                Common.throwError(exception, "Error redis connection, Try to reconnect!");
-                this.connect();
+                // Test the connection by trying to get a resource from the pool
+                try (Jedis jedis = this.cachePool.getResource()) {
+                    // Reset reconnectAttempts on successful connection
+                    this.reconnectAttempts = 0;
+                }
+
+            } catch (Exception exception) {
+                Common.throwError(exception, "Error redis connection, trying to reconnect!");
+
+                if (this.reconnectAttempts < this.MAX_RECONNECT_ATTEMPTS) {
+                    this.reconnectAttempts++;
+                    this.connect();
+                } else {
+                    Common.log("&cReached maximum reconnection attempts. Disabling the plugin.");
+                    Bukkit.shutdown();
+                }
             }
 
         }, 0, 10, TimeUnit.SECONDS);
     }
 
     private void connect() {
-        JedisPoolConfig paramJedisConfig = new JedisPoolConfig();
-        paramJedisConfig.setMaxTotal(-1);
-        paramJedisConfig.setJmxEnabled(false);
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+        jedisPoolConfig.setMaxTotal(-1);
+        jedisPoolConfig.setJmxEnabled(false);
 
         try {
-            this.cachePool = new JedisPool(paramJedisConfig, this.bungee.getIp(), this.bungee.getPort(), 0, this.bungee.getPassword());
+            this.cachePool = new JedisPool(jedisPoolConfig, this.bungee.getIp(), this.bungee.getPort(), 0, this.bungee.getPassword());
             this.cachePool.getResource().configSet("notify-keyspace-events", "Ex");
             this.cachePool.getResource().close();
 
             Common.logNoPrefix("&7[&9Jedis&7] &aConnection à la database.");
         } catch (Throwable throwable) {
             Common.throwError(throwable, "Impossible de se connecter à la database, désactivation du plugin.");
-            Bukkit.shutdown();
         }
     }
 }
